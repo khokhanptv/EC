@@ -40,4 +40,6 @@
 
 ### Câu 10: `volatile` có ý nghĩa gì? Có đảm bảo atomic và thread-safe không?
 
-**Trả lời phỏng vấn:** `volatile` cho compiler biết giá trị có thể thay đổi ngoài luồng thực thi thông thường, nên các lần truy cập không được loại bỏ tùy ý. Nó thường dùng với thanh ghi phần cứng và biến được ISR thay đổi. `volatile` không đảm bảo atomic hoặc thread-safe.
+**Trả lời phỏng vấn:** volatile báo cho compiler không được tối ưu , ngăn compiler dùng lại giá trị cũ trong thanh ghi;
+- Biến thường: compiler có thể giữ bản sao trong thanh ghi CPU để dùng lại.
+- Biến volatile: compiler không được dùng lại giá trị cũ trong thanh ghi,mỗi lần biến bị thay đổi bởi yếu tố bên ngoài compiler phải đọc lại biến, không được dùng giá trị cũ giữ trong thanh ghi.
