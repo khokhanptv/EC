@@ -2,7 +2,7 @@
 
 ## Ngày 13/08/2026
 
-### Câu 1: Biến là gì? Khai báo và khởi tạo khác nhau thế nào?
+### Câu 1: Biến là gì? Khai báo và khởi tạo khác nhau thế nào?1
 
 **Trả lời phỏng vấn:** Biến là một đối tượng có tên, có kiểu dữ liệu và dùng để lưu giá trị. Khai báo giới thiệu tên và kiểu của biến; định nghĩa tạo biến và thường cấp vùng nhớ. Khởi tạo cung cấp giá trị ban đầu khi biến được định nghĩa.
 
