@@ -1,7 +1,7 @@
 <details>
 <summary><h1>Luyện phỏng vấn C/C++ Embedded</h1></summary>
 
-> Bản tổng hợp Câu 1–77.  
+> Bản tổng hợp Câu 1–120.  
 
 > Phần STL đã được tinh gọn theo hướng phỏng vấn: bỏ các câu đi quá sâu vào từng hàm riêng lẻ của `std::vector`.
 
@@ -1204,6 +1204,327 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 - `stack` → LIFO.
 
 - `deque` → thao tác tốt ở cả hai đầu.
+
+</details>
+
+<details>
+<summary><h1>Đa luồng C++ — Câu 78–120</h1></summary>
+
+<details>
+<summary><strong>Câu 78: Process là gì, thread là gì và chúng khác nhau như thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Process là một chương trình đang chạy, có vùng nhớ và tài nguyên riêng. Thread là đơn vị thực thi bên trong process. Các thread trong cùng process chia sẻ code, biến global và heap, nhưng mỗi thread có stack và trạng thái thực thi riêng. Việc tạo và chuyển đổi thread thường nhẹ hơn process.
+
+**Cách nhớ:** Process chứa tài nguyên, thread thực hiện công việc.
+
+</details>
+
+<details>
+<summary><strong>Câu 79: Concurrency và parallelism khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Concurrency là nhiều công việc cùng tiến triển trong một khoảng thời gian nhưng không nhất thiết chạy cùng một thời điểm. Parallelism là nhiều công việc thực sự chạy đồng thời trên nhiều CPU core.
+
+</details>
+
+<details>
+<summary><strong>Câu 80: `std::thread`, `join()` và `detach()` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `std::thread` đại diện cho một luồng thực thi. `join()` làm thread hiện tại chờ thread kia kết thúc, còn `detach()` cho thread chạy độc lập. Nếu một object `std::thread` vẫn còn `joinable` khi bị hủy, chương trình gọi `std::terminate()`, nên cần `join()` hoặc `detach()` trước đó.
+
+</details>
+
+<details>
+<summary><strong>Câu 81: Context switch là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Context switch là quá trình CPU tạm dừng một thread hoặc process, lưu trạng thái của nó rồi khôi phục trạng thái của thread hoặc process khác. Quá trình này tạo ra chi phí nên quá nhiều thread có thể làm giảm hiệu năng.
+
+</details>
+
+<details>
+<summary><strong>Câu 82: Shared resource và critical section là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Shared resource là tài nguyên được nhiều thread sử dụng chung, chẳng hạn biến global, object hoặc file. Critical section là đoạn code truy cập tài nguyên chung và thường phải được đồng bộ để tránh lỗi dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 83: Race condition và data race khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Race condition là lỗi logic khi kết quả phụ thuộc vào thứ tự hoặc thời điểm các thread thực thi. Data race xảy ra khi nhiều thread truy cập cùng một vùng nhớ, có ít nhất một thao tác ghi và không có đồng bộ phù hợp. Trong C++, data race gây undefined behavior.
+
+</details>
+
+<details>
+<summary><strong>Câu 84: Mutex là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Mutex là cơ chế loại trừ lẫn nhau, dùng để bảo vệ tài nguyên dùng chung bằng cách chỉ cho một thread truy cập critical section tại một thời điểm.
+
+</details>
+
+<details>
+<summary><strong>Câu 85: `lock_guard`, `unique_lock` và `scoped_lock` khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Cả ba đều quản lý mutex theo RAII. `lock_guard` đơn giản, khóa khi được tạo và tự mở khóa khi ra khỏi scope. `unique_lock` linh hoạt hơn, cho phép khóa hoặc mở khóa thủ công và dùng được với condition variable. `scoped_lock` phù hợp khi cần khóa nhiều mutex an toàn.
+
+</details>
+
+<details>
+<summary><strong>Câu 86: Deadlock là gì và phòng tránh thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Deadlock xảy ra khi các thread chờ tài nguyên của nhau vô thời hạn nên không thread nào tiếp tục được. Có thể hạn chế bằng cách thống nhất thứ tự lấy khóa, giữ khóa trong thời gian ngắn và dùng `scoped_lock` khi cần khóa nhiều mutex.
+
+</details>
+
+<details>
+<summary><strong>Câu 87: Deadlock, livelock và starvation khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Deadlock là các thread bị chặn và chờ nhau. Livelock là các thread vẫn hoạt động nhưng liên tục phản ứng với nhau nên không tiến triển. Starvation là một thread không được cấp CPU hoặc tài nguyên trong thời gian dài.
+
+</details>
+
+<details>
+<summary><strong>Câu 88: `condition_variable` dùng để làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `condition_variable` cho phép một thread ngủ và chờ đến khi điều kiện được thỏa mãn thay vì liên tục kiểm tra gây tốn CPU. Nó thường được dùng cùng mutex và `unique_lock`; thread khác gọi `notify_one()` hoặc `notify_all()` để đánh thức thread đang chờ.
+
+</details>
+
+<details>
+<summary><strong>Câu 89: Spurious wakeup là gì? Vì sao cần predicate?</strong></summary>
+
+**Trả lời phỏng vấn:** Spurious wakeup là trường hợp thread thức dậy dù điều kiện chưa thỏa mãn. Vì vậy, khi dùng condition variable phải luôn kiểm tra lại điều kiện bằng predicate sau khi thread thức dậy.
+
+</details>
+
+<details>
+<summary><strong>Câu 90: Producer–consumer là bài toán gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Producer–consumer là mô hình trong đó một nhóm thread tạo dữ liệu và nhóm khác xử lý dữ liệu thông qua hàng đợi dùng chung. Hàng đợi thường được bảo vệ bằng mutex, còn condition variable được dùng để thông báo khi có dữ liệu hoặc có chỗ trống.
+
+</details>
+
+<details>
+<summary><strong>Câu 91: `std::atomic` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `std::atomic` cho phép nhiều thread thao tác trên một biến bằng các phép toán nguyên tử mà không gây data race. Nó phù hợp với dữ liệu và thao tác đơn giản như counter hoặc flag.
+
+</details>
+
+<details>
+<summary><strong>Câu 92: Atomic và mutex khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Atomic phù hợp với thao tác đơn giản trên một biến. Mutex phù hợp khi cần bảo vệ nhiều dữ liệu hoặc nhiều thao tác phải được thực hiện như một khối thống nhất. Một biến atomic không tự động làm cho toàn bộ thuật toán trở thành thread-safe.
+
+</details>
+
+<details>
+<summary><strong>Câu 93: `volatile` và `atomic` khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `volatile` yêu cầu compiler không loại bỏ tùy ý các lần truy cập nhưng không bảo đảm atomic hoặc thread-safe. `std::atomic` cung cấp thao tác nguyên tử và cơ chế đồng bộ giữa các thread. Không dùng `volatile` để thay thế `atomic` trong đa luồng.
+
+</details>
+
+<details>
+<summary><strong>Câu 94: Memory ordering và happens-before là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Memory ordering quy định cách các thao tác bộ nhớ được quan sát giữa các thread. Nếu thao tác A happens-before thao tác B thì ảnh hưởng của A phải được B nhìn thấy. Quan hệ này được tạo bởi những cơ chế đồng bộ như mutex hoặc atomic với memory order phù hợp.
+
+</details>
+
+<details>
+<summary><strong>Câu 95: Thread-safe và reentrant khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Thread-safe nghĩa là hàm hoặc đối tượng có thể được nhiều thread sử dụng đồng thời mà vẫn đúng. Reentrant nghĩa là hàm có thể bị gọi lại trước khi lần gọi trước hoàn thành mà vẫn an toàn. Reentrant thường có yêu cầu chặt chẽ hơn thread-safe.
+
+</details>
+
+<details>
+<summary><strong>Câu 96: `future`, `promise` và `async` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `promise` dùng để cung cấp kết quả hoặc exception, `future` dùng để chờ và nhận kết quả đó, còn `std::async` hỗ trợ thực hiện một công việc bất đồng bộ và trả kết quả qua `future`.
+
+</details>
+
+<details>
+<summary><strong>Câu 97: Semaphore là gì? Khác mutex thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Mutex cung cấp quyền sở hữu độc quyền để bảo vệ critical section. Semaphore quản lý một bộ đếm và giới hạn số thread được truy cập tài nguyên cùng lúc. Semaphore không có khái niệm chủ sở hữu giống mutex.
+
+</details>
+
+<details>
+<summary><strong>Câu 98: Thread pool là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Thread pool là tập hợp các worker thread được tạo sẵn để xử lý công việc trong hàng đợi. Nó giảm chi phí liên tục tạo và hủy thread, đồng thời giúp giới hạn số thread chạy đồng thời.
+
+</details>
+
+<details>
+<summary><strong>Câu 99: Priority inversion là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Priority inversion xảy ra khi thread ưu tiên cao phải chờ tài nguyên do thread ưu tiên thấp giữ, trong khi thread ưu tiên trung bình tiếp tục chiếm CPU. Một giải pháp phổ biến là priority inheritance.
+
+</details>
+
+<details>
+<summary><strong>Câu 100: Khi thiết kế chương trình đa luồng cần lưu ý gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Cần hạn chế dữ liệu dùng chung, đồng bộ đúng critical section, tránh deadlock, giữ khóa trong thời gian ngắn, dùng RAII và quản lý vòng đời thread rõ ràng. Chỉ nên dùng đa luồng khi lợi ích lớn hơn chi phí đồng bộ và context switch.
+
+</details>
+
+<details>
+<summary><strong>Câu 101: `shared_mutex` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `shared_mutex` phù hợp với dữ liệu được đọc nhiều và ghi ít. Nhiều reader có thể cùng giữ shared lock, nhưng writer cần quyền truy cập độc quyền nên khi ghi không thread nào khác được đọc hoặc ghi.
+
+</details>
+
+<details>
+<summary><strong>Câu 102: `recursive_mutex` và `timed_mutex` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `recursive_mutex` cho phép cùng một thread khóa mutex nhiều lần và phải mở khóa đúng số lần. `timed_mutex` cho phép thử lấy khóa với giới hạn thời gian thay vì chờ vô hạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 103: `thread_local` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `thread_local` tạo một phiên bản biến riêng cho mỗi thread. Thay đổi ở thread này không ảnh hưởng đến phiên bản của thread khác, và mỗi phiên bản tồn tại trong suốt thời gian sống của thread tương ứng.
+
+</details>
+
+<details>
+<summary><strong>Câu 104: Compare-and-swap — CAS là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** CAS là thao tác nguyên tử so sánh giá trị hiện tại với giá trị mong đợi và chỉ cập nhật thành giá trị mới nếu chúng bằng nhau. Đây là nền tảng của nhiều thuật toán lock-free.
+
+</details>
+
+<details>
+<summary><strong>Câu 105: Lock-free và wait-free khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Lock-free bảo đảm toàn hệ thống luôn có ít nhất một thread tiến triển nhưng một thread cụ thể vẫn có thể chờ lâu. Wait-free mạnh hơn vì bảo đảm mỗi thread hoàn thành thao tác sau một số bước hữu hạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 106: ABA problem là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** ABA xảy ra khi giá trị thay đổi từ A sang B rồi quay lại A, khiến CAS nhìn thấy A và cho rằng dữ liệu chưa thay đổi. Có thể hạn chế bằng version counter, tagged pointer hoặc kỹ thuật quản lý bộ nhớ phù hợp.
+
+</details>
+
+<details>
+<summary><strong>Câu 107: False sharing là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** False sharing xảy ra khi các thread sửa những biến khác nhau nhưng các biến nằm trên cùng một cache line. CPU phải liên tục đồng bộ và vô hiệu hóa cache line, làm giảm hiệu năng dù dữ liệu không thực sự được dùng chung.
+
+</details>
+
+<details>
+<summary><strong>Câu 108: Cache coherence có làm chương trình thread-safe không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không. Cache coherence giúp các CPU core duy trì dữ liệu cache nhất quán nhưng không tự bảo đảm atomicity, memory ordering hoặc loại bỏ data race. Chương trình vẫn cần mutex, atomic hoặc cơ chế đồng bộ thích hợp.
+
+</details>
+
+<details>
+<summary><strong>Câu 109: `memory_order` trong C++ gồm những loại nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Các loại gồm `relaxed`, `consume`, `acquire`, `release`, `acq_rel` và `seq_cst`. Chúng quy định mức độ sắp xếp và đồng bộ của thao tác atomic. `seq_cst` mạnh và dễ hiểu nhất; `relaxed` chỉ bảo đảm tính nguyên tử; `consume` hiếm khi được sử dụng trực tiếp.
+
+</details>
+
+<details>
+<summary><strong>Câu 110: `memory_order_relaxed` bảo đảm điều gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `memory_order_relaxed` bảo đảm thao tác trên chính biến atomic là nguyên tử nhưng không thiết lập thứ tự hoặc đồng bộ với các dữ liệu khác giữa các thread.
+
+</details>
+
+<details>
+<summary><strong>Câu 111: Acquire và release hoạt động thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Release công bố các thao tác xảy ra trước nó, còn acquire tiếp nhận các thay đổi đó. Khi một acquire đọc được giá trị từ release tương ứng, các thao tác trước release sẽ được thread acquire nhìn thấy.
+
+</details>
+
+<details>
+<summary><strong>Câu 112: `memory_order_seq_cst` là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `memory_order_seq_cst` cung cấp thứ tự nhất quán tuần tự, làm các thao tác atomic `seq_cst` được quan sát theo một thứ tự chung. Đây là memory order mặc định và dễ sử dụng nhất nhưng có thể hạn chế tối ưu hóa.
+
+</details>
+
+<details>
+<summary><strong>Câu 113: Memory fence là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Memory fence là rào cản dùng để thiết lập thứ tự giữa các thao tác bộ nhớ, hạn chế compiler hoặc CPU sắp xếp một số thao tác qua rào cản đó. Đây là cơ chế nâng cao và cần kết hợp đúng với atomic để tạo đồng bộ hợp lệ.
+
+</details>
+
+<details>
+<summary><strong>Câu 114: `std::jthread` khác `std::thread` thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `std::jthread` được thêm từ C++20, tự động yêu cầu dừng rồi `join()` khi bị hủy và hỗ trợ cooperative cancellation qua `stop_token`. `std::thread` yêu cầu lập trình viên tự `join()` hoặc `detach()`.
+
+</details>
+
+<details>
+<summary><strong>Câu 115: `stop_token` có buộc thread dừng ngay không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không. `stop_token` chỉ truyền yêu cầu dừng theo cơ chế cooperative cancellation. Thread phải chủ động kiểm tra yêu cầu, dọn dẹp tài nguyên và tự kết thúc an toàn.
+
+</details>
+
+<details>
+<summary><strong>Câu 116: `latch` và `barrier` khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `latch` là điểm đồng bộ sử dụng một lần; khi bộ đếm giảm về 0, các thread được tiếp tục. `barrier` đồng bộ các thread theo nhiều giai đoạn và có thể tự tái sử dụng sau mỗi giai đoạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 117: `launch::async` và `launch::deferred` khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `launch::async` yêu cầu công việc được thực hiện bất đồng bộ. `launch::deferred` trì hoãn công việc cho đến khi gọi `get()` hoặc `wait()` trên `future`. Nếu không chỉ định chính sách, implementation có thể lựa chọn.
+
+</details>
+
+<details>
+<summary><strong>Câu 118: Điều gì xảy ra nếu exception thoát khỏi hàm của `std::thread`?</strong></summary>
+
+**Trả lời phỏng vấn:** Nếu exception thoát khỏi hàm chạy bởi `std::thread` mà không được bắt, chương trình gọi `std::terminate()`. Vì vậy, thread nên bắt exception và truyền lỗi về thread quản lý qua `promise`, `future` hoặc `exception_ptr`.
+
+</details>
+
+<details>
+<summary><strong>Câu 119: `std::call_once` và `once_flag` dùng để làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `std::call_once` kết hợp với `once_flag` bảo đảm một thao tác chỉ được thực hiện thành công đúng một lần dù nhiều thread cùng gọi. Nó thường dùng để khởi tạo tài nguyên dùng chung hoặc cài đặt thread-safe Singleton.
+
+</details>
+
+<details>
+<summary><strong>Câu 120: Làm thế nào để debug và tối ưu chương trình đa luồng?</strong></summary>
+
+**Trả lời phỏng vấn:** Khi debug, cần kiểm tra data race, deadlock, thứ tự lấy khóa, vòng đời thread và ghi log kèm thread ID. Khi tối ưu, cần giảm dữ liệu dùng chung, giữ khóa ngắn, giới hạn số thread, kiểm tra false sharing và luôn đo hiệu năng trước khi thay đổi. CPU affinity chỉ nên dùng khi có lý do và số liệu rõ ràng.
+
+</details>
+
+---
+
+### Ghi nhớ nhanh đa luồng
+
+- Process chứa tài nguyên; thread thực hiện công việc.
+- Dữ liệu dùng chung phải được đồng bộ đúng cách.
+- Mutex bảo vệ một khối thao tác; atomic phù hợp với thao tác đơn giản.
+- `volatile` không thay thế `atomic`.
+- Condition variable phải luôn kiểm tra điều kiện bằng predicate.
+- Thống nhất thứ tự lấy khóa để hạn chế deadlock.
+- Dùng RAII để khóa được tự động giải phóng.
+- Quản lý rõ vòng đời và cách kết thúc thread.
 
 </details>
 
