@@ -1,7 +1,7 @@
 <details>
 <summary><h1>Luyện phỏng vấn C/C++ Embedded</h1></summary>
 
-> Bản tổng hợp Câu 1–120.  
+> Bản tổng hợp Câu 1–140.  
 
 > Phần STL đã được tinh gọn theo hướng phỏng vấn: bỏ các câu đi quá sâu vào từng hàm riêng lẻ của `std::vector`.
 
@@ -1525,6 +1525,180 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 - Thống nhất thứ tự lấy khóa để hạn chế deadlock.
 - Dùng RAII để khóa được tự động giải phóng.
 - Quản lý rõ vòng đời và cách kết thúc thread.
+
+</details>
+
+<details>
+<summary><h1>IPC — Giao tiếp giữa các process — Câu 121–140</h1></summary>
+
+<details>
+<summary><strong>Câu 121: IPC là gì và tại sao process cần IPC?</strong></summary>
+
+**Trả lời phỏng vấn:** IPC là tập hợp các cơ chế cho phép những process có vùng nhớ riêng trao đổi dữ liệu và đồng bộ với nhau. IPC cần thiết vì một process thông thường không thể trực tiếp truy cập biến nằm trong không gian địa chỉ của process khác.
+
+</details>
+
+<details>
+<summary><strong>Câu 122: Những cơ chế IPC phổ biến là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Các cơ chế IPC phổ biến gồm pipe, named pipe, shared memory, message queue, socket, signal, semaphore, memory-mapped file và RPC. Cơ chế phù hợp phụ thuộc vào phạm vi giao tiếp, lượng dữ liệu, hiệu năng và độ phức tạp chấp nhận được.
+
+**Lưu ý:** Thư viện chuẩn C++ chưa cung cấp đầy đủ IPC tổng quát; chương trình thường dùng API hệ điều hành hoặc thư viện bên ngoài.
+
+</details>
+
+<details>
+<summary><strong>Câu 123: Anonymous pipe là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Anonymous pipe là kênh IPC không có tên, thường dùng giữa process cha và process con. Nó truyền dữ liệu dạng byte stream và thường hoạt động một chiều; muốn giao tiếp hai chiều thường cần hai pipe.
+
+</details>
+
+<details>
+<summary><strong>Câu 124: Named pipe là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Named pipe là pipe có tên, cho phép các process độc lập không có quan hệ cha–con giao tiếp với nhau. Nó thường dùng cho IPC trên cùng máy và có thể hỗ trợ mô hình client–server hoặc giao tiếp hai chiều tùy hệ điều hành và cấu hình.
+
+</details>
+
+<details>
+<summary><strong>Câu 125: Pipe có bảo toàn ranh giới message không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không nên mặc định pipe luôn bảo toàn ranh giới message. Với pipe dạng byte stream, một lần ghi có thể phải đọc nhiều lần hoặc nhiều lần ghi có thể được đọc chung. Ứng dụng cần tự thiết kế message framing, chẳng hạn gửi độ dài trước dữ liệu. Một số named pipe trên Windows có thể được cấu hình theo message mode.
+
+</details>
+
+<details>
+<summary><strong>Câu 126: Shared memory là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Shared memory ánh xạ cùng một vùng nhớ vào nhiều process để các process đọc và ghi trực tiếp. Nó có hiệu năng cao và hạn chế sao chép dữ liệu, nhưng chương trình phải tự đồng bộ để tránh race condition và hỏng dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 127: Đồng bộ shared memory như thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Shared memory chỉ cung cấp vùng dữ liệu chung, không tự đồng bộ. Cần dùng semaphore, mutex liên process, process-shared mutex hoặc cơ chế atomic phù hợp để bảo vệ dữ liệu. Không nên chỉ dùng một biến `bool` thông thường làm cờ đồng bộ.
+
+</details>
+
+<details>
+<summary><strong>Câu 128: Message queue là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Message queue truyền dữ liệu theo từng message thông qua một hàng đợi do hệ thống hoặc middleware quản lý. Nó phù hợp với giao tiếp bất đồng bộ, bảo toàn ranh giới message và giúp tách biệt bên gửi với bên nhận.
+
+</details>
+
+<details>
+<summary><strong>Câu 129: Shared memory và message queue khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Shared memory thường nhanh hơn và phù hợp với dữ liệu lớn nhưng phức tạp về đồng bộ và quản lý cấu trúc dữ liệu. Message queue dễ tổ chức hơn, có ranh giới message rõ ràng nhưng thường có thêm overhead sao chép và quản lý.
+
+</details>
+
+<details>
+<summary><strong>Câu 130: Socket là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Socket là một endpoint giao tiếp hai chiều, cho phép các process trao đổi dữ liệu trên cùng máy hoặc qua mạng. Socket thường được sử dụng theo mô hình client–server.
+
+</details>
+
+<details>
+<summary><strong>Câu 131: Local socket và network socket khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Local socket chỉ dùng giữa các process trên cùng máy, còn network socket dùng địa chỉ mạng và port để giao tiếp trên cùng máy hoặc giữa các máy. Khi không cần qua mạng, local socket thường có overhead thấp hơn và phạm vi truy cập dễ kiểm soát hơn.
+
+</details>
+
+<details>
+<summary><strong>Câu 132: TCP có bảo toàn ranh giới message không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không. TCP cung cấp một byte stream liên tục nên một lần `send()` không nhất thiết tương ứng với một lần `recv()`. Chương trình phải xử lý partial send, partial receive và tự thiết kế message framing bằng độ dài, ký hiệu kết thúc hoặc message có kích thước cố định.
+
+</details>
+
+<details>
+<summary><strong>Câu 133: Signal là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Signal là cơ chế thông báo sự kiện bất đồng bộ cho một process, chẳng hạn yêu cầu dừng hoặc báo một sự kiện hệ thống. Nó phù hợp cho tín hiệu điều khiển đơn giản nhưng không phải kênh truyền lượng dữ liệu lớn.
+
+</details>
+
+<details>
+<summary><strong>Câu 134: Semaphore, mutex và event liên process khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Mutex dùng cho quyền sở hữu độc quyền một tài nguyên. Semaphore dùng bộ đếm để giới hạn số process hoặc thread được truy cập đồng thời. Event dùng để báo hiệu rằng một sự kiện hoặc trạng thái đã xảy ra.
+
+</details>
+
+<details>
+<summary><strong>Câu 135: Memory-mapped file là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Memory-mapped file ánh xạ nội dung file vào không gian địa chỉ để chương trình truy cập giống như vùng nhớ. Nó có thể dùng để xử lý file lớn hoặc chia sẻ dữ liệu giữa các process, nhưng vẫn cần đồng bộ khi có nhiều bên cùng ghi.
+
+</details>
+
+<details>
+<summary><strong>Câu 136: RPC là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** RPC cho phép một process gọi thủ tục hoặc dịch vụ nằm trong process hoặc máy khác như một lời gọi hàm. Bên dưới vẫn phải đóng gói dữ liệu, truyền request, thực hiện xử lý và trả response. RPC có độ trễ và khả năng thất bại nên không thể xem hoàn toàn giống lời gọi cục bộ.
+
+</details>
+
+<details>
+<summary><strong>Câu 137: Serialization và deserialization là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Serialization chuyển object hoặc cấu trúc dữ liệu thành định dạng có thể truyền hoặc lưu trữ; deserialization khôi phục dữ liệu ở phía nhận. Hai phía phải thống nhất định dạng, kích thước kiểu, byte order và phiên bản giao thức.
+
+**Lưu ý:** Không nên gửi trực tiếp toàn bộ byte của một C/C++ `struct` nếu chưa xử lý padding, con trỏ và byte order.
+
+</details>
+
+<details>
+<summary><strong>Câu 138: Blocking, non-blocking, synchronous và asynchronous khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Blocking và non-blocking mô tả lời gọi có làm thread chờ hay trả về ngay. Synchronous và asynchronous mô tả cách tổ chức công việc và nhận kết quả. Hai cặp khái niệm có liên quan nhưng không hoàn toàn giống nhau.
+
+</details>
+
+<details>
+<summary><strong>Câu 139: IPC cần lưu ý gì về bảo mật và độ tin cậy?</strong></summary>
+
+**Trả lời phỏng vấn:** Không được mặc định tin tưởng dữ liệu IPC. Cần kiểm tra quyền truy cập, danh tính bên kết nối, định dạng và kích thước dữ liệu; đồng thời xử lý timeout, mất kết nối, partial read/write, process bị treo, phiên bản giao thức và việc dọn dẹp tài nguyên.
+
+</details>
+
+<details>
+<summary><strong>Câu 140: Chọn cơ chế IPC như thế nào?</strong></summary>
+
+| Nhu cầu | Cơ chế phù hợp |
+|---|---|
+| Process cha–con, dữ liệu đơn giản | Anonymous pipe |
+| Process độc lập trên cùng máy | Named pipe hoặc local socket |
+| Dữ liệu lớn, yêu cầu tốc độ cao | Shared memory |
+| Truyền từng message bất đồng bộ | Message queue |
+| Giao tiếp qua mạng | Socket |
+| Chia sẻ hoặc xử lý file lớn | Memory-mapped file |
+| Gọi dịch vụ ở process hoặc máy khác | RPC |
+| Thông báo sự kiện đơn giản | Signal hoặc event |
+
+**Trả lời phỏng vấn:** Tôi chọn IPC dựa trên phạm vi giao tiếp, lượng dữ liệu, yêu cầu hiệu năng, mô hình message, khả năng đồng bộ, bảo mật và độ phức tạp. Shared memory nhanh nhưng khó đồng bộ; pipe và message queue dễ tổ chức hơn; socket phù hợp khi cần giao tiếp qua mạng.
+
+**Trên Windows C++:** Các cơ chế thường gặp gồm Named Pipe, socket, named mutex/semaphore/event, `CreateFileMapping()` kết hợp `MapViewOfFile()`, và `WM_COPYDATA` cho dữ liệu nhỏ giữa các ứng dụng có cửa sổ.
+
+</details>
+
+---
+
+### Ghi nhớ nhanh IPC
+
+- Pipe phù hợp với luồng dữ liệu đơn giản.
+- Shared memory nhanh nhưng phải tự đồng bộ.
+- Message queue truyền theo từng message.
+- Socket dùng được trên cùng máy hoặc qua mạng.
+- TCP là byte stream, không bảo toàn ranh giới message.
+- Serialization phải xử lý padding, con trỏ, byte order và phiên bản.
+- Luôn xử lý timeout, partial read/write, mất kết nối và dọn dẹp tài nguyên.
 
 </details>
 
