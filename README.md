@@ -122,7 +122,613 @@
 <details>
 <summary><strong>Câu 17: Bốn tính chất chính của lập trình hướng đối tượng là gì?</strong></summary>
 
-**Trả lời phỏng vấn:** Bốn tính chất gồm đóng gói, kế thừa, đa hình và trừu tượng. Đa hình cho phép các đối tượng khác nhau phản ứng khác nhau với cùng một lời gọi hàm.
+**Trả lời phỏng vấn:** Bốn tính chất chính của OOP là **Encapsulation (Đóng gói)**, **Inheritance (Kế thừa)**, **Polymorphism (Đa hình)** và **Abstraction (Trừu tượng)**.
+
+---
+
+# Tổng hợp kiến thức OOP
+
+## 1. OOP là gì?
+
+**OOP – Object-Oriented Programming** là lập trình hướng đối tượng.
+
+Ý tưởng chính là tổ chức chương trình dựa trên:
+
+- **Class** → khuôn mẫu.
+- **Object** → đối tượng được tạo từ class.
+- Object có:
+  - **Attribute / Property** → dữ liệu, trạng thái.
+  - **Method** → hành vi.
+
+Ví dụ ngoài đời:
+
+```text
+Class: Car
+```
+
+Thuộc tính:
+
+- color
+- speed
+
+Hành vi:
+
+- start()
+- stop()
+
+Từ `Car` có thể tạo nhiều object:
+
+```text
+car1
+car2
+car3
+```
+
+Mỗi object có dữ liệu riêng.
+
+### Cách trả lời phỏng vấn
+
+> OOP là phương pháp lập trình tổ chức chương trình dựa trên các object. Object chứa dữ liệu và các method xử lý dữ liệu đó.
+
+---
+
+## 2. Class.
+
+### Class là gì?
+
+**Class là bản thiết kế/khuôn mẫu dùng để tạo object.**
+
+Class định nghĩa:
+
+```text
+Class
+ ├── Attribute
+ └── Method
+```
+
+Ví dụ C++:
+
+```cpp
+class Student
+{
+public:
+    int id;
+    string name;
+
+    void display()
+    {
+        cout << id << " " << name;
+    }
+};
+```
+
+Ở đây:
+
+- `Student` là **class**.
+- `id`, `name` là **attribute/member variable**.
+- `display()` là **method/member function**.
+
+Điểm cần nhớ:
+
+- Class là kiểu dữ liệu do người dùng định nghĩa.
+- Class là bản thiết kế để tạo object.
+- Có thể tạo nhiều object từ một class.
+- Bộ nhớ cho dữ liệu của object được tạo khi object tồn tại.
+
+### Cách nhớ
+
+> **Class = bản thiết kế.**
+
+```text
+Bản thiết kế xe → Class
+Chiếc xe thật   → Object
+```
+
+### Trả lời phỏng vấn
+
+> Class là khuôn mẫu định nghĩa dữ liệu và các method mà object của class đó sẽ có.
+
+---
+
+## 3. Object
+
+### Object là gì?
+
+**Object là một instance/thể hiện cụ thể của class.**
+
+Ví dụ:
+
+```cpp
+Student s1;
+Student s2;
+```
+
+`Student` là class.
+
+`s1`, `s2` là hai object.
+
+Ta có thể:
+
+```cpp
+s1.id = 101;
+s1.name = "An";
+
+s2.id = 102;
+s2.name = "Linh";
+```
+
+Mặc dù cùng một class, mỗi object có dữ liệu riêng:
+
+```text
+Student
+   |
+   +---- s1
+   |     id = 101
+   |     name = An
+   |
+   +---- s2
+         id = 102
+         name = Linh
+```
+
+### Cách nhớ
+
+> **Class = khuôn. Object = sản phẩm được tạo từ khuôn.**
+
+### Trả lời phỏng vấn
+
+> Object là một instance của class. Mỗi object có trạng thái dữ liệu riêng và có thể gọi các method được định nghĩa trong class.
+
+---
+
+## 4. Method
+
+### Method là gì?
+
+Method là **hàm nằm trong class**, dùng để mô tả hành vi của object.
+
+Ví dụ:
+
+```cpp
+class Calculator
+{
+public:
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+};
+```
+
+Tạo object:
+
+```cpp
+Calculator calc;
+int result = calc.add(5, 3);
+```
+
+Quá trình có thể hiểu:
+
+```text
+calc.add(5,3)
+      ↓
+a = 5, b = 3
+      ↓
+a + b
+      ↓
+return 8
+```
+
+Method:
+
+- có thể nhận tham số;
+- có thể trả về giá trị;
+- cũng có thể không trả về giá trị (`void`);
+- dùng để mô tả hành vi của object.
+
+### Cách nhớ
+
+```text
+Attribute = object CÓ GÌ
+Method    = object LÀM GÌ
+```
+
+Ví dụ:
+
+```text
+Car
+
+Attribute:
+speed
+
+Method:
+start()
+stop()
+```
+
+### Trả lời phỏng vấn
+
+> Method là hàm thành viên của class, dùng để định nghĩa hành vi hoặc xử lý dữ liệu của object.
+
+---
+
+## 5. Constructor
+
+### Constructor là gì?
+
+Constructor là một **hàm đặc biệt dùng để khởi tạo object**.
+
+Trong C++:
+
+- tên constructor giống tên class;
+- không có kiểu trả về;
+- được gọi tự động khi object được tạo.
+
+Ví dụ:
+
+```cpp
+class Student
+{
+public:
+    int id;
+    string name;
+
+    Student(int i, string n)
+    {
+        id = i;
+        name = n;
+    }
+};
+```
+
+Khi:
+
+```cpp
+Student s1(101, "An");
+```
+
+thì có thể hiểu:
+
+```text
+Tạo s1
+   ↓
+Constructor Student(...) được gọi
+   ↓
+id = 101
+name = "An"
+   ↓
+Object được khởi tạo
+```
+
+Một class có thể có nhiều constructor với tham số khác nhau.
+
+Ví dụ:
+
+```cpp
+class Student
+{
+public:
+    Student()
+    {
+    }
+
+    Student(int id)
+    {
+    }
+
+    Student(int id, string name)
+    {
+    }
+};
+```
+
+Đây chính là **constructor overloading**.
+
+### Cách nhớ
+
+> Constructor = hàm chạy khi object được tạo để thiết lập trạng thái ban đầu.
+
+### Trả lời phỏng vấn
+
+> Constructor là hàm đặc biệt của class, được gọi tự động khi object được tạo và thường dùng để khởi tạo dữ liệu cho object.
+
+---
+
+## 6. Inheritance – Kế thừa
+
+Inheritance cho phép **class con kế thừa thuộc tính và method của class cha**.
+
+Ví dụ:
+
+```cpp
+class Animal
+{
+public:
+    void eat()
+    {
+        cout << "eat";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void bark()
+    {
+        cout << "bark";
+    }
+};
+```
+
+`Dog` có:
+
+```text
+eat()   ← kế thừa từ Animal
+bark()  ← của riêng Dog
+```
+
+Do đó:
+
+```cpp
+Dog d;
+d.eat();
+d.bark();
+```
+
+Quan hệ này thường gọi là:
+
+> **IS-A**
+
+Ví dụ:
+
+```text
+Dog IS-A Animal
+```
+
+Lợi ích:
+
+- tái sử dụng code;
+- tránh viết lại;
+- class con có thể mở rộng class cha;
+- hỗ trợ polymorphism.
+
+### Cách nhớ
+
+> **Inheritance = class con lấy lại những gì class cha đã có.**
+
+### Trả lời phỏng vấn
+
+> Inheritance cho phép class con kế thừa dữ liệu và method từ class cha để tái sử dụng và mở rộng code.
+
+---
+
+## 7. Polymorphism – Đa hình
+
+Polymorphism nghĩa là:
+
+> **Một hành động có thể có nhiều cách thực hiện tùy object.**
+
+Có hai loại chính.
+
+### Compile-time Polymorphism
+
+Thường thông qua **overloading**.
+
+Ví dụ:
+
+```cpp
+int add(int a, int b);
+int add(int a, int b, int c);
+double add(double a, double b);
+```
+
+Cùng tên:
+
+```text
+add()
+```
+
+nhưng khác tham số.
+
+Compiler quyết định gọi hàm nào khi compile.
+
+### Runtime Polymorphism
+
+Thông qua **overriding**.
+
+Ý tưởng:
+
+```text
+Animal
+  |
+  +-- Dog
+  |
+  +-- Cat
+```
+
+Cùng hành động:
+
+```text
+sound()
+```
+
+nhưng:
+
+```text
+Dog → gâu gâu
+Cat → meo meo
+```
+
+Trong C++ thường kết hợp với `virtual`:
+
+```cpp
+class Animal
+{
+public:
+    virtual void sound()
+    {
+        cout << "Animal";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void sound() override
+    {
+        cout << "Dog";
+    }
+};
+```
+
+### Nhớ nhanh
+
+```text
+Overloading
+→ cùng tên
+→ khác tham số
+→ compile time
+
+Overriding
+→ class con ghi đè method class cha
+→ runtime
+```
+
+### Trả lời phỏng vấn
+
+> Polymorphism cho phép cùng một interface hoặc lời gọi hàm nhưng có hành vi khác nhau tùy đối tượng. Compile-time thường dùng overloading, runtime thường dùng virtual function và overriding.
+
+---
+
+## 8. Encapsulation – Đóng gói
+
+Encapsulation nghĩa là:
+
+> **Đóng dữ liệu và các method xử lý dữ liệu vào trong class, đồng thời hạn chế truy cập trực tiếp dữ liệu.**
+
+Ví dụ:
+
+```cpp
+class Student
+{
+private:
+    int id;
+
+public:
+    void setId(int value)
+    {
+        id = value;
+    }
+
+    int getId()
+    {
+        return id;
+    }
+};
+```
+
+Bên ngoài không được:
+
+```cpp
+Student s;
+// s.id = 10;   // không được vì private
+```
+
+Mà truy cập thông qua method:
+
+```cpp
+s.setId(10);
+cout << s.getId();
+```
+
+Cơ chế:
+
+```text
+Bên ngoài
+    |
+    | setId()
+    v
++----------------+
+| Student        |
+|                |
+| private:       |
+|   id           |
+|                |
+| public:        |
+|   setId()      |
+|   getId()      |
++----------------+
+```
+
+Lợi ích:
+
+- bảo vệ dữ liệu;
+- hạn chế truy cập trái phép;
+- kiểm soát cách dữ liệu bị thay đổi;
+- code dễ bảo trì hơn.
+
+### Cách nhớ
+
+> **Encapsulation = giấu dữ liệu bên trong, bên ngoài thao tác thông qua interface.**
+
+### Trả lời phỏng vấn
+
+> Encapsulation là đóng gói dữ liệu và method trong class, đồng thời giới hạn truy cập trực tiếp vào dữ liệu, thường bằng `private` và cung cấp public method để thao tác.
+
+---
+
+## 9. Abstraction – Trừu tượng
+
+Trong bộ kiến thức bạn cung cấp, **Abstraction được liệt kê là một khái niệm chính của OOP nhưng chưa có phần giải thích chi tiết riêng**.
+
+Vì vậy hiện tại ghi nhận:
+
+```text
+Các khái niệm chính:
+
+Class
+Object
+Inheritance
+Polymorphism
+Abstraction
+Encapsulation
+```
+
+Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm kiến thức ngoài nội dung bạn đang học.
+
+---
+
+## 10. Sơ đồ tổng hợp dễ nhớ
+
+```text
+                    OOP
+                     |
+        +------------+------------+
+        |                         |
+      Class                    Object
+    Khuôn mẫu              Thể hiện của class
+        |
+        +---- Attribute → dữ liệu
+        |
+        +---- Method    → hành vi
+        |
+        +---- Constructor
+              khởi tạo object
+
+4 khái niệm thường gặp
+        |
+        +---- Encapsulation
+        |     Đóng gói / bảo vệ dữ liệu
+        |
+        +---- Inheritance
+        |     Class con kế thừa class cha
+        |
+        +---- Polymorphism
+        |     Một interface, nhiều hành vi
+        |
+        +---- Abstraction
+              Trừu tượng
+```
 
 </details>
 
