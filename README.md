@@ -1543,6 +1543,18 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 
 **Trả lời phỏng vấn:** Các cơ chế IPC phổ biến gồm pipe, named pipe, shared memory, message queue, socket, signal, semaphore, memory-mapped file và RPC. Cơ chế phù hợp phụ thuộc vào phạm vi giao tiếp, lượng dữ liệu, hiệu năng và độ phức tạp chấp nhận được.
 
+| Cơ chế IPC | Là gì? | Dùng khi nào? | Điểm cần nhớ |
+|---|---|---|---|
+| **Pipe (anonymous pipe)** | Kênh truyền byte không có tên, thường nối process cha và process con | Truyền dữ liệu đơn giản giữa các process có quan hệ cha–con; chuyển hướng `stdin`/`stdout` | Thường một chiều; muốn hai chiều thường cần hai pipe |
+| **Named pipe** | Pipe có tên do hệ điều hành quản lý | Giao tiếp giữa các process độc lập trên cùng máy; mô hình client–server | Có thể hỗ trợ hai chiều; Windows có byte mode và message mode |
+| **Shared memory** | Nhiều process cùng ánh xạ và truy cập một vùng nhớ | Truyền dữ liệu lớn hoặc cần độ trễ thấp | Thường rất nhanh nhưng phải dùng cơ chế đồng bộ riêng |
+| **Message queue** | Hàng đợi truyền dữ liệu theo từng message | Producer–consumer, xử lý bất đồng bộ, các bên không cần hoạt động cùng lúc | Bảo toàn ranh giới message nhưng thường có thêm overhead |
+| **Socket** | Hai endpoint trao đổi dữ liệu trên cùng máy hoặc qua mạng | Giao tiếp client–server, giữa các máy hoặc khi cần giao thức mạng | TCP là byte stream; ứng dụng phải tự xử lý ranh giới message |
+| **Signal / event** | Cơ chế thông báo rằng một sự kiện đã xảy ra | Báo dừng, đánh thức hoặc thông báo thay đổi trạng thái | Phù hợp để báo hiệu, không phù hợp truyền dữ liệu lớn |
+| **Semaphore / named mutex** | Cơ chế đồng bộ có thể được nhiều process cùng sử dụng | Bảo vệ shared memory hoặc giới hạn số process truy cập tài nguyên | Chủ yếu dùng để đồng bộ, không phải để truyền nội dung dữ liệu |
+| **Memory-mapped file** | Ánh xạ file hoặc vùng mapping vào không gian địa chỉ của process | Chia sẻ dữ liệu lớn, xử lý file lớn hoặc cần dữ liệu có thể lưu lại | Nhiều process cùng ghi thì vẫn phải đồng bộ |
+| **RPC** | Gọi một hàm hoặc dịch vụ nằm trong process hay máy khác | Kiến trúc dịch vụ, request–response, ứng dụng phân tán | Cần serialization; có độ trễ, timeout và khả năng thất bại |
+
 **Lưu ý:** Thư viện chuẩn C++ chưa cung cấp đầy đủ IPC tổng quát; chương trình thường dùng API hệ điều hành hoặc thư viện bên ngoài.
 
 </details>
