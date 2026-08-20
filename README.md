@@ -973,6 +973,100 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 <summary><strong>Câu 51: STL là gì?</strong></summary>
 
 **Trả lời phỏng vấn:** STL là thư viện chuẩn C++ cung cấp các cấu trúc dữ liệu và thuật toán dùng sẵn. Ba thành phần chính thường được nhắc đến là Container, Algorithm và Iterator.
+### 1. Container là gì?
+
+**Container** là cấu trúc dùng để lưu trữ và quản lý một tập hợp các phần tử. Mỗi container có cách tổ chức dữ liệu, tốc độ truy cập, chèn, xóa và tìm kiếm khác nhau.
+
+#### Nhóm Sequence Container
+
+Các phần tử được tổ chức theo thứ tự tuyến tính.
+
+| Container | Cấu tạo / đặc điểm | Khi nào dùng? |
+|---|---|---|
+| `array` | Mảng có kích thước cố định; phần tử liên tiếp | Biết kích thước ngay từ compile time |
+| `vector` | Mảng động; phần tử liên tiếp | Cần truy cập nhanh theo index và chủ yếu thêm ở cuối |
+| `deque` | Hàng đợi hai đầu; không bảo đảm toàn bộ phần tử liên tiếp | Cần thêm hoặc xóa nhanh ở cả đầu và cuối |
+| `list` | Danh sách liên kết kép | Cần chèn hoặc xóa thường xuyên tại vị trí đã biết qua iterator |
+| `forward_list` | Danh sách liên kết đơn | Cần danh sách một chiều và muốn giảm chi phí bộ nhớ so với `list` |
+
+#### Nhóm Associative Container
+
+Dữ liệu được sắp xếp theo key; thường được triển khai bằng cây cân bằng.
+
+| Container | Dữ liệu lưu trữ | Trùng lặp | Khi nào dùng? |
+|---|---|---|---|
+| `set` | Value | Không trùng | Cần value duy nhất và có thứ tự |
+| `multiset` | Value | Được trùng | Cần value có thứ tự và cho phép trùng |
+| `map` | Key–value | Key không trùng | Cần tra cứu theo key và duyệt theo thứ tự key |
+| `multimap` | Key–value | Key được trùng | Một key cần liên kết với nhiều value và vẫn có thứ tự |
+
+#### Nhóm Unordered Associative Container
+
+Dữ liệu thường được tổ chức bằng hash table và không bảo đảm thứ tự.
+
+| Container | Dữ liệu lưu trữ | Trùng lặp | Khi nào dùng? |
+|---|---|---|---|
+| `unordered_set` | Value | Không trùng | Cần kiểm tra value tồn tại nhanh, không cần thứ tự |
+| `unordered_multiset` | Value | Được trùng | Cần lưu value trùng và không cần thứ tự |
+| `unordered_map` | Key–value | Key không trùng | Cần tìm kiếm theo key nhanh trung bình, không cần thứ tự |
+| `unordered_multimap` | Key–value | Key được trùng | Một key có nhiều value và không cần thứ tự |
+
+#### Nhóm Container Adapter
+
+Container adapter cung cấp một giao diện sử dụng đặc biệt trên một container bên dưới.
+
+| Container adapter | Nguyên tắc | Khi nào dùng? |
+|---|---|---|
+| `stack` | LIFO – vào sau ra trước | Undo/redo, DFS, xử lý theo thứ tự ngược |
+| `queue` | FIFO – vào trước ra trước | Task queue, message queue, xử lý tuần tự |
+| `priority_queue` | Phần tử có độ ưu tiên cao nhất được lấy trước | Lập lịch, xử lý công việc theo độ ưu tiên |
+
+**Trả lời ngắn về Container:**
+
+> Container là cấu trúc STL dùng để lưu và quản lý một tập hợp phần tử. Việc chọn container phụ thuộc vào yêu cầu truy cập, tìm kiếm, chèn, xóa và thứ tự dữ liệu.
+
+### 2. Algorithm là gì?
+
+**Algorithm** là các hàm có sẵn dùng để xử lý dữ liệu, chẳng hạn tìm kiếm, sắp xếp, đếm, sao chép hoặc biến đổi. Algorithm thường không làm việc trực tiếp với một container cụ thể mà làm việc trên một khoảng iterator dạng `[first, last)`.
+
+| Nhóm | Algorithm phổ biến | Tác dụng |
+|---|---|---|
+| Tìm kiếm | `find`, `find_if`, `binary_search` | Tìm value hoặc phần tử thỏa điều kiện |
+| Đếm và kiểm tra | `count`, `count_if`, `all_of`, `any_of`, `none_of` | Đếm hoặc kiểm tra điều kiện trên các phần tử |
+| Sắp xếp | `sort`, `stable_sort`, `partial_sort` | Sắp xếp toàn bộ hoặc một phần dữ liệu |
+| Xác định vị trí | `lower_bound`, `upper_bound`, `equal_range` | Tìm vị trí trong một range đã sắp xếp |
+| Sao chép và di chuyển | `copy`, `copy_if`, `move` | Sao chép hoặc di chuyển phần tử sang vùng khác |
+| Biến đổi | `transform`, `replace`, `replace_if` | Thay đổi hoặc tạo dữ liệu từ các phần tử hiện có |
+| Loại bỏ logic | `remove`, `remove_if`, `unique` | Dồn các phần tử cần giữ lại; thường kết hợp `erase()` để xóa thật khỏi container |
+| Giá trị nhỏ/lớn | `min_element`, `max_element`, `minmax_element` | Tìm phần tử nhỏ nhất hoặc lớn nhất |
+| Duyệt | `for_each` | Thực hiện một thao tác trên từng phần tử |
+| Tính toán | `accumulate`, `iota` | Tính tổng hoặc tạo dãy giá trị; thuộc header `<numeric>` |
+| Heap | `make_heap`, `push_heap`, `pop_heap`, `sort_heap` | Tạo và thao tác với cấu trúc heap |
+
+**Trả lời ngắn về Algorithm:**
+
+> Algorithm là các hàm xử lý dữ liệu dùng sẵn của STL. Chúng thường nhận một range iterator nên có thể tái sử dụng với nhiều container khác nhau.
+
+### 3. Iterator là gì?
+
+**Iterator** là đối tượng dùng để xác định vị trí và duyệt phần tử trong container. Iterator tạo cầu nối giữa Container và Algorithm.
+
+| Loại iterator | Khả năng chính | Ví dụ thường gặp |
+|---|---|---|
+| Input iterator | Đọc và tiến về phía trước | Iterator đọc dữ liệu đầu vào |
+| Output iterator | Ghi và tiến về phía trước | `back_inserter` |
+| Forward iterator | Đọc/ghi, đi một chiều nhiều lần | `forward_list`, `unordered_map` |
+| Bidirectional iterator | Đi tới và đi lùi | `list`, `set`, `map` |
+| Random-access iterator | Nhảy đến vị trí bất kỳ, hỗ trợ phép toán khoảng cách | `vector`, `deque` |
+| Contiguous iterator | Random access và các phần tử nằm liên tiếp trong bộ nhớ | `array`, `vector` |
+
+**Trả lời ngắn về Iterator:**
+
+# Iterator là abstraction dùng để truy cập và duyệt phần tử trong container. Algorithm nhận iterator để có thể hoạt động với nhiều loại container.Hiểu đơn giản Iterator là một biến dùng để xác định vị trí và duyệt qua các phần tử trong container.
+
+### Mối quan hệ giữa ba thành phần
+
+> **Container lưu dữ liệu → Iterator truy cập dữ liệu → Algorithm xử lý dữ liệu.**
 
 </details>
 
