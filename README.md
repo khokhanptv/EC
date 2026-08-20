@@ -898,7 +898,70 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 <details>
 <summary><strong>Câu 41: `static` trong C/C++ có những cách sử dụng nào?</strong></summary>
 
-**Trả lời phỏng vấn:** `static` ngoài hàm giới hạn symbol trong file hiện tại; `static` local chỉ khởi tạo một lần và giữ giá trị giữa các lần gọi hàm; `static` member trong class được dùng chung cho tất cả object của class.
+**Trả lời phỏng vấn:** `static` ngoài hàm giới hạn symbol trong file hiện tại; `static` local chỉ khởi tạo một lần và giữ giá trị giữa các lần gọi hàm; `static` member trong class được dùng chung cho tất cả object của class.Ưu điểm là tiết kiệm bộ nhớ và phù hợp để lưu trạng thái chung. Nhược điểm là hoạt động giống global state, khó kiểm soát và cần đồng bộ khi sử dụng đa luồng.
+| Loại | Nội dung | Giải thích |
+|---|---|---|
+| Ưu điểm | Dùng chung dữ liệu | Tất cả object cùng sử dụng một biến duy nhất |
+| Ưu điểm | Tiết kiệm bộ nhớ | Không tạo một bản riêng cho từng object |
+| Ưu điểm | Truy cập không cần object | Có thể truy cập bằng `TênClass::tênBiến` |
+| Ưu điểm | Quản lý thông tin chung | Phù hợp để đếm số object hoặc lưu trạng thái chung của class |
+| Nhược điểm | Hoạt động giống biến global | Có thể bị thay đổi từ nhiều nơi nên khó kiểm soát |
+| Nhược điểm | Khó kiểm thử | Các bài test có thể ảnh hưởng lẫn nhau vì cùng dùng chung dữ liệu |
+| Nhược điểm | Không lưu dữ liệu riêng | Không phù hợp nếu mỗi object cần một giá trị khác nhau |
+| Nhược điểm | Có thể xảy ra data race | Nhiều thread cùng thay đổi thì cần `mutex` hoặc `atomic` bảo vệ |
+| Nhược điểm | Tồn tại lâu | Biến thường tồn tại trong suốt thời gian chương trình chạy |
+ví dụ:
+
+```c++
+class Test {
+public:
+    static int x;
+};
+
+int Test::x = 0;
+
+int main() {
+    Test a;
+    Test b;
+
+    a.x = 10;
+
+    cout << b.x;  // Kết quả: 10
+}
+```
+
+
+
+# Singleton là một design pattern(giải pháp thiết kế) đảm bảo:
+👉 Trong chương trình chỉ tồn tại duy nhất 1 object của class.
+| Tiêu chí | Static data member | Singleton |
+|---|---|---|
+| Cái duy nhất | Một biến của class | Một object của class |
+| Số lượng | Mỗi static member chỉ có một bản | Class chỉ cho phép sử dụng một object |
+| Phạm vi chia sẻ | Chia sẻ một giá trị | Chia sẻ toàn bộ trạng thái và hành vi của object |
+| Cách truy cập | `ClassName::member` | `ClassName::GetInstance()` |
+| Ví dụ | `static int count` | `Singleton Logger` |
+
+> Ưu điểm là dễ quản lý tài nguyên chung; nhược điểm là tạo global state, tăng phụ thuộc, khó kiểm thử và cần đồng bộ khi dùng đa luồng.>
+```c++
+ví dụ:
+class Logger {
+private:
+    Logger() {} // không cho tạo từ bên ngoài
+
+public:
+    static Logger& getInstance() {
+        static Logger instance; // chỉ tạo 1 lần
+        return instance;
+    }
+};
+
+int main() {
+    Logger& a = Logger::getInstance();
+    Logger& b = Logger::getInstance();
+}
+
+```
 
 </details>
 
