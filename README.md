@@ -1871,12 +1871,6 @@ Container adapter cung cấp một giao diện sử dụng đặc biệt trên m
 
 </details>
 
-<details>
-<summary><h1>FPT Telecom</h1></summary>
-
-
-
-</details>
 
 <details>
 <summary><h1>FPT Telecom</h1></summary>
