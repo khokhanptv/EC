@@ -1878,6 +1878,886 @@ Container adapter cung cấp một giao diện sử dụng đặc biệt trên m
 
 </details>
 
+<details>
+<summary><h1>FPT Telecom</h1></summary>
+
+## 1. Công việc chính
+
+Phát triển và maintain embedded software cho **FPT Play Box** và **Smart Home**, tập trung vào:
+
+| Công việc | Ví dụ đơn giản |
+|---|---|
+| **Xử lý kết nối** | Kiểm tra thiết bị có kết nối Wi-Fi và kết nối với máy chủ của FPT hay không; nếu mất kết nối thì kết nối lại |
+| **Điều khiển thiết bị** | Nhận lệnh bật/tắt từ máy chủ của FPT rồi thực hiện bật/tắt thiết bị |
+| **Theo dõi trạng thái thiết bị** | Kiểm tra thiết bị đang bật, tắt, online hay offline rồi gửi trạng thái đó lên máy chủ của FPT |
+| **Kết nối thiết bị với hệ thống máy chủ** | Nhận dữ liệu hoặc lệnh từ máy chủ, đọc nội dung lệnh, xử lý rồi gửi kết quả hoặc trạng thái của thiết bị ngược lại |
+
+Ngoài ra còn:
+
+- **Debugging**: tìm và sửa lỗi trong chương trình, thường dựa vào log hoặc dùng GDB/gdbserver để kiểm tra process, breakpoint, biến và call stack.
+- **Functional Test**: kiểm tra **từng chức năng riêng lẻ có hoạt động đúng yêu cầu hay không**.  
+  Ví dụ: gửi lệnh `ON` thì thiết bị có thực sự bật hay không; mất Wi-Fi thì thiết bị có tự kết nối lại hay không.
+- **Integration Test**: kiểm tra **nhiều thành phần khi kết nối với nhau có hoạt động đúng hay không**.  
+  Ví dụ: máy chủ gửi lệnh qua MQTT → thiết bị nhận lệnh → bật thiết bị → gửi trạng thái `ON` ngược lại cho máy chủ.
+- **Technical Document**: viết tài liệu kỹ thuật như cách build, cách cài đặt, cách test, mô tả luồng xử lý hoặc hướng dẫn debug.
+
+---
+
+## 2. Ngôn ngữ
+
+- C
+- C++
+
+---
+
+## 3. Công nghệ
+
+- OpenWrt
+- Wi-Fi
+- MQTT
+- Git
+- SVN
+
+---
+
+# KIẾN THỨC LIÊN QUAN
+
+## 4. Linux Kernel là gì?
+
+**Linux Kernel** là phần lõi của hệ điều hành Linux.
+
+Nó quản lý:
+
+- CPU
+- RAM
+- Process
+- File system
+- Driver
+- Thiết bị phần cứng
+
+Dễ nhớ:
+
+> Kernel = phần trung tâm quản lý toàn bộ hệ thống.
+
+---
+
+## 5. User Space và Kernel Space
+
+### User Space
+
+Là nơi các application chạy.
+
+Ví dụ:
+
+```text
+my_app
+MQTT client
+Web service
+```
+
+### Kernel Space
+
+Là nơi Linux Kernel và driver chạy.
+
+Dễ nhớ:
+
+```text
+User Space   → Application
+Kernel Space → Kernel + Driver
+```
+
+---
+
+## 6. Process và Thread
+
+### Process
+
+Là một chương trình đang chạy.
+
+Ví dụ:
+
+```text
+my_app
+```
+
+khi được chạy sẽ trở thành một process.
+
+### Thread
+
+Là một luồng thực thi bên trong process.
+
+Một process có thể có nhiều thread.
+
+Dễ nhớ:
+
+```text
+Process
+├── Thread 1
+├── Thread 2
+└── Thread 3
+```
+
+---
+
+## 7. OpenWrt là gì?
+
+**OpenWrt** là hệ điều hành Linux dành cho thiết bị mạng và embedded.
+
+Ví dụ:
+
+- Router
+- Gateway
+- Smart Home device
+- Access Point
+
+Dễ nhớ:
+
+> OpenWrt = Linux dành cho thiết bị mạng/embedded.
+
+---
+
+## 8. Embedded Linux khác Bare-metal MCU thế nào?
+
+### Embedded Linux
+
+Có:
+
+- Linux Kernel
+- Process
+- Thread
+- File system
+- Driver
+- Service
+
+### Bare-metal MCU
+
+Code chạy trực tiếp trên vi điều khiển.
+
+Thường không có hệ điều hành đầy đủ.
+
+Dễ nhớ:
+
+```text
+Embedded Linux
+→ Có Linux
+
+Bare-metal MCU
+→ Code chạy trực tiếp trên MCU
+```
+
+---
+
+## 9. Application / Service chạy trên OpenWrt là gì?
+
+### Application
+
+Là chương trình C/C++ chạy trên thiết bị.
+
+Ví dụ:
+
+```text
+my_app
+```
+
+có thể dùng để:
+
+- xử lý Wi-Fi
+- xử lý MQTT
+- nhận lệnh
+- điều khiển thiết bị
+- gửi trạng thái
+
+### Service
+
+Là chương trình thường chạy nền và có thể tự khởi động khi thiết bị bật.
+
+---
+
+## 10. File System Linux cơ bản
+
+Một số thư mục thường gặp:
+
+| Thư mục | Ý nghĩa |
+|---|---|
+| `/etc` | File cấu hình |
+| `/tmp` | File tạm |
+| `/usr` | Program và library |
+| `/dev` | Thiết bị |
+| `/proc` | Thông tin process và kernel |
+
+---
+
+## 11. Process / Service trên Device
+
+### Process
+
+Là chương trình đang chạy.
+
+Có thể kiểm tra bằng:
+
+```bash
+ps
+```
+
+hoặc:
+
+```bash
+top
+```
+
+### Service
+
+Là chương trình chạy nền.
+
+Ví dụ service có thể tự chạy khi thiết bị OpenWrt khởi động.
+
+---
+
+## 12. SSH vào Device
+
+SSH dùng để truy cập terminal của thiết bị từ laptop qua mạng.
+
+Ví dụ:
+
+```bash
+ssh root@192.168.1.1
+```
+
+Sau khi SSH vào device có thể chạy:
+
+```bash
+ps
+top
+logread
+ls
+```
+
+Dễ nhớ:
+
+> SSH = vào terminal của thiết bị từ xa.
+
+---
+
+# BUILD / TOOLCHAIN
+
+## 13. Compiler là gì?
+
+Compiler dùng để dịch code C/C++ thành object code.
+
+Ví dụ:
+
+```text
+main.cpp
+   ↓
+Compiler
+   ↓
+main.o
+```
+
+---
+
+## 14. Linker là gì?
+
+Linker dùng để ghép:
+
+- các file `.o`
+- các library
+
+thành một chương trình hoàn chỉnh.
+
+Ví dụ:
+
+```text
+main.o
+network.o
+library
+   ↓
+Linker
+   ↓
+my_app
+```
+
+---
+
+## 15. Toolchain là gì?
+
+Toolchain là bộ công cụ dùng để build chương trình.
+
+Thường gồm:
+
+- Compiler
+- Linker
+- Assembler
+- Debugger
+
+Dễ nhớ:
+
+> Toolchain = bộ công cụ build software.
+
+---
+
+## 16. GCC là gì?
+
+GCC là bộ compiler/toolchain phổ biến dùng để compile C/C++.
+
+Dễ nhớ:
+
+> GCC = công cụ compile C/C++.
+
+---
+
+## 17. Cross-compile là gì?
+
+Cross-compile là:
+
+> Build chương trình trên một máy nhưng chương trình tạo ra chạy trên một máy khác.
+
+Ví dụ:
+
+```text
+Laptop x86
+   ↓ build
+
+Router ARM
+   ↓
+chạy chương trình
+```
+
+---
+
+## 18. Vì sao phải Cross-compile?
+
+Vì thiết bị embedded:
+
+- tài nguyên hạn chế
+- CPU khác laptop
+- thường không có môi trường build đầy đủ
+
+Nên ta build trên laptop rồi deploy lên thiết bị.
+
+---
+
+## 19. GCC Toolchain dùng để làm gì?
+
+Dùng để compile và link code C/C++.
+
+```text
+Source C/C++
+    ↓
+GCC Toolchain
+    ↓
+Executable
+```
+
+---
+
+## 20. OpenWrt SDK là gì?
+
+OpenWrt SDK là bộ công cụ dùng để build software/package cho thiết bị chạy OpenWrt.
+
+Flow:
+
+```text
+Source C/C++
+    ↓
+Makefile
+    ↓
+OpenWrt SDK
+    ↓
+GCC Cross-Compiler
+    ↓
+Executable / .ipk
+```
+
+---
+
+## 21. Makefile dùng để làm gì?
+
+Makefile mô tả cách build chương trình.
+
+Ví dụ nó cho biết:
+
+- compile file nào
+- link library nào
+- output tên gì
+- cách install package
+
+Dễ nhớ:
+
+> Makefile = hướng dẫn cách build.
+
+---
+
+## 22. `.o`, Executable và `.ipk`
+
+### `.o`
+
+File trung gian sau khi compile.
+
+### Executable
+
+File chương trình có thể chạy.
+
+### `.ipk`
+
+Package dùng để cài phần mềm trên OpenWrt.
+
+Flow:
+
+```text
+main.cpp
+   ↓
+Compiler
+   ↓
+main.o
+   ↓
+Linker
+   ↓
+my_app
+   ↓
+đóng package
+   ↓
+my_app.ipk
+```
+
+---
+
+# NETWORK CƠ BẢN
+
+## 23. IP Address
+
+Là địa chỉ của một thiết bị trong mạng.
+
+Dễ nhớ:
+
+> IP = địa chỉ của thiết bị.
+
+---
+
+## 24. TCP/IP cơ bản
+
+Là bộ giao thức giúp các thiết bị giao tiếp với nhau qua mạng.
+
+- **IP**: xác định địa chỉ thiết bị.
+- **TCP/UDP**: dùng để truyền dữ liệu.
+
+---
+
+## 25. TCP và UDP khác nhau
+
+### TCP
+
+- Có kết nối.
+- Đảm bảo dữ liệu đến.
+- Đảm bảo đúng thứ tự.
+- Tin cậy hơn.
+
+### UDP
+
+- Không cần tạo kết nối trước.
+- Nhanh hơn.
+- Không đảm bảo dữ liệu đến đầy đủ.
+
+---
+
+## 26. Client và Server
+
+### Client
+
+Là bên gửi yêu cầu hoặc chủ động tạo kết nối.
+
+### Server
+
+Là bên nhận và xử lý yêu cầu.
+
+---
+
+## 27. Socket là gì?
+
+Socket là điểm giao tiếp giữa hai chương trình qua mạng.
+
+Ví dụ:
+
+```text
+Client
+   ↓
+Socket
+   ↓
+Network
+   ↓
+Socket
+   ↓
+Server
+```
+
+---
+
+## 28. Port là gì?
+
+Port dùng để xác định application/service cụ thể trên một thiết bị.
+
+Dễ nhớ:
+
+```text
+IP   = địa chỉ ngôi nhà
+Port = số phòng
+```
+
+---
+
+## 29. DNS là gì?
+
+DNS dùng để chuyển tên miền thành IP address.
+
+Ví dụ:
+
+```text
+example.com
+   ↓
+DNS
+   ↓
+IP Address
+```
+
+---
+
+## 30. Wi-Fi Connection cơ bản
+
+Luồng đơn giản:
+
+```text
+Device
+   ↓
+Tìm Wi-Fi
+   ↓
+Kết nối Access Point
+   ↓
+Nhận IP
+   ↓
+Có thể giao tiếp mạng
+```
+
+---
+
+## 31. Reconnect khi mất Network
+
+Khi phát hiện mất Wi-Fi hoặc mất kết nối với server, chương trình sẽ thử kết nối lại.
+
+Ví dụ:
+
+```text
+Đang kết nối
+   ↓
+Mất mạng
+   ↓
+Phát hiện mất kết nối
+   ↓
+Chờ một khoảng thời gian
+   ↓
+Kết nối lại
+```
+
+---
+
+## 32. Timeout
+
+Timeout là thời gian tối đa mà chương trình chờ một thao tác hoặc phản hồi.
+
+Ví dụ:
+
+> Chờ server 5 giây. Nếu sau 5 giây không có phản hồi thì xem là timeout.
+
+---
+
+## 33. Retry
+
+Retry nghĩa là khi thao tác thất bại thì thử thực hiện lại.
+
+Ví dụ:
+
+```text
+Gửi dữ liệu
+   ↓
+Thất bại
+   ↓
+Retry
+   ↓
+Gửi lại
+```
+
+---
+
+# MQTT
+
+## 34. MQTT là gì?
+
+MQTT là giao thức truyền tin nhẹ, thường dùng trong:
+
+- IoT
+- Smart Home
+- Embedded device
+
+Dùng để thiết bị giao tiếp với hệ thống máy chủ.
+
+---
+
+## 35. Broker
+
+Broker là máy chủ trung gian của MQTT.
+
+Nó:
+
+- nhận message
+- xác định topic
+- chuyển message cho các bên đã đăng ký topic đó
+
+---
+
+## 36. Publisher
+
+Publisher là bên gửi message.
+
+Ví dụ:
+
+```text
+Device
+↓
+Publish trạng thái
+```
+
+---
+
+## 37. Subscriber
+
+Subscriber là bên đăng ký để nhận message.
+
+Ví dụ:
+
+```text
+Device
+↓
+Subscribe topic điều khiển
+↓
+Nhận lệnh ON/OFF
+```
+
+---
+
+## 38. Topic
+
+Topic là tên/kênh dùng để phân loại message.
+
+Ví dụ:
+
+```text
+home/light/control
+home/light/status
+```
+
+---
+
+## 39. Publish / Subscribe
+
+### Publish
+
+Gửi message lên một topic.
+
+### Subscribe
+
+Đăng ký nhận message từ một topic.
+
+Ví dụ:
+
+```text
+Máy chủ
+   ↓ Publish "ON"
+home/light/control
+   ↓
+MQTT Broker
+   ↓
+Device đã Subscribe
+   ↓
+Nhận "ON"
+```
+
+---
+
+## 40. QoS 0 / 1 / 2
+
+### QoS 0
+
+- Gửi một lần.
+- Không đảm bảo bên nhận nhận được.
+
+### QoS 1
+
+- Đảm bảo nhận ít nhất một lần.
+- Có thể nhận trùng.
+
+### QoS 2
+
+- Đảm bảo nhận đúng một lần.
+- Phức tạp hơn.
+
+Dễ nhớ:
+
+```text
+QoS 0 → nhanh, không đảm bảo
+QoS 1 → ít nhất 1 lần
+QoS 2 → đúng 1 lần
+```
+
+---
+
+## 41. Retained Message
+
+Broker giữ lại message cuối cùng của một topic.
+
+Khi subscriber mới subscribe topic đó, broker có thể gửi ngay message cuối cùng cho subscriber.
+
+---
+
+## 42. Keep Alive
+
+Keep Alive dùng để kiểm tra client và MQTT Broker còn kết nối với nhau hay không.
+
+Nếu quá lâu không có giao tiếp, kết nối có thể được xem là đã mất.
+
+---
+
+## 43. MQTT Reconnect
+
+Khi kết nối MQTT bị mất:
+
+```text
+Phát hiện mất MQTT
+   ↓
+Chờ
+   ↓
+Kết nối lại Broker
+   ↓
+Subscribe lại các topic
+   ↓
+Tiếp tục hoạt động
+```
+
+---
+
+# DEVICE GIAO TIẾP VỚI HỆ THỐNG MÁY CHỦ
+
+## 44. Device giao tiếp với máy chủ như thế nào?
+
+Ví dụ với Smart Home:
+
+```text
+Mobile App
+    ↓
+Máy chủ của FPT
+    ↓
+MQTT Broker
+    ↓
+Device chạy OpenWrt
+    ↓
+Application C/C++
+```
+
+Ví dụ điều khiển:
+
+```text
+Người dùng bấm ON trên App
+        ↓
+Máy chủ gửi lệnh ON
+        ↓
+MQTT Broker
+        ↓
+Device nhận lệnh
+        ↓
+Application C/C++ xử lý
+        ↓
+Bật thiết bị
+        ↓
+Device gửi trạng thái ON
+        ↓
+Máy chủ nhận trạng thái
+```
+
+Dễ nhớ:
+
+> Device kết nối mạng qua Wi-Fi, giao tiếp với máy chủ bằng MQTT, nhận lệnh điều khiển và gửi trạng thái thiết bị ngược lại.
+
+---
+
+# DEBUG
+
+## 45. GDB / gdbserver là gì?
+
+### GDB
+
+Chạy trên máy phát triển, dùng để điều khiển quá trình debug.
+
+Có thể:
+
+- đặt breakpoint
+- xem biến
+- xem call stack
+- chạy từng bước
+
+### gdbserver
+
+Chạy trên thiết bị OpenWrt.
+
+Nó cho phép GDB trên máy phát triển kết nối tới chương trình đang chạy trên device.
+
+Flow:
+
+```text
+Laptop
+GDB
+  │
+  │ kết nối qua mạng
+  ↓
+OpenWrt Device
+gdbserver
+  │
+  ↓
+Application C/C++
+```
+
+Dễ nhớ:
+
+> GDB ở laptop, gdbserver ở device.
+
+---
+
+# TÓM TẮT CÔNG VIỆC FPT TELECOM
+
+## 46. Cách nhớ ngắn gọn
+
+```text
+C/C++
+  ↓
+GCC Toolchain + OpenWrt SDK
+  ↓
+Build
+  ↓
+Executable / .ipk
+  ↓
+Deploy lên device OpenWrt
+  ↓
+Device kết nối Wi-Fi
+  ↓
+Giao tiếp máy chủ qua MQTT
+  ↓
+Nhận lệnh / điều khiển / gửi trạng thái
+  ↓
+Test + Debug
+```
+
+## 47. Câu trả lời phỏng vấn ngắn
+
+> Em phát triển application C/C++ chạy trên OpenWrt cho FPT Play Box và Smart Home. Công việc chính của em là xử lý kết nối Wi-Fi/MQTT, nhận lệnh điều khiển từ máy chủ, thực hiện trên thiết bị và gửi trạng thái thiết bị ngược lại. Software được cross-compile bằng GCC Toolchain và OpenWrt SDK, sau đó deploy lên device để functional test, integration test và debug.
+
+</details>
 
 
 <!--
