@@ -3932,15 +3932,45 @@ Khi xử lý cần kiểm tra:
 
 ## 77. Unit Test, Functional Test, Integration Test và System Test
 
-| Loại test | Kiểm tra gì? | Ví dụ |
-|---|---|---|
-| Unit Test | Hàm/class riêng lẻ | Test hàm parse MQTT payload |
-| Functional Test | Một chức năng theo yêu cầu | Device nhận `ON` và bật thiết bị |
-| Integration Test | Nhiều thành phần kết hợp | Server → MQTT → device → trạng thái phản hồi |
-| System Test | Toàn bộ hệ thống trong môi trường gần thực tế | App, backend, broker, network và device hoạt động cùng nhau |
+| Loại test | Kiểm tra gì? | Ví dụ | Framework/công cụ thường dùng |
+|---|---|---|---|
+| Unit Test | Kiểm tra từng hàm hoặc class riêng lẻ | Test hàm parse MQTT payload | C: Unity, CMock, Ceedling. C++: GoogleTest, GoogleMock |
+| Functional Test | Kiểm tra một chức năng có đúng yêu cầu không | Device nhận lệnh `ON` và bật thiết bị | Python, Pytest, Robot Framework, shell script hoặc công cụ test nội bộ |
+| Integration Test | Kiểm tra nhiều thành phần kết hợp với nhau | Server → MQTT Broker → Device → gửi trạng thái phản hồi | Robot Framework, Pytest, Mosquitto client, Paho MQTT, test script |
+| System Test | Kiểm tra toàn bộ hệ thống trong môi trường gần thực tế | App, backend, broker, network và device hoạt động cùng nhau | Thiết bị thật, test bench, hệ thống backend test và công cụ mô phỏng network |
+Công cụ Unit Test cho C
 
----
+Công cụ	Dùng để làm gì?
+Unity	Framework viết và chạy Unit Test cho C
+CMock	Tự động tạo mock/stub cho các function C phụ thuộc
+Ceedling	Quản lý build và chạy test; tích hợp Unity và CMock
+Unity: dùng để viết test và kiểm tra kết quả bằng assertion.
+CMock: giả lập các thành phần phụ thuộc như MQTT, Wi-Fi hoặc hardware API.
+Ceedling: quản lý việc build, chạy và tổng hợp kết quả test.
 
+Unity được thiết kế riêng cho Unit Test C và phù hợp với embedded; CMock tạo mock/stub cho C; Ceedling kết hợp Unity, CMock và hệ thống build test. Unity, CMock, Ceedling
+
+Công cụ Unit Test cho C++
+Công cụ	Dùng để làm gì?
+GoogleTest	Framework viết và chạy Unit Test cho C++
+GoogleMock	Tạo mock object để giả lập các class phụ thuộc
+
+GoogleTest là framework Unit Test C++; GoogleMock được tích hợp cùng dự án và hỗ trợ tạo mock class. GoogleTest/GoogleMock
+
+Ví dụ liên quan FPT Telecom
+Hàm cần test:
+ParseMqttCommand("{\"command\":\"ON\"}")
+
+Unit Test kiểm tra:
+- Payload hợp lệ → trả về lệnh ON.
+- Thiếu field command → báo lỗi.
+- Payload sai định dạng → không làm process crash.
+- Command không hỗ trợ → từ chối xử lý.
+Trả lời phỏng vấn
+
+Unit Test kiểm tra từng hàm hoặc class riêng lẻ. Với C có thể dùng Unity, CMock và Ceedling; với C++ có thể dùng GoogleTest và GoogleMock. Functional Test kiểm tra một chức năng, Integration Test kiểm tra nhiều thành phần kết hợp và System Test kiểm tra toàn bộ hệ thống trong môi trường gần thực tế.
+
+Lưu ý: đây là các công cụ thường dùng, chưa thể khẳng định dự án FPT Telecom thực tế dùng chính xác framework nào nếu team chưa cung cấp thông tin.
 ## 78. Các công cụ debug Linux ngoài GDB
 
 | Công cụ | Công dụng |
