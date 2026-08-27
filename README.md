@@ -1416,6 +1416,286 @@ Container adapter cung cấp một giao diện sử dụng đặc biệt trên m
 
 **Trả lời phỏng vấn:** Mutex là cơ chế loại trừ lẫn nhau, dùng để bảo vệ tài nguyên dùng chung bằng cách chỉ cho một thread truy cập critical section tại một thời điểm.
 
+
+# MULTITHREADING SYNCHRONIZATION
+
+## 1. `mutex`
+
+> Cơ chế đồng bộ dùng để bảo vệ tài nguyên dùng chung, đảm bảo chỉ một thread truy cập tại một thời điểm.
+>
+> **Ví dụ:** Hai thread cùng cập nhật `balance`, `mutex` đảm bảo chỉ một thread sửa tại một thời điểm.
+>
+> **Dùng để tránh:** Data Race, dữ liệu sai.
+
+---
+
+## 2. `lock()`
+
+> Hàm dùng để khóa `mutex`.
+>
+> Nếu mutex đang bị thread khác giữ thì thread hiện tại phải chờ.
+>
+> **Rủi ro:** Quên `unlock()` có thể gây treo hoặc Deadlock.
+
+---
+
+## 3. `unlock()`
+
+> Hàm dùng để mở khóa `mutex`.
+>
+> Sau khi xử lý xong tài nguyên dùng chung, thread gọi `unlock()` để thread khác có thể truy cập.
+>
+> **Khuyến nghị:** Ưu tiên `lock_guard` hoặc `unique_lock` để tránh quên `unlock()`.
+
+---
+
+## 4. `lock_guard`
+
+> Class quản lý `mutex` tự động theo RAII.
+>
+> Tạo object → tự `lock`.
+>
+> Ra khỏi scope → tự `unlock`.
+>
+> **Ưu điểm:** Đơn giản, an toàn, tránh quên `unlock()`.
+>
+> → Dùng khi chỉ cần lock từ đầu đến cuối scope.
+
+---
+
+## 5. `unique_lock`
+
+> Class quản lý `mutex` linh hoạt hơn `lock_guard`.
+>
+> Có thể `lock`, `unlock`, rồi `lock` lại khi cần.
+>
+> **Thường dùng với:** `condition_variable`.
+>
+> → Dùng khi cần quản lý lock linh hoạt.
+
+---
+
+## 6. `condition_variable`
+
+> Cho phép một thread `wait` đến khi thread khác `notify`.
+>
+> Thường đi với:
+>
+> `condition_variable + unique_lock + mutex`
+>
+> **Ví dụ:** Consumer chờ queue có dữ liệu. Producer thêm dữ liệu rồi gọi `notify_one()`.
+>
+> Khi `wait()`:
+>
+> - Mutex được tạm `unlock`.
+> - Thread chuyển sang chờ.
+> - Khi được `notify`, mutex được `lock` lại.
+>
+> → Thường dùng trong mô hình **Producer - Consumer**.
+
+---
+
+## 7. `shared_mutex`
+
+> Cho phép nhiều thread cùng đọc nhưng chỉ một thread được ghi tại một thời điểm.
+>
+> **Ví dụ:** Nhiều thread cùng đọc cấu hình, nhưng khi một thread sửa cấu hình thì phải độc quyền.
+>
+> → **Multiple Readers - Single Writer**.
+
+---
+
+## 8. `shared_lock`
+
+> Wrapper dùng với `shared_mutex` cho thao tác đọc.
+>
+> Nhiều thread có thể giữ `shared_lock` cùng lúc.
+>
+> **Ví dụ:** Thread A, B, C cùng đọc danh sách user.
+>
+> → `shared_lock` = **khóa đọc**.
+
+---
+
+## 9. Exclusive Lock / Write Lock
+
+> Khóa độc quyền dùng khi một thread cần ghi dữ liệu với `shared_mutex`.
+>
+> Khi Writer giữ lock:
+>
+> - Thread khác không được đọc.
+> - Thread khác không được ghi.
+>
+> Thường dùng:
+>
+> `unique_lock<shared_mutex>`
+>
+> → Exclusive Lock = **khóa ghi**.
+
+---
+
+## 10. `atomic`
+
+> Cho phép thao tác đơn giản trên dữ liệu được thực hiện an toàn giữa nhiều thread mà không cần mutex trong nhiều trường hợp.
+>
+> **Ví dụ:** Nhiều thread cùng tăng biến `counter`.
+>
+> Thường dùng cho:
+>
+> - Counter
+> - Flag
+> - Trạng thái đơn giản
+>
+> **Hạn chế:** Không phù hợp với logic phức tạp gồm nhiều biến.
+
+---
+
+## 11. Race Condition
+
+> Kết quả chương trình phụ thuộc vào thứ tự hoặc timing thực thi của các thread.
+>
+> **Ví dụ:** A chạy trước cho kết quả khác B chạy trước.
+>
+> **Hậu quả:**
+>
+> - Kết quả không ổn định.
+> - Bug khó tái hiện.
+>
+> **Xử lý:**
+>
+> - Dùng cơ chế đồng bộ phù hợp như `mutex`, `atomic`, `condition_variable`.
+
+---
+
+## 12. Data Race
+
+> Nhiều thread truy cập cùng một vùng dữ liệu, có ít nhất một thread ghi và không được đồng bộ đúng cách.
+>
+> **Ví dụ:** Hai thread cùng tăng `counter` từ `10`, nhưng kết quả cuối là `11` thay vì `12`.
+>
+> **Hậu quả:**
+>
+> - Dữ liệu sai.
+> - Mất update.
+> - Có thể crash.
+> - Trong C++ có thể gây **Undefined Behavior**.
+>
+> **Xử lý:**
+>
+> - Dùng `mutex`.
+> - Dữ liệu đơn giản có thể dùng `atomic`.
+>
+> → Data Race = **cùng truy cập dữ liệu, có ghi nhưng không được bảo vệ**.
+
+---
+
+## 13. Deadlock
+
+> Hai hoặc nhiều thread chờ tài nguyên của nhau và không thread nào tiếp tục được.
+>
+> **Ví dụ:**
+>
+> Thread A giữ Mutex 1, chờ Mutex 2.
+>
+> Thread B giữ Mutex 2, chờ Mutex 1.
+>
+> **Hậu quả:**
+>
+> - Thread bị treo.
+> - Chương trình có thể không phản hồi.
+>
+> **Xử lý / phòng tránh:**
+>
+> - Lock mutex theo cùng một thứ tự.
+> - Giữ thời gian lock ngắn.
+> - Có thể dùng `std::scoped_lock` khi lock nhiều mutex.
+>
+> → Deadlock = **đứng im chờ nhau**.
+
+---
+
+## 14. Livelock
+
+> Các thread vẫn chạy nhưng liên tục nhường hoặc retry nên không thread nào hoàn thành công việc.
+>
+> **Ví dụ:** Thread A nhường B, B lại nhường A, lặp lại liên tục.
+>
+> **Hậu quả:**
+>
+> - Công việc không hoàn thành.
+> - CPU vẫn bị sử dụng.
+>
+> **Xử lý / phòng tránh:**
+>
+> - Thêm delay hoặc random backoff.
+> - Giới hạn số lần retry.
+> - Thiết lập ưu tiên rõ ràng.
+>
+> → Livelock = **vẫn chạy nhưng không tiến triển**.
+
+---
+
+## 15. Starvation
+
+> Một thread phải chờ rất lâu vì các thread khác liên tục được ưu tiên sử dụng tài nguyên.
+>
+> **Ví dụ:** Reader liên tục lấy lock khiến Writer mãi không được ghi.
+>
+> **Hậu quả:**
+>
+> - Thread chờ quá lâu.
+> - Task có thể gần như không được thực hiện.
+>
+> **Xử lý / phòng tránh:**
+>
+> - Giữ lock ngắn.
+> - Sử dụng cơ chế scheduling hoặc lock công bằng hơn.
+>
+> → Starvation = **mãi không tới lượt**.
+
+---
+
+## 16. Critical Section
+
+> Đoạn code truy cập hoặc sửa tài nguyên dùng chung và cần được bảo vệ.
+>
+> **Ví dụ:** Đọc `balance` → cộng tiền → ghi lại `balance`.
+>
+> **Nếu không bảo vệ:**
+>
+> - Có thể xảy ra Data Race.
+> - Dữ liệu có thể sai.
+>
+> **Xử lý:**
+>
+> - Dùng `mutex`.
+> - Với dữ liệu đơn giản có thể dùng `atomic`.
+> - Giữ Critical Section càng ngắn càng tốt.
+>
+> → Critical Section = **đoạn code cần được bảo vệ**.
+
+---
+
+# Ghi nhớ nhanh
+
+| Khái niệm | Hiểu đơn giản |
+|---|---|
+| `mutex` | Khóa bảo vệ tài nguyên |
+| `lock()` | Khóa mutex |
+| `unlock()` | Mở mutex |
+| `lock_guard` | Tự lock, tự unlock |
+| `unique_lock` | Lock linh hoạt |
+| `condition_variable` | Wait / Notify giữa các thread |
+| `shared_mutex` | Nhiều Reader, một Writer |
+| `shared_lock` | Khóa đọc |
+| Exclusive Lock | Khóa ghi |
+| `atomic` | Thao tác đơn giản an toàn giữa thread |
+| Race Condition | Kết quả phụ thuộc timing |
+| Data Race | Có ghi dữ liệu nhưng không đồng bộ |
+| Deadlock | Đứng im chờ nhau |
+| Livelock | Vẫn chạy nhưng không tiến triển |
+| Starvation | Mãi không tới lượt |
+| Critical Section | Đoạn code cần bảo vệ |
 </details>
 
 <details>
@@ -1868,6 +2148,406 @@ Container adapter cung cấp một giao diện sử dụng đặc biệt trên m
 - TCP là byte stream, không bảo toàn ranh giới message.
 - Serialization phải xử lý padding, con trỏ, byte order và phiên bản.
 - Luôn xử lý timeout, partial read/write, mất kết nối và dọn dẹp tài nguyên.
+
+</details>
+
+
+<details>
+<summary><h1>C/C++ BỔ SUNG — Câu 141–165</h1></summary>
+
+> Phần này bổ sung các kiến thức C/C++ cốt lõi còn thiếu. Các chủ đề Embedded chuyên sâu sẽ được thêm sau.
+
+<details>
+<summary><strong>Câu 141: Exception là gì? `try`, `throw` và `catch` dùng để làm gì?</strong></summary>
+
+Exception là cơ chế báo và xử lý lỗi trong C++.
+
+- `try`: chứa đoạn code có thể phát sinh lỗi.
+- `throw`: phát ra exception.
+- `catch`: nhận và xử lý exception.
+
+```cpp
+try {
+    throw 10;
+} catch (int error) {
+    std::cout << error;
+}
+```
+
+**Trả lời phỏng vấn:** Exception là cơ chế xử lý lỗi trong C++. Code có khả năng lỗi được đặt trong `try`, lỗi được phát ra bằng `throw` và được xử lý trong `catch`.
+
+</details>
+
+<details>
+<summary><strong>Câu 142: Stack unwinding là gì? RAII liên quan thế nào đến exception?</strong></summary>
+
+Khi exception xảy ra, chương trình rời khỏi các hàm đang gọi để tìm `catch` phù hợp. Trong quá trình đó, destructor của các object local đã được tạo sẽ tự động chạy. Quá trình này gọi là **stack unwinding**.
+
+RAII giúp tài nguyên được giải phóng qua destructor, kể cả khi exception xảy ra.
+
+**Trả lời phỏng vấn:** Stack unwinding là quá trình C++ thoát dần khỏi các function call để tìm `catch` và gọi destructor của object local. Vì vậy, RAII giúp dọn dẹp tài nguyên an toàn khi có exception.
+
+</details>
+
+<details>
+<summary><strong>Câu 143: Reference và pointer khác nhau như thế nào?</strong></summary>
+
+| Tiêu chí | Reference | Pointer |
+|---|---|---|
+| Khởi tạo | Phải tham chiếu đến object khi khai báo | Có thể chưa trỏ đến object |
+| Giá trị null | Thông thường không được null | Có thể là `nullptr` |
+| Đổi đối tượng đích | Không thể đổi sau khi khởi tạo | Có thể trỏ sang object khác |
+| Truy cập | Dùng trực tiếp như biến thường | Phải dereference bằng `*` hoặc `->` |
+| Phép toán địa chỉ | Không hỗ trợ pointer arithmetic | Có hỗ trợ |
+
+**Trả lời phỏng vấn:** Reference là bí danh của một object và phải được khởi tạo ngay. Pointer lưu địa chỉ, có thể là `nullptr` và có thể đổi sang địa chỉ khác.
+
+</details>
+
+<details>
+<summary><strong>Câu 144: Vì sao thường truyền object bằng `const T&`?</strong></summary>
+
+```cpp
+void Print(const std::string& text);
+```
+
+- `&` tránh sao chép object.
+- `const` không cho hàm thay đổi object.
+- Phù hợp với object lớn như `std::string`, `vector` hoặc class.
+
+**Trả lời phỏng vấn:** Truyền bằng `const T&` giúp tránh chi phí copy và bảo đảm hàm không sửa object. Với kiểu nhỏ như `int` hoặc `char`, truyền tham trị thường đơn giản hơn.
+
+</details>
+
+<details>
+<summary><strong>Câu 145: `public`, `private` và `protected` khác nhau thế nào?</strong></summary>
+
+| Access specifier | Bên trong class | Class con | Code bên ngoài |
+|---|:---:|:---:|:---:|
+| `public` | Có | Có | Có |
+| `protected` | Có | Có | Không |
+| `private` | Có | Không truy cập trực tiếp | Không |
+
+**Trả lời phỏng vấn:** `public` cho phép truy cập từ bên ngoài; `protected` chỉ cho class hiện tại và class con; `private` chỉ cho chính class và friend truy cập.
+
+</details>
+
+<details>
+<summary><strong>Câu 146: Con trỏ `this` là gì?</strong></summary>
+
+`this` là con trỏ ngầm định trỏ đến object đang gọi hàm thành viên.
+
+```cpp
+class Student {
+private:
+    int age;
+public:
+    void SetAge(int age) {
+        this->age = age;
+    }
+};
+```
+
+**Trả lời phỏng vấn:** `this` trỏ đến object hiện tại. Nó thường dùng để phân biệt member với parameter cùng tên hoặc trả về chính object bằng `*this`.
+
+</details>
+
+<details>
+<summary><strong>Câu 147: Hàm thành viên `const` là gì?</strong></summary>
+
+```cpp
+int GetValue() const {
+    return value;
+}
+```
+
+Từ khóa `const` sau tên hàm bảo đảm hàm không thay đổi trạng thái thông thường của object và cho phép gọi hàm trên object `const`.
+
+**Trả lời phỏng vấn:** Hàm thành viên `const` cam kết không thay đổi object, ngoại trừ member `mutable`. Object `const` chỉ gọi được các hàm thành viên `const`.
+
+</details>
+
+<details>
+<summary><strong>Câu 148: Các loại constructor thường gặp là gì?</strong></summary>
+
+| Loại | Mục đích |
+|---|---|
+| Default constructor | Tạo object không cần đối số |
+| Parameterized constructor | Tạo object bằng các giá trị truyền vào |
+| Copy constructor | Tạo object mới từ một lvalue object khác |
+| Move constructor | Tạo object mới bằng cách nhận tài nguyên từ rvalue object khác |
+
+**Trả lời phỏng vấn:** Constructor dùng để khởi tạo object. Các loại thường gặp là default, parameterized, copy và move constructor.
+
+</details>
+
+<details>
+<summary><strong>Câu 149: Copy constructor và copy assignment khác nhau thế nào?</strong></summary>
+
+```cpp
+Test b = a;  // Copy constructor: b đang được tạo
+b = a;       // Copy assignment: b đã tồn tại
+```
+
+**Trả lời phỏng vấn:** Copy constructor tạo một object mới từ object khác. Copy assignment gán dữ liệu cho một object đã tồn tại và phải xử lý tài nguyên cũ của object đích.
+
+</details>
+
+<details>
+<summary><strong>Câu 150: Move constructor và move assignment khác nhau thế nào?</strong></summary>
+
+- Move constructor khởi tạo object mới bằng tài nguyên của object nguồn.
+- Move assignment chuyển tài nguyên vào object đã tồn tại và phải giải phóng tài nguyên cũ của object đích.
+- Object nguồn vẫn hợp lệ nhưng trạng thái sau move thường không được xác định cụ thể.
+
+**Trả lời phỏng vấn:** Move constructor dùng khi object đích đang được tạo; move assignment dùng khi object đích đã tồn tại. Cả hai thường chuyển quyền sở hữu tài nguyên thay vì sao chép toàn bộ dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 151: `= default` và `= delete` có ý nghĩa gì?</strong></summary>
+
+```cpp
+Test() = default;
+Test(const Test&) = delete;
+Test& operator=(const Test&) = delete;
+```
+
+- `= default`: yêu cầu compiler tạo implementation mặc định.
+- `= delete`: cấm sử dụng function đó.
+
+**Trả lời phỏng vấn:** `= default` yêu cầu compiler sinh hàm mặc định; `= delete` làm hàm không thể được gọi, thường dùng để cấm copy object.
+
+</details>
+
+<details>
+<summary><strong>Câu 152: Bốn phép cast trong C++ khác nhau thế nào?</strong></summary>
+
+| Cast | Công dụng chính |
+|---|---|
+| `static_cast` | Chuyển đổi kiểu có quan hệ rõ ràng và được kiểm tra ở compile time |
+| `dynamic_cast` | Downcast an toàn trong hệ phân cấp đa hình; kiểm tra ở runtime |
+| `const_cast` | Thêm hoặc bỏ `const`/`volatile` |
+| `reinterpret_cast` | Diễn giải lại bit/địa chỉ thành kiểu khác; rủi ro cao |
+
+**Trả lời phỏng vấn:** Nên dùng cast C++ theo đúng mục đích. `static_cast` cho chuyển đổi thông thường, `dynamic_cast` cho đa hình runtime, `const_cast` thay đổi constness và `reinterpret_cast` cho chuyển đổi mức thấp.
+
+</details>
+
+<details>
+<summary><strong>Câu 153: Lambda expression là gì?</strong></summary>
+
+Lambda là hàm không cần đặt tên, thường dùng làm callback hoặc truyền vào thuật toán STL.
+
+```cpp
+int factor = 2;
+auto multiply = [factor](int value) {
+    return value * factor;
+};
+```
+
+- `[=]`: capture biến bên ngoài theo value.
+- `[&]`: capture theo reference.
+- `[x]` hoặc `[&x]`: capture một biến cụ thể.
+
+**Trả lời phỏng vấn:** Lambda là function object được viết ngắn gọn ngay tại nơi sử dụng. Capture list quy định cách lambda sử dụng biến bên ngoài.
+
+</details>
+
+<details>
+<summary><strong>Câu 154: Operator overloading là gì?</strong></summary>
+
+Operator overloading cho phép định nghĩa cách toán tử hoạt động với kiểu dữ liệu do người dùng tạo.
+
+```cpp
+Point operator+(const Point& other) const;
+```
+
+Không thể tạo toán tử mới hoặc thay đổi độ ưu tiên và số lượng toán hạng của toán tử.
+
+**Trả lời phỏng vấn:** Operator overloading cho phép toán tử như `+`, `==` hoặc `<<` làm việc tự nhiên với class. Chỉ nên overload khi ý nghĩa của toán tử rõ ràng và dễ hiểu.
+
+</details>
+
+<details>
+<summary><strong>Câu 155: C string và `std::string` khác nhau thế nào?</strong></summary>
+
+| C string | `std::string` |
+|---|---|
+| Mảng `char` kết thúc bằng `\0` | Class quản lý chuỗi tự động |
+| Phải quản lý kích thước cẩn thận | Tự quản lý bộ nhớ |
+| Dùng `strlen`, `strcmp`, `strcpy`... | Có `size`, `find`, `append`, toán tử `+`... |
+| Dễ xảy ra buffer overflow | An toàn và thuận tiện hơn trong C++ |
+
+**Trả lời phỏng vấn:** C string là mảng `char` kết thúc bằng null character, còn `std::string` là class quản lý chuỗi và bộ nhớ tự động. Trong C++ nên ưu tiên `std::string` khi không bị giới hạn bởi API C.
+
+</details>
+
+<details>
+<summary><strong>Câu 156: Những lỗi bộ nhớ phổ biến trong C/C++ là gì?</strong></summary>
+
+| Lỗi | Ý nghĩa |
+|---|---|
+| Memory leak | Cấp phát nhưng không giải phóng |
+| Dangling pointer | Con trỏ trỏ tới vùng nhớ không còn hợp lệ |
+| Use-after-free | Truy cập vùng nhớ sau khi đã giải phóng |
+| Double free | Giải phóng cùng vùng nhớ nhiều lần |
+| Buffer overflow | Ghi vượt giới hạn buffer |
+| Out-of-bounds | Truy cập ngoài phạm vi mảng/container |
+| Null dereference | Dereference con trỏ null |
+
+**Trả lời phỏng vấn:** Các lỗi phổ biến gồm leak, use-after-free, double free, buffer overflow, out-of-bounds và null dereference. Nên dùng RAII, smart pointer, kiểm tra giới hạn và công cụ phân tích bộ nhớ để phòng tránh.
+
+</details>
+
+<details>
+<summary><strong>Câu 157: Include guard và `#pragma once` dùng để làm gì?</strong></summary>
+
+Chúng ngăn một header bị include nhiều lần trong cùng translation unit.
+
+```cpp
+#ifndef MY_CLASS_H
+#define MY_CLASS_H
+
+class MyClass {};
+
+#endif
+```
+
+Hoặc:
+
+```cpp
+#pragma once
+```
+
+**Trả lời phỏng vấn:** Include guard và `#pragma once` ngăn lỗi định nghĩa lặp khi một header được include nhiều lần. Include guard là cách chuẩn và portable; `#pragma once` ngắn gọn và được nhiều compiler hỗ trợ.
+
+</details>
+
+<details>
+<summary><strong>Câu 158: Composition và inheritance khác nhau thế nào?</strong></summary>
+
+- Inheritance biểu diễn quan hệ **is-a**: `Dog` là một `Animal`.
+- Composition biểu diễn quan hệ **has-a**: `Car` có một `Engine`.
+
+**Trả lời phỏng vấn:** Inheritance phù hợp khi class con thực sự là một dạng của class cha và cần đa hình. Composition ghép object từ các thành phần nhỏ, giảm phụ thuộc và thường linh hoạt hơn.
+
+</details>
+
+<details>
+<summary><strong>Câu 159: Interface trong C++ được biểu diễn như thế nào?</strong></summary>
+
+C++ không có từ khóa `interface`. Interface thường được biểu diễn bằng abstract class chứa các pure virtual function và virtual destructor.
+
+```cpp
+class ILogger {
+public:
+    virtual ~ILogger() = default;
+    virtual void Log(const std::string& message) = 0;
+};
+```
+
+**Trả lời phỏng vấn:** Interface trong C++ thường là abstract class chỉ khai báo hành vi qua pure virtual function. Nó giúp code phụ thuộc vào abstraction thay vì implementation cụ thể.
+
+</details>
+
+<details>
+<summary><strong>Câu 160: Diamond problem và virtual inheritance là gì?</strong></summary>
+
+Diamond problem xảy ra khi một class kế thừa từ hai class và cả hai class đó cùng kế thừa từ một base class, làm object có thể chứa hai bản sao của base.
+
+Virtual inheritance giúp các nhánh dùng chung một base subobject:
+
+```cpp
+class B : virtual public A {};
+class C : virtual public A {};
+```
+
+**Trả lời phỏng vấn:** Diamond problem gây trùng lặp và nhập nhằng base class trong multiple inheritance. Virtual inheritance bảo đảm class cuối chỉ có một base subobject dùng chung.
+
+</details>
+
+<details>
+<summary><strong>Câu 161: `friend` trong C++ là gì?</strong></summary>
+
+Function hoặc class được khai báo `friend` có thể truy cập member `private` và `protected`.
+
+**Trả lời phỏng vấn:** `friend` cấp quyền truy cập đặc biệt cho một function hoặc class khác. Nó hữu ích trong một số trường hợp như overload toán tử, nhưng nên hạn chế vì làm tăng phụ thuộc và giảm tính đóng gói.
+
+</details>
+
+<details>
+<summary><strong>Câu 162: Factory pattern là gì?</strong></summary>
+
+Factory tách logic tạo object khỏi nơi sử dụng object.
+
+```text
+CreateDevice("wifi") → WifiDevice
+CreateDevice("mqtt") → MqttDevice
+```
+
+**Trả lời phỏng vấn:** Factory là design pattern đóng gói việc tạo object và thường trả object thông qua interface/base class. Nó giúp code sử dụng không phụ thuộc trực tiếp vào class cụ thể.
+
+</details>
+
+<details>
+<summary><strong>Câu 163: Observer pattern là gì?</strong></summary>
+
+Observer cho phép một object thông báo cho nhiều object khác khi trạng thái thay đổi.
+
+```text
+NetworkManager mất kết nối
+        ↓ thông báo
+Logger, UI, ReconnectManager
+```
+
+**Trả lời phỏng vấn:** Observer thiết lập quan hệ một-nhiều. Khi subject thay đổi, các observer đã đăng ký sẽ được thông báo; thường dùng cho event, callback và cập nhật trạng thái.
+
+</details>
+
+<details>
+<summary><strong>Câu 164: `auto` và range-based `for` dùng để làm gì?</strong></summary>
+
+```cpp
+std::vector<int> numbers = {1, 2, 3};
+
+for (const auto& number : numbers) {
+    std::cout << number;
+}
+```
+
+- `auto`: compiler suy luận kiểu từ biểu thức khởi tạo.
+- Range-based `for`: duyệt các phần tử trong container ngắn gọn hơn.
+
+**Trả lời phỏng vấn:** `auto` giúp tránh lặp lại tên kiểu dài nhưng không làm C++ trở thành ngôn ngữ dynamic type. Range-based `for` giúp duyệt container rõ ràng; dùng `const auto&` để tránh copy khi chỉ đọc.
+
+</details>
+
+<details>
+<summary><strong>Câu 165: `size`, `capacity`, `reserve`, `resize`, `push_back` và `emplace_back` của `vector` khác nhau thế nào?</strong></summary>
+
+| Thành phần | Ý nghĩa |
+|---|---|
+| `size()` | Số phần tử đang có |
+| `capacity()` | Số phần tử có thể chứa trước khi phải cấp phát lại |
+| `reserve(n)` | Tăng capacity, không tạo thêm phần tử |
+| `resize(n)` | Thay đổi số phần tử thực tế |
+| `push_back(x)` | Thêm một object đã có vào cuối |
+| `emplace_back(...)` | Tạo object trực tiếp ở cuối từ các đối số |
+
+**Trả lời phỏng vấn:** `size` là số phần tử, còn `capacity` là dung lượng đã cấp phát. `reserve` chuẩn bị bộ nhớ nhưng không đổi size; `resize` làm thay đổi số phần tử. `emplace_back` có thể tạo phần tử trực tiếp trong container.
+
+</details>
+
+### Ghi nhớ nhanh C/C++ bổ sung
+
+- Exception: `try → throw → catch`.
+- Reference là bí danh; pointer lưu địa chỉ.
+- `const T&` tránh copy và không cho sửa object.
+- Copy/move constructor tạo object mới; assignment làm việc với object đã tồn tại.
+- Ưu tiên RAII và smart pointer để quản lý tài nguyên.
+- Composition là **has-a**; inheritance là **is-a**.
+- Factory dùng để tạo object; Observer dùng để thông báo sự kiện.
 
 </details>
 
@@ -2750,6 +3430,614 @@ Test + Debug
 ## 47. Câu trả lời phỏng vấn ngắn
 
 > Em phát triển application C/C++ chạy trên OpenWrt cho FPT Play Box và Smart Home. Công việc chính của em là xử lý kết nối Wi-Fi/MQTT, nhận lệnh điều khiển từ máy chủ, thực hiện trên thiết bị và gửi trạng thái thiết bị ngược lại. Software được cross-compile bằng GCC Toolchain và OpenWrt SDK, sau đó deploy lên device để functional test, integration test và debug.
+
+---
+
+# LINUX / OPENWRT THỰC TẾ
+
+## 48. Các lệnh Linux cơ bản thường dùng
+
+| Lệnh | Công dụng |
+|---|---|
+| `ls`, `cd`, `pwd` | Xem và di chuyển giữa các thư mục |
+| `cp`, `mv`, `rm` | Sao chép, di chuyển và xóa file |
+| `find` | Tìm file |
+| `grep` | Tìm nội dung trong text/log |
+| `ps`, `top` | Xem process và mức sử dụng tài nguyên |
+| `df`, `du`, `free` | Kiểm tra disk và RAM |
+| `ip addr`, `ip route` | Xem IP và routing table |
+| `ping` | Kiểm tra khả năng kết nối mạng |
+| `logread`, `dmesg` | Đọc system log và kernel log |
+
+**Trả lời phỏng vấn:** Khi debug thiết bị Linux/OpenWrt, em thường kiểm tra process, log, CPU/RAM, IP, route và khả năng kết nối mạng bằng các lệnh Linux cơ bản.
+
+---
+
+## 49. Quyền truy cập file trong Linux
+
+Linux có ba quyền cơ bản:
+
+- `r`: read – đọc.
+- `w`: write – ghi.
+- `x`: execute – thực thi.
+
+Ba nhóm người dùng:
+
+- Owner.
+- Group.
+- Others.
+
+```bash
+chmod +x my_app
+chmod 755 my_app
+```
+
+> Nếu executable không có quyền `x`, chương trình không thể chạy trực tiếp.
+
+---
+
+## 50. Signal và graceful shutdown
+
+Signal là cơ chế hệ điều hành gửi thông báo bất đồng bộ cho process.
+
+| Signal | Ý nghĩa |
+|---|---|
+| `SIGINT` | Thường phát sinh khi nhấn `Ctrl+C` |
+| `SIGTERM` | Yêu cầu process kết thúc an toàn |
+| `SIGKILL` | Buộc process dừng ngay, không thể bắt hoặc xử lý |
+| `SIGSEGV` | Process truy cập bộ nhớ không hợp lệ |
+
+Graceful shutdown nghĩa là process nhận yêu cầu dừng, ngừng nhận công việc mới, đóng socket/file, lưu trạng thái cần thiết rồi thoát.
+
+**Trả lời phỏng vấn:** Nên ưu tiên `SIGTERM` để application có cơ hội dọn dẹp tài nguyên. `SIGKILL` chỉ dùng khi process không thể dừng theo cách thông thường.
+
+---
+
+## 51. Daemon, service và `procd`
+
+- **Daemon**: process chạy nền, thường hoạt động lâu dài.
+- **Service**: chương trình nền được hệ thống quản lý.
+- **`procd`**: trình quản lý process/service của OpenWrt.
+
+Các thao tác thường dùng:
+
+```bash
+/etc/init.d/my_app start
+/etc/init.d/my_app stop
+/etc/init.d/my_app restart
+/etc/init.d/my_app enable
+```
+
+`enable` cho phép service tự chạy khi thiết bị khởi động.
+
+---
+
+## 52. `logread` và `dmesg` khác nhau thế nào?
+
+| Công cụ | Nội dung chính |
+|---|---|
+| `logread` | Đọc system log và log do service/application gửi vào hệ thống log |
+| `dmesg` | Đọc kernel ring buffer, thường dùng cho driver, boot và lỗi kernel |
+
+Ví dụ:
+
+```bash
+logread -f
+dmesg | grep wlan
+```
+
+> Debug application/service thường xem `logread`; debug kernel, driver hoặc thiết bị phần cứng thường xem `dmesg`.
+
+---
+
+## 53. `opkg` là gì?
+
+`opkg` là package manager thường dùng trên OpenWrt.
+
+```bash
+opkg update
+opkg install my_app.ipk
+opkg remove my_app
+opkg list-installed
+```
+
+**Trả lời phỏng vấn:** `opkg` dùng để cài, gỡ và quản lý package `.ipk` trên OpenWrt.
+
+---
+
+## 54. UCI là gì?
+
+UCI – Unified Configuration Interface – là hệ thống cấu hình thống nhất của OpenWrt.
+
+Các file cấu hình thường nằm trong:
+
+```text
+/etc/config/
+```
+
+Ví dụ:
+
+```bash
+uci get network.lan.ipaddr
+uci set my_app.main.enable='1'
+uci commit my_app
+```
+
+> `uci set` thay đổi cấu hình trong bộ nhớ; `uci commit` lưu thay đổi xuống file cấu hình.
+
+---
+
+## 55. `ubus` là gì?
+
+`ubus` là cơ chế IPC của OpenWrt, cho phép các service gọi method và trao đổi dữ liệu với nhau.
+
+```bash
+ubus list
+ubus call system board
+```
+
+**Trả lời phỏng vấn:** `ubus` là message bus nội bộ của OpenWrt. Application có thể dùng nó để gọi service, lấy trạng thái hoặc phát sự kiện mà không phải tự xây dựng toàn bộ giao thức IPC.
+
+---
+
+## 56. `netifd` là gì?
+
+`netifd` là daemon quản lý network interface trong OpenWrt.
+
+Nó xử lý:
+
+- Interface lên hoặc xuống.
+- Cấu hình IP.
+- DHCP client.
+- Thay đổi trạng thái mạng.
+
+> UCI lưu cấu hình mạng; `netifd` đọc cấu hình và áp dụng vào hệ thống.
+
+---
+
+## 57. Overlay filesystem trong OpenWrt là gì?
+
+OpenWrt thường có:
+
+- `/rom`: firmware gốc, chỉ đọc.
+- `/overlay`: lưu các thay đổi có thể ghi.
+- `/`: kết quả kết hợp giữa `/rom` và `/overlay`.
+
+**Trả lời phỏng vấn:** Overlay filesystem giúp firmware gốc vẫn giữ nguyên trong `/rom`, còn cấu hình và package người dùng cài thêm được lưu ở `/overlay`.
+
+---
+
+# BUILD / DEPLOY THỰC TẾ
+
+## 58. Package Makefile của OpenWrt dùng để làm gì?
+
+Package Makefile mô tả:
+
+- Tên và phiên bản package.
+- Phụ thuộc vào library/package nào.
+- Cách configure và compile.
+- File nào được cài vào package `.ipk`.
+- Application được đặt vào thư mục nào trên device.
+
+> Makefile thông thường build source; package Makefile của OpenWrt còn tích hợp source đó vào hệ thống build và đóng gói `.ipk`.
+
+---
+
+## 59. Target architecture, ABI, sysroot và `staging_dir`
+
+| Khái niệm | Ý nghĩa |
+|---|---|
+| Target architecture | Kiến trúc CPU của thiết bị như ARM, MIPS, AArch64 |
+| ABI | Quy ước binary giữa chương trình, compiler, library và hệ điều hành |
+| Sysroot | Cây thư mục mô phỏng root filesystem của target để compiler tìm header/library |
+| `staging_dir` | Nơi OpenWrt build system đặt toolchain, header và library đã chuẩn bị cho target |
+
+> Chương trình phải được build đúng architecture và ABI của target. Đúng ARM nhưng sai ABI hoặc sai C library vẫn có thể không chạy.
+
+---
+
+## 60. Static library và shared library khác nhau thế nào?
+
+| Static library | Shared library |
+|---|---|
+| Thường có đuôi `.a` | Thường có đuôi `.so` |
+| Code được đưa vào executable khi link | Được nạp khi chương trình chạy |
+| Executable lớn hơn | Executable nhỏ hơn |
+| Ít phụ thuộc library trên device | Device phải có đúng shared library tương thích |
+
+Kiểm tra shared library:
+
+```bash
+ldd my_app
+```
+
+---
+
+## 61. Quy trình build và deploy package OpenWrt
+
+```text
+Source C/C++
+    ↓
+OpenWrt SDK + package Makefile
+    ↓
+Cross-compile
+    ↓
+my_app.ipk
+    ↓ scp
+OpenWrt device
+    ↓ opkg install
+Start/restart service
+    ↓
+Kiểm tra process + log + chức năng
+```
+
+Ví dụ:
+
+```bash
+scp my_app.ipk root@192.168.1.1:/tmp/
+ssh root@192.168.1.1
+opkg install /tmp/my_app.ipk
+/etc/init.d/my_app restart
+ps | grep my_app
+logread -f
+```
+
+---
+
+## 62. Vì sao executable đã copy sang device nhưng không chạy?
+
+Các nguyên nhân thường gặp:
+
+- Sai CPU architecture.
+- Sai ABI hoặc C library.
+- Thiếu quyền execute.
+- Thiếu shared library.
+- Dynamic loader không tồn tại.
+- File bị hỏng hoặc copy chưa hoàn chỉnh.
+- Chương trình cần file cấu hình nhưng không tìm thấy.
+
+Các lệnh kiểm tra:
+
+```bash
+file my_app
+chmod +x my_app
+ldd my_app
+```
+
+---
+
+# SOCKET / NETWORK PROGRAMMING
+
+## 63. Luồng hoạt động của TCP client
+
+```text
+socket()
+   ↓
+connect()
+   ↓
+send() / recv()
+   ↓
+close()
+```
+
+**Trả lời phỏng vấn:** TCP client tạo socket, chủ động kết nối tới IP và port của server, trao đổi dữ liệu rồi đóng socket. Chương trình thực tế phải xử lý timeout, partial read/write và mất kết nối.
+
+---
+
+## 64. Luồng hoạt động của TCP server
+
+```text
+socket()
+   ↓
+bind()
+   ↓
+listen()
+   ↓
+accept()
+   ↓
+recv() / send()
+   ↓
+close()
+```
+
+**Trả lời phỏng vấn:** TCP server bind socket với địa chỉ/port, listen kết nối đến và dùng `accept()` tạo socket riêng để giao tiếp với từng client.
+
+---
+
+## 65. Partial `send()` và `recv()` là gì?
+
+TCP là byte stream. Một lần `send()` có thể gửi ít hơn số byte yêu cầu và một lần `recv()` có thể nhận chưa đủ một message.
+
+Do đó cần:
+
+- Kiểm tra giá trị trả về.
+- Lặp cho đến khi gửi/nhận đủ dữ liệu cần thiết.
+- Tự thiết kế ranh giới message bằng length field, delimiter hoặc protocol.
+
+> Không được giả định một lần `send()` tương ứng chính xác với một lần `recv()`.
+
+---
+
+## 66. Blocking và non-blocking socket khác nhau thế nào?
+
+| Blocking | Non-blocking |
+|---|---|
+| Lệnh có thể chờ cho đến khi có dữ liệu/kết quả | Lệnh trả về ngay nếu chưa thể thực hiện |
+| Code đơn giản hơn | Phải quản lý trạng thái và sự kiện |
+| Có thể làm thread bị kẹt nếu không có timeout | Phù hợp khi xử lý nhiều kết nối |
+
+**Trả lời phỏng vấn:** Blocking socket dễ viết nhưng phải có timeout hoặc thread riêng. Non-blocking socket không giữ thread chờ nhưng cần event loop như `select`, `poll` hoặc `epoll`.
+
+---
+
+## 67. `select`, `poll` và `epoll` dùng để làm gì?
+
+Chúng giúp một thread theo dõi nhiều file descriptor/socket.
+
+| Cơ chế | Điểm chính |
+|---|---|
+| `select` | Phổ biến nhưng giới hạn số descriptor và phải tạo lại tập descriptor |
+| `poll` | Không có giới hạn nhỏ cố định như `select`, nhưng vẫn duyệt toàn bộ danh sách |
+| `epoll` | Linux-specific, hiệu quả hơn khi quản lý nhiều kết nối |
+
+> Với số lượng socket nhỏ, `select` hoặc `poll` có thể đủ; `epoll` phù hợp server Linux có nhiều kết nối.
+
+---
+
+## 68. Heartbeat, timeout và exponential backoff
+
+- **Heartbeat**: message định kỳ để kiểm tra phía bên kia còn hoạt động.
+- **Timeout**: thời gian chờ tối đa.
+- **Retry**: thử lại sau khi thất bại.
+- **Exponential backoff**: thời gian chờ tăng dần sau mỗi lần thất bại.
+- **Jitter**: thêm độ trễ ngẫu nhiên để nhiều device không reconnect cùng lúc.
+
+Ví dụ:
+
+```text
+Retry sau: 1s → 2s → 4s → 8s → tối đa 60s
+```
+
+> Không nên retry liên tục không có delay vì sẽ tốn CPU, mạng và tạo tải lớn lên server.
+
+---
+
+## 69. Wi-Fi STA, AP và DHCP là gì?
+
+| Khái niệm | Ý nghĩa |
+|---|---|
+| STA – Station | Device kết nối vào một Access Point |
+| AP – Access Point | Thiết bị phát Wi-Fi cho client khác kết nối |
+| DHCP client | Xin địa chỉ IP từ DHCP server |
+| DHCP server | Cấp IP, gateway và DNS cho client |
+
+Luồng STA cơ bản:
+
+```text
+Scan AP → Authentication/Association → DHCP → Có IP → Kết nối server
+```
+
+> Kết nối được Wi-Fi chưa chắc đã có IP hoặc truy cập được Internet/server.
+
+---
+
+# MQTT THỰC TẾ
+
+## 70. Last Will and Testament – LWT là gì?
+
+LWT là message được client đăng ký với broker khi kết nối. Nếu client mất kết nối bất thường, broker publish message này thay client.
+
+Ví dụ:
+
+```text
+Topic: device/123/status
+Payload: offline
+```
+
+**Trả lời phỏng vấn:** LWT giúp hệ thống phát hiện và thông báo device offline khi device mất kết nối đột ngột, không kịp tự gửi trạng thái.
+
+---
+
+## 71. Clean session/Clean start và persistent session
+
+- **Clean session/Clean start**: client yêu cầu bắt đầu phiên mới, không dùng trạng thái subscription cũ.
+- **Persistent session**: broker giữ một số trạng thái phiên như subscription và message phù hợp khi client mất kết nối, tùy phiên bản MQTT và QoS.
+
+**Trả lời phỏng vấn:** Nếu cần nhận lại dữ liệu sau khi reconnect, có thể dùng persistent session. Nếu luôn muốn khởi tạo sạch và subscribe lại, dùng clean session/start phù hợp.
+
+---
+
+## 72. Wildcard `+` và `#` trong MQTT topic
+
+- `+`: khớp đúng một cấp topic.
+- `#`: khớp nhiều cấp còn lại và phải nằm ở cuối filter.
+
+```text
+home/+/status   → home/light/status, home/fan/status
+home/#          → mọi topic bắt đầu bằng home/
+```
+
+---
+
+## 73. Bảo mật MQTT
+
+Các biện pháp cơ bản:
+
+- Username/password hoặc certificate để xác thực.
+- TLS để mã hóa đường truyền.
+- Phân quyền topic – ACL.
+- Kiểm tra payload và giới hạn kích thước message.
+- Không hard-code secret trong source code.
+
+**Trả lời phỏng vấn:** MQTT không tự động an toàn chỉ vì dùng broker. Cần xác thực, mã hóa TLS, phân quyền topic và kiểm tra dữ liệu nhận được.
+
+---
+
+## 74. Vì sao QoS 1 có thể làm lệnh được xử lý hai lần?
+
+QoS 1 bảo đảm **at least once**. Nếu sender không nhận được ACK, message có thể được gửi lại nên subscriber có thể nhận trùng.
+
+Giải pháp:
+
+- Mỗi command có `message_id` hoặc `request_id`.
+- Device lưu/kiểm tra ID đã xử lý.
+- Thiết kế thao tác idempotent nếu có thể.
+
+> Idempotent nghĩa là thực hiện cùng một lệnh nhiều lần vẫn tạo ra kết quả cuối giống nhau.
+
+---
+
+## 75. Luồng MQTT reconnect an toàn
+
+```text
+Phát hiện mất MQTT
+        ↓
+Đánh dấu trạng thái disconnected
+        ↓
+Chờ bằng exponential backoff + jitter
+        ↓
+Kiểm tra Wi-Fi/IP/DNS
+        ↓
+Kết nối lại broker
+        ↓
+Xác thực + subscribe lại nếu cần
+        ↓
+Đồng bộ trạng thái device
+        ↓
+Tiếp tục publish/subscribe
+```
+
+> Wi-Fi còn kết nối không có nghĩa MQTT vẫn còn kết nối. Hai trạng thái phải được quản lý riêng.
+
+---
+
+## 76. JSON, serialization và kiểm tra payload
+
+Device thường nhận payload dạng JSON hoặc định dạng nhị phân.
+
+Khi xử lý cần kiểm tra:
+
+- Message có parse được không.
+- Field bắt buộc có tồn tại không.
+- Kiểu dữ liệu và phạm vi giá trị.
+- Kích thước payload.
+- Phiên bản protocol.
+- Command có được phép thực hiện không.
+
+**Trả lời phỏng vấn:** Không nên tin trực tiếp dữ liệu từ server hoặc broker. Application phải parse có kiểm soát, validate field và xử lý message lỗi mà không làm process crash.
+
+---
+
+# TEST / DEBUG / SOURCE CONTROL
+
+## 77. Unit Test, Functional Test, Integration Test và System Test
+
+| Loại test | Kiểm tra gì? | Ví dụ |
+|---|---|---|
+| Unit Test | Hàm/class riêng lẻ | Test hàm parse MQTT payload |
+| Functional Test | Một chức năng theo yêu cầu | Device nhận `ON` và bật thiết bị |
+| Integration Test | Nhiều thành phần kết hợp | Server → MQTT → device → trạng thái phản hồi |
+| System Test | Toàn bộ hệ thống trong môi trường gần thực tế | App, backend, broker, network và device hoạt động cùng nhau |
+
+---
+
+## 78. Các công cụ debug Linux ngoài GDB
+
+| Công cụ | Công dụng |
+|---|---|
+| Log | Theo dõi flow, trạng thái và lỗi runtime |
+| `strace` | Theo dõi system call của process |
+| Core dump | Lưu trạng thái process khi crash để phân tích sau |
+| `addr2line` | Chuyển địa chỉ crash thành file và dòng source khi có symbol |
+| `ldd` | Kiểm tra shared library phụ thuộc |
+| AddressSanitizer | Phát hiện out-of-bounds, use-after-free và lỗi bộ nhớ khi build phù hợp |
+| Valgrind | Phát hiện leak/lỗi bộ nhớ nếu target hoặc môi trường test hỗ trợ |
+
+> Trên thiết bị tài nguyên hạn chế, thường ưu tiên log, core dump và remote GDB; sanitizer/Valgrind có thể chạy trên môi trường test tương thích.
+
+---
+
+## 79. Cách kiểm tra process dùng CPU hoặc RAM cao
+
+Quy trình cơ bản:
+
+1. Dùng `top` hoặc `ps` xác định process.
+2. Xem log có vòng lặp retry liên tục hay không.
+3. Kiểm tra số thread, socket và file descriptor.
+4. Kiểm tra memory leak hoặc queue tăng không giới hạn.
+5. Dùng profiler/debugger nếu môi trường hỗ trợ.
+
+Nguyên nhân thường gặp:
+
+- Busy loop không có sleep/wait.
+- Reconnect liên tục.
+- Thread không thoát.
+- Memory leak.
+- Message queue không được tiêu thụ kịp.
+
+---
+
+## 80. Git và SVN cơ bản
+
+| Git | SVN | Công dụng |
+|---|---|---|
+| `git clone` | `svn checkout` | Lấy source lần đầu |
+| `git pull` | `svn update` | Cập nhật source |
+| `git status` | `svn status` | Xem file thay đổi |
+| `git diff` | `svn diff` | Xem nội dung thay đổi |
+| `git commit` | `svn commit` | Ghi nhận thay đổi |
+| `git revert` | `svn revert` | Hoàn tác theo cơ chế tương ứng |
+
+**Khác nhau cơ bản:** Git là hệ thống version control phân tán; mỗi developer thường có repository local đầy đủ. SVN là hệ thống tập trung, phụ thuộc nhiều hơn vào repository server trung tâm.
+
+---
+
+## 81. Tình huống: Device mất Wi-Fi thì xử lý thế nào?
+
+**Cách trả lời phỏng vấn:**
+
+> Em tách trạng thái Wi-Fi, IP và MQTT. Khi mất Wi-Fi, application đánh dấu offline, dừng hoặc đưa các thao tác mạng vào hàng chờ, sau đó reconnect bằng backoff để tránh retry liên tục. Khi Wi-Fi kết nối lại và nhận được IP, em reconnect MQTT, subscribe lại nếu cần, đồng bộ trạng thái mới nhất với server rồi tiếp tục xử lý message. Trong quá trình này cần có log, timeout và giới hạn kích thước hàng chờ.
+
+---
+
+## 82. Tình huống: Service bị crash hoặc không tự chạy sau reboot
+
+Quy trình kiểm tra:
+
+1. Dùng `ps` kiểm tra process có chạy không.
+2. Kiểm tra `/etc/init.d/my_app` và trạng thái `enable`.
+3. Đọc `logread` và core dump nếu có.
+4. Kiểm tra executable, quyền chạy, library và file cấu hình.
+5. Chạy application thủ công để tái hiện lỗi.
+6. Kiểm tra cấu hình `procd` có respawn service khi cần không.
+
+**Trả lời phỏng vấn:** Em xác định service chưa start hay đã start rồi crash, sau đó kiểm tra init script, log, dependency, quyền, library và cấu hình. Nếu service quan trọng, có thể cấu hình `procd` respawn nhưng vẫn phải tìm và sửa nguyên nhân crash, không chỉ restart vô hạn.
+
+---
+
+# TÓM TẮT FPT TELECOM MỞ RỘNG
+
+```text
+Viết C/C++
+    ↓
+Cross-compile đúng architecture + ABI
+    ↓
+Đóng gói .ipk và cài bằng opkg
+    ↓
+Chạy service bằng procd/init script
+    ↓
+Đọc cấu hình UCI, giao tiếp nội bộ qua ubus
+    ↓
+Quản lý Wi-Fi/IP/MQTT bằng state machine
+    ↓
+Nhận command, kiểm tra payload, điều khiển device
+    ↓
+Publish trạng thái về server
+    ↓
+Xử lý timeout, retry, duplicate và reconnect
+    ↓
+Test + log + GDB/core dump + theo dõi CPU/RAM
+```
 
 </details>
 
