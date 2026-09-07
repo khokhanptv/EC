@@ -6,6 +6,195 @@
 > Phần STL đã được tinh gọn theo hướng phỏng vấn: bỏ các câu đi quá sâu vào từng hàm riêng lẻ của `std::vector`.
 
 ---
+<details>
+<summary><strong>CÂU HỎI PHỎNG VẤN EMBEDDED / C++</strong></summary>
+<details>
+<summary><strong>Câu 1: Quy trình xử lý interrupt diễn ra như thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Khi có interrupt, CPU tạm dừng chương trình hiện tại, lưu trạng thái đang chạy vào stack, thực thi hàm xử lý ngắt `ISR`, sau đó khôi phục trạng thái và tiếp tục chương trình trước đó.
+
+</details>
+
+<details>
+<summary><strong>Câu 2: SPI có bao nhiêu dây?</strong></summary>
+
+**Trả lời phỏng vấn:** SPI với N Slave thường cần 3 + N dây: 3 dây dùng chung là SCLK, MOSI, MISO, và mỗi Slave có một dây CSS riêng
+- SPI có tốc độ cao, thường nhanh hơn UART và I2C. Ưu điểm là truyền full-duplex và giao thức đơn giản. Nhược điểm là tốn nhiều chân, đặc biệt khi có nhiều Slave vì mỗi Slave thường cần một chân CS riêng.
+</details>
+
+<details>
+<summary><strong>Câu 3: Stack và Queue khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `Stack` hoạt động theo nguyên tắc `LIFO` - vào sau ra trước. `Queue` hoạt động theo nguyên tắc `FIFO` - vào trước ra trước.
+
+
+</details>
+
+<details>
+<summary><strong>Câu 4: Bạn đã dùng RTOS nào trong công việc?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi chưa trực tiếp làm nhiều với FreeRTOS, chủ yếu làm OpenWrt và AUTOSAR, nhưng tôi có kiến thức cơ bản về task, scheduling, mutex và semaphore.
+
+- `RTOS` = `Real-Time Operating System`: hệ điều hành thời gian thực, dùng để quản lý các task và đảm bảo task được xử lý đúng thời gian yêu cầu.
+- `FreeRTOS`: một RTOS cụ thể, mã nguồn mở, rất phổ biến trong embedded.
+- `Task`: một công việc hoặc chương trình nhỏ được RTOS quản lý và cho chạy.
+- `Scheduling`: cơ chế RTOS quyết định task nào được chạy trước, thường dựa vào `priority`.
+
+</details>
+
+<details>
+<summary><strong>Câu 5: Trong ASPICE, Software Requirement liên kết với gì?</strong></summary>
+
+**Trả lời phỏng vấn:** 
+## ASPICE là gì?
+
+`ASPICE` = `Automotive SPICE`.
+
+Là mô hình chuẩn hóa và đánh giá quy trình phát triển phần mềm ô tô.
+
+Flow cơ bản:
+
+`Requirement → Design → Coding → Testing → Traceability`
+
+---
+
+## Các thành phần chính
+
+- `System Requirement`: yêu cầu hệ thống.
+- `Software Requirement`: yêu cầu phần mềm.
+- `Software Design`: thiết kế phần mềm.
+- `Implementation`: coding.
+- `Unit Test`: test từng phần nhỏ.
+- `Integration Test`: test các module khi kết hợp.
+- `Traceability`: truy vết giữa Requirement, Design và Test.
+
+---
+
+## Software Requirement liên kết với gì?
+
+Thường liên kết với:
+
+`System Requirement → Software Requirement → Software Design → Test Case`
+
+---
+
+## Software Requirement là gì?
+
+`Software Requirement` = **Yêu cầu phần mềm**.
+
+Mô tả phần mềm cần làm gì để đáp ứng yêu cầu của hệ thống.
+
+Ý nghĩa:
+- Là cơ sở để design.
+- Là cơ sở để coding.
+- Là cơ sở để tạo test case.
+
+</details>
+
+<details>
+<summary><strong>Câu 6: Tessy và Polyspace là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `Tessy` là tool dùng cho Unit Test và Integration Test trong embedded. `Polyspace` là tool dùng cho static code analysis.
+## Unit Test, Integration Test và Static Code Analysis là gì?
+
+- `Unit Test`: kiểm tra từng function hoặc module nhỏ một cách độc lập.
+- `Integration Test`: kiểm tra các module khi kết hợp với nhau có hoạt động đúng không.
+- `Static Code Analysis`: phân tích source code mà không cần chạy chương trình, để tìm lỗi, coding rule violation hoặc vấn đề tiềm ẩn.
+
+</details>
+
+<details>
+<summary><strong>Câu 7: MCAL Timer liên quan đến gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Trong AUTOSAR, module thường gặp liên quan đến timer là `GPT`. Flow cơ bản là init timer, start timer, timer chạy, timeout rồi xử lý bằng interrupt hoặc callback.
+
+</details>
+
+<details>
+<summary><strong>Câu 8: Khi communication không hoạt động thì kiểm tra gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi sẽ kiểm tra :
+- Kết nối phần cứng.
+- Cấu hình hai bên có giống nhau không.
+- `Clock`.
+- `Driver` đã được init chưa.
+- `TX/RX` có dữ liệu không.
+- Nếu cần, dùng `Logic Analyzer` hoặc `Oscilloscope` để kiểm tra signal.
+
+</details>
+
+<details>
+<summary><strong>Câu 9: UDS Security Access hoạt động thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `SecurityAccess` là service `0x27`. Tester xin `Seed` từ ECU, dùng Seed để tính `Key`, gửi Key lại ECU. ECU kiểm tra Key, nếu đúng thì unlock security level.
+- UDS Security Access là cơ chế xác thực để mở quyền truy cập vào các chức năng bị bảo vệ trên ECU.
+</details>
+
+<details>
+<summary><strong>Câu 10: UART không hoạt động thì kiểm tra gì?</strong></summary>
+
+## UART là gì?
+
+`UART` = `Universal Asynchronous Receiver/Transmitter`.
+Là giao tiếp nối tiếp không đồng bộ, dùng để truyền và nhận dữ liệu giữa hai thiết bị qua `TX` và `RX`.
+`USART` : hỗ trợ cả không đồng bộ và đồng bộ.USART có thêm tín hiệu Clock để hai thiết bị đồng bộ dữ liệu.
+---
+
+## Ưu điểm
+
+- Đơn giản, dễ sử dụng.
+- Chỉ cần ít dây: `TX`, `RX`, `GND`.
+- Phù hợp để debug, log và giao tiếp giữa các vi điều khiển hoặc module.
+
+---
+
+## Nhược điểm
+
+- Tốc độ thường thấp hơn `SPI`.
+- Chủ yếu dùng giao tiếp điểm-điểm giữa hai thiết bị.
+- Hai bên phải cấu hình giống nhau về baud rate, parity, data bit và stop bit.
+- Không có clock riêng nên nếu cấu hình timing sai có thể gây lỗi dữ liệu.
+
+**Trả lời phỏng vấn:** Nếu UART không hoạt động, tôi sẽ kiểm tra theo 3 nhóm:
+
+- **Phần cứng:**
+  - Kiểm tra dây `TX`, `RX`, `GND` có nối đúng không.
+  - Kiểm tra nguồn và mức điện áp có đúng không.
+
+- **Phần mềm:**
+  - Kiểm tra cấu hình UART như baud rate, parity, stop bit.
+  - Kiểm tra `clock`, pin configuration và driver đã init chưa.
+  - Kiểm tra dữ liệu `TX/RX` có được gửi và nhận đúng không.
+
+- **Logic Analyzer / Oscilloscope:**
+  - Dùng để kiểm tra tín hiệu thực tế trên chân `TX/RX`.
+  - Giúp xác định có signal hay không và baud rate/timing có đúng không.
+
+</details>
+
+<details>
+<summary><strong>Câu 11: FreeRTOS có bao nhiêu trạng thái task?</strong></summary>
+
+**Trả lời phỏng vấn:** Có 4 trạng thái chính: `Running`, `Ready`, `Blocked` và `Suspended`.
+
+</details>
+
+<details>
+<summary><strong>Câu 12: Process và Thread khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `Process` có vùng memory riêng. `Thread` nằm trong một process và share memory với các thread khác, nhưng mỗi thread có stack và execution context riêng.
+
+</details>
+
+<details>
+<summary><strong>Câu 13: `.bss` và `.data` khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `.data` chứa các biến global/static đã được khởi tạo. `.bss` chứa các biến global/static chưa khởi tạo hoặc được khởi tạo bằng `0`.
+
+</details>
+
+
+</details>
 
 <details>
 <summary><strong>Câu 1: Biến là gì? Khai báo và khởi tạo khác nhau thế nào?</strong></summary>
