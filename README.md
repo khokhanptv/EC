@@ -196,6 +196,64 @@ Là giao tiếp nối tiếp không đồng bộ, dùng để truyền và nhậ
 
 </details>
 
+
+
+<details>
+<summary><strong>Câu 0: cấu trúc dữ liệu và giải thuật</strong></summary>
+
+## Các cấu trúc dữ liệu phổ biến
+
+- `Array`: mảng, lưu các phần tử liên tiếp trong bộ nhớ.
+- `Linked List`: danh sách liên kết, mỗi node trỏ tới node tiếp theo.
+- `Stack`: LIFO – vào sau ra trước.
+- `Queue`: FIFO – vào trước ra trước.
+- `Deque`: có thể thêm/xóa ở cả hai đầu.
+- `Hash Table`: lưu dữ liệu theo key-value, truy cập nhanh theo key.
+- `Tree`: cấu trúc phân cấp cha-con.
+- `Binary Search Tree`: cây nhị phân có thứ tự.
+- `Heap`: cây dùng để lấy phần tử lớn nhất/nhỏ nhất nhanh.
+- `Graph`: biểu diễn các đỉnh và cạnh, dùng cho mạng, đường đi, quan hệ.
+
+---
+
+## Các giải thuật phổ biến
+
+- `Linear Search`: duyệt lần lượt từng phần tử từ đầu đến cuối cho đến khi tìm thấy giá trị cần tìm.  
+  Độ phức tạp: `O(n)`.
+
+- `Binary Search`: chia đôi vùng tìm kiếm sau mỗi lần so sánh. Chỉ dùng khi dữ liệu đã được sắp xếp.  
+  Độ phức tạp: `O(log n)`.
+
+- `Bubble Sort`: so sánh hai phần tử liền kề, nếu sai thứ tự thì `swap`. Lặp lại nhiều lần cho đến khi mảng được sắp xếp.  
+  Độ phức tạp: `O(n²)`.
+
+- `Selection Sort`: mỗi vòng tìm phần tử nhỏ nhất hoặc lớn nhất trong phần chưa sắp xếp rồi `swap` về đúng vị trí.  
+  Độ phức tạp: `O(n²)`.
+
+- `Insertion Sort`: lấy từng phần tử và chèn nó vào đúng vị trí trong phần dữ liệu đã được sắp xếp trước đó.  
+  Độ phức tạp: `O(n²)`.
+
+- `Merge Sort`: chia mảng thành các phần nhỏ, sắp xếp từng phần rồi `merge` lại thành mảng hoàn chỉnh.  
+  Độ phức tạp: `O(n log n)`.
+
+- `Quick Sort`: chọn một `pivot`, chia dữ liệu thành nhóm nhỏ hơn và lớn hơn pivot, sau đó tiếp tục xử lý đệ quy.  
+  Trung bình: `O(n log n)`, trường hợp xấu: `O(n²)`.
+
+- `DFS` - Depth First Search: duyệt sâu hết một nhánh của `Tree/Graph` rồi mới quay lại duyệt nhánh khác. Thường dùng `Stack` hoặc recursion.  
+  Độ phức tạp: `O(V + E)`.
+
+- `BFS` - Breadth First Search: duyệt lần lượt từng tầng, các node gần trước rồi mới đến node xa hơn. Thường dùng `Queue`.  
+  Độ phức tạp: `O(V + E)`.
+
+---
+
+## Cách nhớ nhanh 3 thuật toán sắp xếp
+
+- `Bubble Sort` → so sánh 2 phần tử kế nhau rồi `swap`.
+- `Selection Sort` → tìm `min/max` rồi `swap`.
+- `Insertion Sort` → lấy phần tử rồi chèn vào đúng vị trí.
+
+</details>
 <details>
 <summary><strong>Câu 1: Biến là gì? Khai báo và khởi tạo khác nhau thế nào?</strong></summary>
 
