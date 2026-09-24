@@ -37,8 +37,41 @@ main.o
   ↓ Linking
 Executable
 
+</details>
+
+<details>
+<summary><strong>Câu 0.1: sự khác biệt giữa vi điều khiển và vi xử lý</strong></summary>
+
+**Trả lời phỏng vấn:** Trả lời phỏng vấn:
+### Sự khác biệt giữa vi điều khiển và vi xử lý
+
+- **Vi điều khiển (MCU):** tích hợp CPU, bộ nhớ và ngoại vi trên cùng một chip, thường dùng cho tác vụ chuyên biệt.
+- **Vi xử lý (MPU):** chủ yếu là CPU, cần RAM, bộ nhớ và ngoại vi bên ngoài, thường dùng cho hệ thống đa năng.
+
+### Các thành phần của vi điều khiển
+
+Gồm: **CPU, RAM, ROM/Flash và các ngoại vi** như GPIO, UART, SPI, I2C, ADC, DAC, PWM, Timer/Counter.
+
+### Thư viện tĩnh và thư viện động
+
+- **Static Library:** được liên kết vào chương trình khi build → file thực thi lớn hơn nhưng không cần thư viện riêng khi chạy.
+- **Dynamic Library:** được liên kết/nạp khi chạy → file thực thi nhỏ hơn, dễ cập nhật nhưng cần thư viện tương ứng khi chạy.
 
 </details>
+
+<details>
+<summary><strong>Câu 0.2: Thư viện tĩnh và thư viện động</strong></summary>
+
+**Trả lời phỏng vấn:** Trả lời phỏng vấn:
+### Thư viện tĩnh và thư viện động
+
+- **Static Library:** được liên kết vào chương trình khi build → file thực thi lớn hơn nhưng không cần thư viện riêng khi chạy.
+- **Dynamic Library:** được liên kết/nạp khi chạy → file thực thi nhỏ hơn, dễ cập nhật nhưng cần thư viện tương ứng khi chạy.
+
+</details>
+
+
+
 <details>
 <summary><strong>Câu 1: Quy trình xử lý interrupt diễn ra như thế nào?</strong></summary>
 
@@ -957,22 +990,7 @@ Lợi ích:
 
 ## 9. Abstraction – Trừu tượng
 
-Trong bộ kiến thức bạn cung cấp, **Abstraction được liệt kê là một khái niệm chính của OOP nhưng chưa có phần giải thích chi tiết riêng**.
-
-Vì vậy hiện tại ghi nhận:
-
-```text
-Các khái niệm chính:
-
-Class
-Object
-Inheritance
-Polymorphism
-Abstraction
-Encapsulation
-```
-
-Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm kiến thức ngoài nội dung bạn đang học.
+- Abstraction là ẩn chi tiết xử lý bên trong và chỉ cung cấp chức năng cần thiết cho người dùng.
 
 ---
 
@@ -1067,9 +1085,48 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 </details>
 
 <details>
-<summary><strong>Câu 26: Hàm thuần ảo và abstract class là gì?</strong></summary>
+<summary><strong>Câu 26: hàm ảo ,Hàm thuần ảo và abstract class là gì?</strong></summary>
 
-**Trả lời phỏng vấn:** Hàm thuần ảo là hàm `virtual` khai báo bằng `= 0`. Class chứa hàm thuần ảo chưa được cài đặt là abstract class và không thể tạo object trực tiếp.
+**Trả lời phỏng vấn:** 
+- **Hàm ảo:** Hàm ảo là hàm khai báo bằng virtual ở class cha , cho phép class con override và hỗ trợ đa hình runtime.
+- Đa hình runtime nghĩa là: chương trình quyết định sẽ gọi hàm nào khi chương trình đang chạy, dựa trên object thực tế.
+-  Khi dùng con trỏ/reference của class cha trỏ tới object class con, chương trình sẽ gọi hàm override của class con.
+```c++
+class A {
+public:
+    virtual void f() {}
+};
+
+class B : public A {
+public:
+    void f() override {}
+};
+
+A* p = new B();
+p->f();   // gọi B::f()sound();
+
+//A* là con trỏ class cha, nhưng đang trỏ tới object B → nhờ virtual nên gọi B::f().
+```
+
+- **Hàm thuần ảo:** là hàm `virtual` khai báo bằng `= 0`.Class con phải override hàm thuần ảo nếu muốn tạo object.(class cha đưa ra yêu cầu, class con phải tự cài đặt cách thực hiện.)
+
+```c++
+class Animal {
+public:
+    virtual void sound() = 0;
+};
+class Dog : public Animal {
+public:
+    void sound() override {
+        cout << "Woof";
+    }
+};
+```
+
+- **Abstract class:** là class có ít nhất một hàm thuần ảo  và không thể tạo object trực tiếp từ class này
+- Constructor không thể là virtual.
+- Destructor nên là virtual ,Vì nếu xóa object class con thông qua con trỏ class cha,  để destructor của class cha và  class con cũng được gọi.
+
 
 </details>
 
@@ -1139,7 +1196,15 @@ Phần Abstraction chi tiết chưa được bổ sung để tránh trộn thêm
 <details>
 <summary><strong>Câu 36: Mảng và con trỏ khác nhau như thế nào?</strong></summary>
 
-**Trả lời phỏng vấn:** Mảng là vùng nhớ liên tiếp chứa nhiều phần tử cùng kiểu và có kích thước cố định. Con trỏ là biến lưu địa chỉ. Trong hầu hết biểu thức, tên mảng tự chuyển thành con trỏ tới phần tử đầu tiên.
+**Trả lời phỏng vấn:** 
+- Mảng (array): là một vùng nhớ chứa nhiều phần tử cùng kiểu, nằm liên tiếp nhau.
+- Con trỏ (pointer): là biến dùng để lưu địa chỉ của một biến hoặc vùng nhớ khác.
+- Tên mảng  là  con trỏ tới phần tử đầu tiên của mảng
+```cpp
+int arr[3] = {10, 20, 30};
+int *p = arr;      // tương đương với:
+int *p = &arr[0];
+```
 
 </details>
 
@@ -1300,10 +1365,11 @@ int main() {
 </details>
 
 <details>
-<summary><strong>Câu 50: Wild pointer là gì?</strong></summary>
+<summary><strong>Câu 50: Interface là gì?</strong></summary>
 
-**Trả lời phỏng vấn:** Wild pointer là con trỏ chưa được khởi tạo, nên chứa địa chỉ không xác định. Nên khởi tạo con trỏ bằng `nullptr` nếu chưa có địa chỉ hợp lệ.
-
+**Trả lời phỏng vấn:** Interface là bản hợp đồng quy định class phải cung cấp những chức năng nào. C++ không có từ khóa interface, nên thường dùng abstract class chứa các pure virtual function để tạo interface.
+ví dụ:
+ ta muốn các class con đều phải có hàng read
 </details>
 
 ---
