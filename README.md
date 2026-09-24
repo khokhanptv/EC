@@ -32,6 +32,7 @@ main.s
 main.o
   ↓ Linking
 Executable
+```
 
 </details>
 <details>
