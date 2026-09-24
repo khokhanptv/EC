@@ -22,6 +22,7 @@ Quá trình biên dịch C/C++ gồm 4 bước:
 - Assembler tạo Object File.
 - Linker ghép các Object File và thư viện để tạo file thực thi.
 
+```text
 main.c
   ↓ Preprocessing
 main.i
