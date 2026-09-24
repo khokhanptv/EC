@@ -9,6 +9,30 @@
 <details>
 <summary><strong>CÂU HỎI PHỎNG VẤN EMBEDDED / C++</strong></summary>
 <details>
+<summary><strong>Câu 0: Qúa trình biên dịch</strong></summary>
+
+**Trả lời phỏng vấn:** Trả lời phỏng vấn:
+Quá trình biên dịch C/C++ gồm 4 bước:
+
+**Preprocessing → Compilation → Assembly → Linking**
+
+
+- Preprocessor xử lý `#include`, `#define`.( xử lý chỉ thị tiền xử lý)
+- Compiler chuyển code sang Assembly.
+- Assembler tạo Object File.
+- Linker ghép các Object File và thư viện để tạo file thực thi.
+main.c
+  ↓ Preprocessing
+main.i
+  ↓ Compilation
+main.s
+  ↓ Assembly
+main.o
+  ↓ Linking
+Executable
+
+</details>
+<details>
 <summary><strong>Câu 1: Quy trình xử lý interrupt diễn ra như thế nào?</strong></summary>
 
 **Trả lời phỏng vấn:** Khi có interrupt, CPU tạm dừng chương trình hiện tại, lưu trạng thái đang chạy vào stack, thực thi hàm xử lý ngắt `ISR`, sau đó khôi phục trạng thái và tiếp tục chương trình trước đó.
@@ -205,8 +229,8 @@ Là giao tiếp nối tiếp không đồng bộ, dùng để truyền và nhậ
 
 - `Array`: mảng, lưu các phần tử liên tiếp trong bộ nhớ.
 - `Linked List`: danh sách liên kết, mỗi node trỏ tới node tiếp theo.
-- `Stack`: LIFO – vào sau ra trước.
-- `Queue`: FIFO – vào trước ra trước.
+- `Stack`: LIFO – vào sau ra trước. ví dụ call stack
+- `Queue`: FIFO – vào trước ra trước. ví dụ truyền msg
 - `Deque`: có thể thêm/xóa ở cả hai đầu.
 - `Hash Table`: lưu dữ liệu theo key-value, truy cập nhanh theo key.
 - `Tree`: cấu trúc phân cấp cha-con.
