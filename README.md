@@ -17,9 +17,13 @@ Quá trình biên dịch C/C++ gồm 4 bước:
 **Preprocessing → Compilation → Assembly → Linking**
 
 
-- Preprocessor xử lý `#include`, `#define`.( xử lý chỉ thị tiền xử lý)
-- Compiler chuyển code sang Assembly.
-- Assembler tạo Object File.
+- Preprocessor :tạo file main.i.
+    - 3 việc xảy ra trong quá trình tiền xử lý:
+        - #include file header
+        - Xóa bỏ comment.
+        - Triển khai macro
+- Compiler chuyển code sang Assembly.(file .i sang file ngôn ngữ assembly là file .s)
+- Assembler: compiler sẽ Biên dịch ngôn ngữ Assembly sang ngôn ngữ máy (0 và 1). Và tạo ra tệp tin Object .o
 - Linker ghép các Object File và thư viện để tạo file thực thi.
 
 
