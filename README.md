@@ -4416,6 +4416,1192 @@ Test + log + GDB/core dump + theo dõi CPU/RAM
 </details>
 
 
+<!-- BEGIN: KIEN THUC 1-125 NHUNG -->
+
+<details>
+<summary><strong>Kiến thức 1–125 (Nhúng) — C/C++, RTOS, MCU, Qt, Linux, GUI</strong></summary>
+
+> Nhóm câu hỏi bổ sung phục vụ phỏng vấn Embedded/Medical Device. Mỗi câu có thể bấm để đóng hoặc mở. Số thứ tự trong nhóm này độc lập với các mục hiện có trong README.
+
+
+### C/C++ Embedded cơ bản
+
+<details>
+<summary><strong>Câu 1: Giới thiệu kinh nghiệm Embedded C/C++</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi có kinh nghiệm C/C++ trong dự án AUTOSAR Automotive và phần mềm máy siêu âm; đã làm việc với giao diện, đa luồng, giao tiếp và debug.
+
+**Giải thích / ví dụ:** Embedded: hệ thống nhúng; debug: tìm và xử lý lỗi; multithreading: lập trình đa luồng.
+
+</details>
+
+<details>
+<summary><strong>Câu 2: Bạn từng làm dự án nhúng nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi từng tham gia kiểm thử EthIf trong AUTOSAR Classic cho ECU dùng Infineon AURIX TC39x và phát triển phần mềm C++ cho máy siêu âm.
+
+**Giải thích / ví dụ:** ECU: bộ điều khiển điện tử; MCU: vi điều khiển; EthIf: giao diện Ethernet của AUTOSAR.
+
+</details>
+
+<details>
+<summary><strong>Câu 3: Embedded System là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Hệ thống nhúng là hệ thống máy tính được thiết kế cho chức năng cụ thể, thường chịu giới hạn về bộ nhớ và tài nguyên.
+
+**Giải thích / ví dụ:** Ví dụ: ECU ô tô, máy đo huyết áp, bộ điều khiển cảm biến.
+
+</details>
+
+<details>
+<summary><strong>Câu 4: C và C++ khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** C chủ yếu lập trình thủ tục; C++ hỗ trợ thêm class, lập trình hướng đối tượng, template và thư viện chuẩn.
+
+**Giải thích / ví dụ:** OOP: lập trình hướng đối tượng; class: khuôn mẫu tạo đối tượng.
+
+</details>
+
+<details>
+<summary><strong>Câu 5: Pointer là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Pointer (con trỏ) là biến lưu địa chỉ bộ nhớ của đối tượng hoặc hàm; `&a` lấy địa chỉ, `*p` truy cập giá trị mà `p` trỏ tới.
+
+**Giải thích / ví dụ:** Ví dụ: `int a=10; int *p=&a;` thì `*p` là 10.
+
+</details>
+
+<details>
+<summary><strong>Câu 6: Pointer và Reference khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Pointer lưu địa chỉ, có thể là `nullptr` và đổi đối tượng được trỏ tới; reference là bí danh gắn với đối tượng khi khởi tạo.
+
+**Giải thích / ví dụ:** Reference: tham chiếu; `nullptr`: giá trị con trỏ rỗng.
+
+</details>
+
+<details>
+<summary><strong>Câu 7: Stack và Heap khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Stack thường chứa thông tin gọi hàm và biến cục bộ; heap dùng để cấp phát động và cần quản lý vòng đời tài nguyên.
+
+**Giải thích / ví dụ:** Stack: ngăn xếp; heap: vùng cấp phát động; memory leak: rò rỉ bộ nhớ.
+
+</details>
+
+<details>
+<summary><strong>Câu 8: Memory leak là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Memory leak là tình trạng vùng nhớ đã cấp phát không được giải phóng khi không còn sử dụng, khiến bộ nhớ khả dụng giảm dần.
+
+**Giải thích / ví dụ:** Ví dụ: gọi `malloc()` liên tục mà quên `free()`.
+
+</details>
+
+<details>
+<summary><strong>Câu 9: Xử lý memory leak như thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra vị trí cấp phát và giải phóng, sử dụng RAII và smart pointer khi phù hợp; dùng công cụ theo dõi bộ nhớ để xác định lỗi.
+
+**Giải thích / ví dụ:** RAII: quản lý tài nguyên theo vòng đời đối tượng; smart pointer: con trỏ thông minh.
+
+</details>
+
+<details>
+<summary><strong>Câu 10: `volatile` dùng để làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** `volatile` cho trình biên dịch biết giá trị có thể thay đổi ngoài luồng thực thi bình thường, thường dùng với thanh ghi phần cứng.
+
+**Giải thích / ví dụ:** Compiler: trình biên dịch; hardware register: thanh ghi phần cứng; ISR: hàm xử lý ngắt.
+
+</details>
+
+<details>
+<summary><strong>Câu 11: `volatile` có đảm bảo an toàn đa luồng không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không. `volatile` không bảo đảm thao tác nguyên tử hoặc đồng bộ giữa các luồng; cần atomic, mutex hoặc cơ chế phù hợp.
+
+**Giải thích / ví dụ:** Thread-safe: an toàn đa luồng; atomic: thao tác nguyên tử; mutex: khóa loại trừ lẫn nhau.
+
+</details>
+
+<details>
+<summary><strong>Câu 12: `const` và `constexpr` khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** `const` ngăn sửa giá trị qua biến đó; `constexpr` cho phép và yêu cầu khởi tạo phù hợp với biểu thức hằng tại thời điểm biên dịch.
+
+**Giải thích / ví dụ:** Compile time: thời điểm biên dịch; runtime: khi chương trình chạy.
+
+</details>
+
+<details>
+<summary><strong>Câu 13: `struct` và `class` trong C++ khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Hai loại có khả năng gần giống nhau, nhưng `struct` mặc định thành viên và kế thừa là `public`, còn `class` mặc định là `private`.
+
+**Giải thích / ví dụ:** Public: truy cập công khai; private: truy cập giới hạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 14: OOP gồm những đặc điểm nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Bốn đặc điểm chính: đóng gói, kế thừa, đa hình và trừu tượng.
+
+**Giải thích / ví dụ:** Encapsulation: đóng gói; inheritance: kế thừa; polymorphism: đa hình; abstraction: trừu tượng.
+
+</details>
+
+<details>
+<summary><strong>Câu 15: Polymorphism là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Đa hình cho phép cùng một lời gọi qua giao diện chung có hành vi khác nhau theo loại đối tượng thực tế.
+
+**Giải thích / ví dụ:** Ví dụ: `Animal::sound()` được `Dog` và `Cat` ghi đè khác nhau.
+
+</details>
+
+<details>
+<summary><strong>Câu 16: Virtual function là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Hàm ảo `virtual` cho phép gọi đúng bản ghi đè ở class con thông qua con trỏ hoặc tham chiếu class cha khi chạy.
+
+**Giải thích / ví dụ:** Override: ghi đè; runtime: khi chương trình đang chạy.
+
+</details>
+
+<details>
+<summary><strong>Câu 17: Virtual destructor để làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Bảo đảm xóa đối tượng class con qua con trỏ class cha sẽ gọi đúng các destructor liên quan.
+
+**Giải thích / ví dụ:** Destructor: hàm hủy để dọn dẹp tài nguyên.
+
+</details>
+
+<details>
+<summary><strong>Câu 18: Smart pointer là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Con trỏ thông minh hỗ trợ quản lý vòng đời đối tượng: `unique_ptr` sở hữu duy nhất, `shared_ptr` chia sẻ sở hữu, `weak_ptr` không sở hữu.
+
+**Giải thích / ví dụ:** RAII: tự dọn tài nguyên khi đối tượng quản lý kết thúc vòng đời.
+
+</details>
+
+
+### RTOS và tác vụ thời gian thực
+
+<details>
+<summary><strong>Câu 19: RTOS là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** RTOS là hệ điều hành thời gian thực, tập trung vào việc đáp ứng các giới hạn thời gian cần thiết cho các tác vụ.
+
+**Giải thích / ví dụ:** RTOS: Real-Time Operating System; deadline: thời hạn; deterministic: có thể dự đoán/giới hạn thời gian đáp ứng.
+
+</details>
+
+<details>
+<summary><strong>Câu 20: RTOS khác hệ điều hành thông thường thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** RTOS nhấn mạnh việc đáp ứng thời hạn và thời gian phản hồi có giới hạn; hệ điều hành đa dụng thường tập trung hiệu suất tổng thể và trải nghiệm sử dụng.
+
+**Giải thích / ví dụ:** Throughput: lượng công việc xử lý trong một đơn vị thời gian; user experience: trải nghiệm người dùng.
+
+</details>
+
+<details>
+<summary><strong>Câu 21: Task trong RTOS là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Task là đơn vị công việc được RTOS lập lịch, có ngăn xếp, mức ưu tiên và trạng thái riêng.
+
+**Giải thích / ví dụ:** Task priority: mức ưu tiên giúp hệ điều hành quyết định tác vụ nào chạy trước.
+
+</details>
+
+<details>
+<summary><strong>Câu 22: Các trạng thái Task trong RTOS là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Running: đang chạy; Ready: sẵn sàng nhưng chờ CPU; Blocked: chờ sự kiện/thời gian; Suspended: bị tạm dừng.
+
+**Giải thích / ví dụ:** Các tên và cơ chế cụ thể phụ thuộc RTOS; đây là bốn trạng thái thường gặp.
+
+</details>
+
+<details>
+<summary><strong>Câu 23: Scheduler là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Scheduler là bộ lập lịch, chọn task được CPU thực thi theo quy tắc và mức ưu tiên.
+
+**Giải thích / ví dụ:** Scheduling policy: quy tắc lập lịch; priority: mức ưu tiên.
+
+</details>
+
+<details>
+<summary><strong>Câu 24: Preemptive scheduling là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Lập lịch có quyền ngắt: khi task ưu tiên cao sẵn sàng, nó có thể giành CPU từ task ưu tiên thấp đang chạy.
+
+**Giải thích / ví dụ:** Task priority: độ ưu tiên của tác vụ; preemptive: cho phép tạm dừng task hiện tại.
+
+</details>
+
+<details>
+<summary><strong>Câu 25: Context switch là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Context switch là việc lưu trạng thái thực thi của task hiện tại và khôi phục trạng thái của task khác để chuyển CPU.
+
+**Giải thích / ví dụ:** Context: các thanh ghi, con trỏ stack và trạng thái cần thiết để tiếp tục thực thi.
+
+</details>
+
+<details>
+<summary><strong>Câu 26: Mutex và Semaphore khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Mutex dùng để bảo vệ tài nguyên chung với cơ chế sở hữu khóa; semaphore là tín hiệu/bộ đếm để đồng bộ hoặc giới hạn tài nguyên.
+
+**Giải thích / ví dụ:** Mutex: khóa loại trừ; semaphore: cơ chế đồng bộ bằng tín hiệu/bộ đếm.
+
+</details>
+
+<details>
+<summary><strong>Câu 27: Khi nào dùng mutex?</strong></summary>
+
+**Trả lời phỏng vấn:** Khi nhiều task cùng truy cập tài nguyên hoặc dữ liệu dùng chung và cần ngăn thao tác đồng thời gây sai dữ liệu.
+
+**Giải thích / ví dụ:** Shared resource: tài nguyên dùng chung; critical section: đoạn mã cần bảo vệ.
+
+</details>
+
+<details>
+<summary><strong>Câu 28: Race condition là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Race condition xảy ra khi kết quả xử lý phụ thuộc không mong muốn vào thứ tự hoặc thời điểm các tác vụ thực thi.
+
+**Giải thích / ví dụ:** Data race: truy cập xung đột bộ nhớ giữa các luồng không được đồng bộ đúng cách.
+
+</details>
+
+<details>
+<summary><strong>Câu 29: Deadlock là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Deadlock xảy ra khi các task chờ tài nguyên do nhau giữ và không task nào tiến triển.
+
+**Giải thích / ví dụ:** Ví dụ: A giữ khóa 1 chờ khóa 2, B giữ khóa 2 chờ khóa 1.
+
+</details>
+
+<details>
+<summary><strong>Câu 30: Cách phòng tránh Deadlock?</strong></summary>
+
+**Trả lời phỏng vấn:** Giữ thứ tự khóa nhất quán, hạn chế thời gian giữ khóa, tránh khóa lồng nhau không cần thiết và dùng timeout khi phù hợp.
+
+**Giải thích / ví dụ:** Timeout: thời hạn chờ tối đa; lock: khóa tài nguyên.
+
+</details>
+
+<details>
+<summary><strong>Câu 31: Priority inversion là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Đảo ngược ưu tiên: task ưu tiên cao bị chặn bởi task ưu tiên thấp đang giữ tài nguyên; có thể giảm bằng kế thừa ưu tiên.
+
+**Giải thích / ví dụ:** Priority inheritance: tạm nâng mức ưu tiên của task đang giữ khóa.
+
+</details>
+
+<details>
+<summary><strong>Câu 32: ISR là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** ISR là hàm xử lý ngắt, thực thi để phản ứng với sự kiện ngắt của phần cứng hoặc hệ thống.
+
+**Giải thích / ví dụ:** ISR: Interrupt Service Routine; interrupt: ngắt.
+
+</details>
+
+<details>
+<summary><strong>Câu 33: Cần chú ý gì trong ISR?</strong></summary>
+
+**Trả lời phỏng vấn:** ISR phải ngắn, tránh hàm chờ lâu hoặc xử lý nặng; nên chuyển công việc tiếp theo cho task phù hợp.
+
+**Giải thích / ví dụ:** Blocking: phải chờ; interrupt latency: độ trễ xử lý ngắt.
+
+</details>
+
+<details>
+<summary><strong>Câu 34: ISR có nên dùng Mutex không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không dùng mutex thông thường có thể chờ trong ISR. Nên dùng API được RTOS cho phép gọi từ ngắt như queue/semaphore dạng FromISR.
+
+**Giải thích / ví dụ:** FromISR: các hàm riêng để gọi từ hàm xử lý ngắt trong FreeRTOS.
+
+</details>
+
+
+### Đa luồng
+
+<details>
+<summary><strong>Câu 35: Process và Thread khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Process là tiến trình với không gian địa chỉ riêng; các thread cùng process chia sẻ nhiều tài nguyên nhưng có stack và luồng thực thi riêng.
+
+**Giải thích / ví dụ:** Process: tiến trình; thread: luồng thực thi; shared memory: bộ nhớ dùng chung.
+
+</details>
+
+<details>
+<summary><strong>Câu 36: Bạn có kinh nghiệm multithreading không?</strong></summary>
+
+**Trả lời phỏng vấn:** Trong dự án phần mềm máy siêu âm tôi từng xử lý các chức năng UI, cơ sở dữ liệu và tác vụ nền liên quan đa luồng, chú ý đồng bộ và quản lý tài nguyên.
+
+**Giải thích / ví dụ:** UI thread: luồng giao diện; background task: tác vụ nền.
+
+</details>
+
+<details>
+<summary><strong>Câu 37: Truyền dữ liệu giữa các thread bằng cách nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Có thể dùng dữ liệu chung kết hợp mutex, hàng đợi thông điệp, tín hiệu sự kiện hoặc condition variable.
+
+**Giải thích / ví dụ:** Message queue: hàng đợi thông điệp; synchronization: đồng bộ.
+
+</details>
+
+
+### UART, SPI, I2C và Ethernet
+
+<details>
+<summary><strong>Câu 38: UART là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** UART là giao tiếp nối tiếp không đồng bộ; thường dùng TX để truyền, RX để nhận, có nối đất chung phù hợp và không có đường clock riêng.
+
+**Giải thích / ví dụ:** UART: Universal Asynchronous Receiver/Transmitter; TX: phát; RX: nhận.
+
+</details>
+
+<details>
+<summary><strong>Câu 39: UART cần cấu hình gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Cần thống nhất baud rate, số bit dữ liệu, parity và số bit dừng giữa hai thiết bị.
+
+**Giải thích / ví dụ:** Baud rate: tốc độ ký hiệu; parity: bit kiểm tra chẵn lẻ; stop bit: bit dừng.
+
+</details>
+
+<details>
+<summary><strong>Câu 40: UART và SPI khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** UART không đồng bộ; SPI đồng bộ bằng clock riêng và thường hỗ trợ truyền nhận hai chiều cùng lúc.
+
+**Giải thích / ví dụ:** SPI: Serial Peripheral Interface; SCLK: xung nhịp; MOSI/MISO: đường dữ liệu; CS: chọn thiết bị.
+
+</details>
+
+<details>
+<summary><strong>Câu 41: SPI và I2C khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** SPI thường nhanh, dùng nhiều dây; I2C sử dụng hai dây SDA/SCL và địa chỉ để kết nối nhiều thiết bị.
+
+**Giải thích / ví dụ:** I2C: Inter-Integrated Circuit; SDA: dữ liệu; SCL: nhịp đồng hồ.
+
+</details>
+
+<details>
+<summary><strong>Câu 42: UART không nhận được dữ liệu thì debug thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra dây TX/RX/GND, mức điện áp, baud rate, parity, cấu hình chân/clock/driver, ngắt hoặc DMA và buffer nhận.
+
+**Giải thích / ví dụ:** DMA: truyền dữ liệu trực tiếp; buffer: bộ đệm; logic analyzer: máy phân tích tín hiệu số.
+
+</details>
+
+<details>
+<summary><strong>Câu 43: Ethernet hoạt động cơ bản thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Ethernet là công nghệ mạng cục bộ; driver xử lý giao tiếp phần cứng, còn các giao thức như IP/TCP/UDP thực hiện truyền dữ liệu ở tầng trên.
+
+**Giải thích / ví dụ:** LAN: mạng cục bộ; driver: phần mềm điều khiển phần cứng.
+
+</details>
+
+<details>
+<summary><strong>Câu 44: TCP và UDP khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** TCP tạo kết nối, cung cấp luồng byte tin cậy và đúng thứ tự; UDP gửi datagram không bảo đảm nhận được hay đúng thứ tự.
+
+**Giải thích / ví dụ:** Packet/datagram: gói dữ liệu; overhead: phần chi phí xử lý bổ sung.
+
+</details>
+
+<details>
+<summary><strong>Câu 45: Truyền dữ liệu quan trọng nên chọn TCP hay UDP?</strong></summary>
+
+**Trả lời phỏng vấn:** Nếu cần truyền tin cậy và đúng thứ tự thường chọn TCP; nếu ưu tiên độ trễ và tự xử lý mất gói có thể chọn UDP.
+
+**Giải thích / ví dụ:** Latency: độ trễ; reliability: độ tin cậy. TCP vẫn cần xử lý lỗi, timeout ở tầng ứng dụng.
+
+</details>
+
+
+### Cảm biến và cơ cấu chấp hành
+
+<details>
+<summary><strong>Câu 46: Sensor và Actuator khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Sensor thu thập thông tin từ môi trường; actuator nhận lệnh và tạo tác động vật lý.
+
+**Giải thích / ví dụ:** Sensor: cảm biến; actuator: cơ cấu chấp hành. Ví dụ: cảm biến nhiệt độ và động cơ.
+
+</details>
+
+<details>
+<summary><strong>Câu 47: Xử lý dữ liệu sensor thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Đọc qua giao tiếp phần cứng, kiểm tra hợp lệ, hiệu chuẩn/lọc nhiễu khi cần rồi chuyển dữ liệu cho chức năng xử lý.
+
+**Giải thích / ví dụ:** Calibration: hiệu chuẩn; filter: lọc nhiễu; validation: kiểm tra hợp lệ.
+
+</details>
+
+<details>
+<summary><strong>Câu 48: Sensor trả giá trị bất thường thì làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra giới hạn dữ liệu, trạng thái cảm biến, giao tiếp và timeout; bỏ dữ liệu sai và xử lý an toàn theo yêu cầu hệ thống.
+
+**Giải thích / ví dụ:** Range: khoảng giá trị; timeout: hết thời gian chờ.
+
+</details>
+
+<details>
+<summary><strong>Câu 49: Actuator không phản hồi thì làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra lệnh gửi, kết nối, nguồn, phản hồi và timeout; báo lỗi hoặc đưa hệ thống về trạng thái an toàn phù hợp.
+
+**Giải thích / ví dụ:** Feedback: tín hiệu phản hồi; fail-safe: chuyển sang trạng thái an toàn khi lỗi.
+
+</details>
+
+
+### Qt và giao diện người dùng
+
+<details>
+<summary><strong>Câu 50: Bạn có kinh nghiệm Qt không?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi có kinh nghiệm GUI bằng C++/MFC; chưa có nhiều kinh nghiệm Qt thực tế nhưng đã quen cơ chế sự kiện và xử lý đa luồng nên có nền tảng học Qt.
+
+**Giải thích / ví dụ:** Qt: framework C++; GUI: giao diện đồ họa; MFC: thư viện GUI cho Windows.
+
+</details>
+
+<details>
+<summary><strong>Câu 51: Signal và Slot trong Qt là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Signal phát thông báo khi có sự kiện; slot là hàm xử lý tín hiệu đã kết nối.
+
+**Giải thích / ví dụ:** Ví dụ: bấm nút phát signal, slot cập nhật màn hình.
+
+</details>
+
+<details>
+<summary><strong>Câu 52: Event-driven programming là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Lập trình hướng sự kiện: chương trình phản ứng khi xảy ra sự kiện như nhấn nút, timer hết thời gian hoặc nhận dữ liệu.
+
+**Giải thích / ví dụ:** Event: sự kiện; handler: hàm xử lý sự kiện.
+
+</details>
+
+<details>
+<summary><strong>Câu 53: Có nên xử lý nặng trong UI thread không?</strong></summary>
+
+**Trả lời phỏng vấn:** Không, vì có thể làm giao diện không phản hồi. Chuyển xử lý nặng sang worker thread và cập nhật GUI bằng cơ chế an toàn cho luồng giao diện.
+
+**Giải thích / ví dụ:** UI thread: luồng giao diện; worker thread: luồng xử lý phụ; freeze: đứng giao diện.
+
+</details>
+
+<details>
+<summary><strong>Câu 54: Thiết kế UI cho AED thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** UI phải rõ ràng, ít thao tác, chỉ dẫn dễ hiểu và cảnh báo nổi bật để người dùng thao tác đúng trong tình huống khẩn cấp.
+
+**Giải thích / ví dụ:** AED: máy khử rung tim tự động bên ngoài; usability: tính dễ sử dụng.
+
+</details>
+
+
+### Thiết bị y tế và an toàn
+
+<details>
+<summary><strong>Câu 55: Bạn có kinh nghiệm Medical Device không?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi từng làm phần mềm C++ cho máy siêu âm, liên quan GUI, cơ sở dữ liệu, đa luồng và giao tiếp DICOM.
+
+**Giải thích / ví dụ:** DICOM: chuẩn dữ liệu/hình ảnh y tế; medical device: thiết bị y tế.
+
+</details>
+
+<details>
+<summary><strong>Câu 56: Medical Device khác phần mềm thông thường ở đâu?</strong></summary>
+
+**Trả lời phỏng vấn:** Phần mềm thiết bị y tế đòi hỏi chú trọng an toàn, độ tin cậy, đánh giá rủi ro, kiểm thử, tài liệu và truy vết.
+
+**Giải thích / ví dụ:** Safety: an toàn; reliability: độ tin cậy; traceability: truy vết yêu cầu tới thiết kế và test.
+
+</details>
+
+<details>
+<summary><strong>Câu 57: IEC 62304 là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** IEC 62304 là tiêu chuẩn về quy trình vòng đời phần mềm thiết bị y tế, gồm phát triển, bảo trì, quản lý cấu hình và xử lý vấn đề.
+
+**Giải thích / ví dụ:** Software lifecycle: vòng đời phần mềm; configuration management: quản lý cấu hình.
+
+</details>
+
+<details>
+<summary><strong>Câu 58: Vì sao Reliability quan trọng với AED?</strong></summary>
+
+**Trả lời phỏng vấn:** Thiết bị cấp cứu phải hoạt động đúng, ổn định và sẵn sàng khi cần; lỗi phần mềm có thể ảnh hưởng trực tiếp đến bệnh nhân.
+
+**Giải thích / ví dụ:** Reliability: độ tin cậy; availability: độ sẵn sàng; safety-critical: liên quan an toàn nghiêm trọng.
+
+</details>
+
+<details>
+<summary><strong>Câu 59: Fail-safe là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Fail-safe là cơ chế đưa hệ thống về trạng thái an toàn phù hợp khi phát hiện lỗi để giảm nguy cơ gây hại.
+
+**Giải thích / ví dụ:** Safe state: trạng thái an toàn, phụ thuộc thiết kế và phân tích rủi ro của thiết bị.
+
+</details>
+
+<details>
+<summary><strong>Câu 60: Watchdog Timer dùng để làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Watchdog giám sát tiến độ chương trình; nếu không được cập nhật đúng hạn, nó có thể kích hoạt reset hoặc biện pháp phục hồi đã thiết kế.
+
+**Giải thích / ví dụ:** Watchdog: bộ định thời giám sát; reset: khởi động lại.
+
+</details>
+
+<details>
+<summary><strong>Câu 61: Tăng reliability của Embedded Software thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra đầu vào, xử lý lỗi/timeout, thiết kế trạng thái rõ ràng, giám sát hoạt động và kiểm thử đầy đủ.
+
+**Giải thích / ví dụ:** Input validation: kiểm tra dữ liệu; state machine: máy trạng thái.
+
+</details>
+
+<details>
+<summary><strong>Câu 62: Hàm quan trọng trả lỗi thì làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra mã lỗi, ghi log, xác định nguyên nhân, phục hồi nếu phù hợp và không để hệ thống tiếp tục ở trạng thái mất an toàn.
+
+**Giải thích / ví dụ:** Error code: mã lỗi; log: bản ghi hoạt động; recovery: phục hồi.
+
+</details>
+
+<details>
+<summary><strong>Câu 63: Điều gì quan trọng nhất khi phát triển thiết bị y tế?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi ưu tiên an toàn và độ tin cậy, sau đó bảo đảm khả năng kiểm thử, bảo trì, truy vết và dễ sử dụng.
+
+**Giải thích / ví dụ:** Maintainability: khả năng bảo trì; testability: khả năng kiểm thử.
+
+</details>
+
+
+### Kiểm thử và debug
+
+<details>
+<summary><strong>Câu 64: Bạn thường debug C/C++ thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Tái hiện lỗi, đọc log, đặt breakpoint, theo dõi call stack và giá trị biến, xác định nguyên nhân gốc rồi kiểm thử lại sau khi sửa.
+
+**Giải thích / ví dụ:** Breakpoint: điểm dừng; call stack: danh sách lời gọi hàm; root cause: nguyên nhân gốc.
+
+</details>
+
+<details>
+<summary><strong>Câu 65: Unit Test là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Unit Test kiểm tra một đơn vị nhỏ như hàm hoặc module riêng lẻ có hoạt động đúng yêu cầu hay không.
+
+**Giải thích / ví dụ:** Test case: trường hợp kiểm thử; assertion: điều kiện kiểm tra kết quả.
+
+</details>
+
+<details>
+<summary><strong>Câu 66: Stub và Mock là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Stub cung cấp hành vi giả để thay dependency; mock thường còn cho phép kiểm tra lời gọi và tương tác với dependency.
+
+**Giải thích / ví dụ:** Dependency: thành phần phụ thuộc; mock/stub: đối tượng hoặc hàm giả lập khi test.
+
+</details>
+
+<details>
+<summary><strong>Câu 67: Bạn đã sử dụng công cụ Unit Test nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Tại dự án AUTOSAR tôi sử dụng mSQT để thiết kế và thực hiện các test case cho API của EthIf.
+
+**Giải thích / ví dụ:** API: giao diện lập trình; EthIf: Ethernet Interface; mSQT: công cụ/framework kiểm thử dự án.
+
+</details>
+
+<details>
+<summary><strong>Câu 68: Boundary Value Testing là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm thử các giá trị ở và quanh ranh giới cho phép, ví dụ giới hạn 0–100 thì thử -1, 0, 1, 99, 100, 101.
+
+**Giải thích / ví dụ:** Boundary: biên; range: khoảng hợp lệ.
+
+</details>
+
+<details>
+<summary><strong>Câu 69: Regression Test là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm thử hồi quy là chạy lại các test cần thiết sau khi sửa lỗi hoặc thêm chức năng để phát hiện tác động đến phần cũ.
+
+**Giải thích / ví dụ:** Regression: lỗi tái phát hoặc tác động không mong muốn sau thay đổi.
+
+</details>
+
+
+### Thiết kế phần mềm
+
+<details>
+<summary><strong>Câu 70: State Machine là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** State Machine mô hình hóa hành vi hệ thống bằng các trạng thái và điều kiện chuyển giữa các trạng thái.
+
+**Giải thích / ví dụ:** State: trạng thái; transition: chuyển trạng thái; event: sự kiện.
+
+</details>
+
+<details>
+<summary><strong>Câu 71: Vì sao State Machine dùng nhiều trong Embedded?</strong></summary>
+
+**Trả lời phỏng vấn:** Thiết bị thường có trạng thái rõ ràng như Init, Idle, Running, Error nên máy trạng thái giúp logic dễ kiểm soát và kiểm thử.
+
+**Giải thích / ví dụ:** Init: khởi tạo; Idle: chờ; Running: hoạt động; Error: lỗi.
+
+</details>
+
+<details>
+<summary><strong>Câu 72: Thiết kế module Embedded thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Chia phần mềm thành các module có nhiệm vụ và giao diện rõ ràng, tách logic ứng dụng khỏi phần phụ thuộc phần cứng khi phù hợp.
+
+**Giải thích / ví dụ:** Module: thành phần; interface: giao diện kết nối; abstraction: trừu tượng.
+
+</details>
+
+<details>
+<summary><strong>Câu 73: Low Coupling có lợi gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Các module ít phụ thuộc nhau sẽ dễ sửa đổi, kiểm thử và bảo trì mà giảm ảnh hưởng dây chuyền.
+
+**Giải thích / ví dụ:** Coupling: độ phụ thuộc giữa các module; low coupling: phụ thuộc thấp.
+
+</details>
+
+<details>
+<summary><strong>Câu 74: Software Design Document là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Tài liệu thiết kế phần mềm mô tả kiến trúc, module, giao diện, luồng dữ liệu và cách xử lý chức năng.
+
+**Giải thích / ví dụ:** Basic Design: thiết kế cơ bản; Detailed Design: thiết kế chi tiết.
+
+</details>
+
+
+### Kinh nghiệm dự án
+
+<details>
+<summary><strong>Câu 75: Trong AUTOSAR bạn đã làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi kiểm thử module EthIf: đọc SWS/ECUC, viết test case, cấu hình stub, chạy test và so sánh kết quả.
+
+**Giải thích / ví dụ:** SWS: đặc tả phần mềm; ECUC: cấu hình ECU; EthIf: Ethernet Interface.
+
+</details>
+
+<details>
+<summary><strong>Câu 76: EthIf nằm ở đâu trong AUTOSAR?</strong></summary>
+
+**Trả lời phỏng vấn:** EthIf là lớp giao diện giữa các module phía trên như TcpIp/EthSM và phần Ethernet Driver/Transceiver ở dưới.
+
+**Giải thích / ví dụ:** EthSM: bộ quản lý trạng thái Ethernet; transceiver: bộ thu phát.
+
+</details>
+
+<details>
+<summary><strong>Câu 77: MCU dự án Automotive là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Dự án chủ yếu dùng Infineon AURIX TC39x, compiler TASKING và công cụ Mobilgene để cấu hình BSW.
+
+**Giải thích / ví dụ:** BSW: phần mềm nền tảng AUTOSAR; compiler: trình biên dịch.
+
+</details>
+
+<details>
+<summary><strong>Câu 78: Bạn từng làm giao thức truyền thông nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi từng làm kiểm thử Ethernet/EthIf trong AUTOSAR, có kiến thức CAN và các giao tiếp nhúng; dự án thiết bị y tế có các chức năng DICOM.
+
+**Giải thích / ví dụ:** CAN: mạng điều khiển trên ô tô; DICOM: tiêu chuẩn dữ liệu y tế.
+
+</details>
+
+<details>
+<summary><strong>Câu 79: Trong dự án máy siêu âm bạn làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi phát triển và sửa lỗi ứng dụng C++ máy siêu âm liên quan UI, đa luồng, cơ sở dữ liệu và DICOM.
+
+**Giải thích / ví dụ:** UI: giao diện người dùng; database: cơ sở dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 80: Ví dụ một bug khó bạn từng xử lý?</strong></summary>
+
+**Trả lời phỏng vấn:** Tôi xử lý lỗi hộp thoại bị đóng khi callback gửi dữ liệu vẫn đang chạy, bằng cách quản lý trình tự hoàn tất callback trước khi đóng tài nguyên liên quan.
+
+**Giải thích / ví dụ:** Callback: hàm gọi lại; lifecycle: vòng đời tài nguyên; synchronization: đồng bộ.
+
+</details>
+
+
+### Tình huống kỹ thuật
+
+<details>
+<summary><strong>Câu 81: Task RTOS chạy quá lâu thì sao?</strong></summary>
+
+**Trả lời phỏng vấn:** Các task khác có thể bị trễ hoặc lỡ deadline; cần đo thời gian chạy, kiểm tra mức ưu tiên và giảm thao tác gây chờ.
+
+**Giải thích / ví dụ:** Execution time: thời gian chạy; missed deadline: trễ thời hạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 82: Sensor phải đọc mỗi 10 ms nhưng task mất 20 ms thì sao?</strong></summary>
+
+**Trả lời phỏng vấn:** Phân tích thời gian thực thi và ưu tiên; tối ưu hoặc tách đọc cảm biến ra khỏi xử lý nặng để đáp ứng chu kỳ 10 ms.
+
+**Giải thích / ví dụ:** Periodic task: tác vụ định kỳ; acquisition: lấy mẫu dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 83: Hai Task cùng truy cập Buffer thì làm sao?</strong></summary>
+
+**Trả lời phỏng vấn:** Bảo vệ buffer chung bằng mutex, hoặc truyền dữ liệu qua queue để hạn chế truy cập chung trực tiếp.
+
+**Giải thích / ví dụ:** Buffer: bộ đệm; queue: hàng đợi.
+
+</details>
+
+<details>
+<summary><strong>Câu 84: Ethernet mất kết nối thì xử lý sao?</strong></summary>
+
+**Trả lời phỏng vấn:** Phát hiện link-down hoặc timeout, cập nhật trạng thái, thử kết nối lại theo chính sách và không dùng dữ liệu đã không hợp lệ.
+
+**Giải thích / ví dụ:** Link-down: mất liên kết; reconnect: kết nối lại.
+
+</details>
+
+<details>
+<summary><strong>Câu 85: UI bị đứng nhưng hệ thống điều khiển vẫn chạy thì debug gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra UI thread có bị chặn do tác vụ nặng, mutex hoặc chờ thread khác; xem log, call stack và trao đổi sự kiện.
+
+**Giải thích / ví dụ:** Freeze: không phản hồi; blocking: bị chặn/chờ.
+
+</details>
+
+<details>
+<summary><strong>Câu 86: Chương trình crash ngẫu nhiên sau vài giờ thì nghĩ đến gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra rò rỉ bộ nhớ/tài nguyên, tràn bộ đệm, con trỏ treo, lỗi đa luồng và dữ liệu đầu vào bất thường.
+
+**Giải thích / ví dụ:** Crash: dừng bất thường; dangling pointer: con trỏ trỏ tới đối tượng hết hạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 87: Hardware trả dữ liệu sai thì Software làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Kiểm tra dữ liệu, giới hạn và trạng thái giao tiếp; phát hiện lỗi, không đưa dữ liệu sai vào xử lý nguy hiểm.
+
+**Giải thích / ví dụ:** Hardware: phần cứng; validation: xác thực dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 88: Software và Hardware không thống nhất nguyên nhân lỗi thì làm gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Thu thập log, tái hiện vấn đề, xác nhận hợp đồng giao tiếp và đo tín hiệu thực tế cùng nhóm phần cứng.
+
+**Giải thích / ví dụ:** Evidence: bằng chứng; interface: giao diện giao tiếp.
+
+</details>
+
+
+### IDE, vi điều khiển và trình biên dịch
+
+<details>
+<summary><strong>Câu 89: SEGGER Embedded Studio là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** SEGGER Embedded Studio là IDE lập trình C/C++ cho hệ thống nhúng, hỗ trợ biên dịch, nạp và debug các vi điều khiển được hỗ trợ.
+
+**Giải thích / ví dụ:** IDE: môi trường phát triển tích hợp; SEGGER: nhà sản xuất công cụ.
+
+</details>
+
+<details>
+<summary><strong>Câu 90: IAR Embedded Workbench là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** IAR Embedded Workbench là môi trường phát triển nhúng có compiler, linker và debugger phục vụ chương trình C/C++ trên MCU.
+
+**Giải thích / ví dụ:** Compiler: biên dịch; linker: liên kết; debugger: công cụ sửa lỗi.
+
+</details>
+
+<details>
+<summary><strong>Câu 91: IDE là gì và bạn dùng IDE nào?</strong></summary>
+
+**Trả lời phỏng vấn:** IDE là môi trường tích hợp để viết, build và debug; tôi từng sử dụng Visual Studio cho C++ máy siêu âm và Eclipse CDT cho AUTOSAR.
+
+**Giải thích / ví dụ:** IDE: Integrated Development Environment; build: tạo chương trình.
+
+</details>
+
+<details>
+<summary><strong>Câu 92: Vi điều khiển khác vi xử lý thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** MCU tích hợp CPU, RAM, Flash và ngoại vi trên chip; MPU tập trung vào năng lực xử lý và thường kết hợp bộ nhớ, ngoại vi ngoài.
+
+**Giải thích / ví dụ:** MCU: Microcontroller Unit (vi điều khiển); MPU: Microprocessor Unit (vi xử lý).
+
+</details>
+
+<details>
+<summary><strong>Câu 93: nRF52840 là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** nRF52840 là vi điều khiển/SoC không dây của Nordic Semiconductor, có lõi ARM Cortex-M4, 1 MB Flash, 256 KB RAM và hỗ trợ Bluetooth Low Energy.
+
+**Giải thích / ví dụ:** Cortex-M4: lõi CPU; BLE: Bluetooth tiết kiệm năng lượng; SoC: hệ thống trên chip.
+
+</details>
+
+<details>
+<summary><strong>Câu 94: nRF52840 dùng để làm gì? Có trong Router không?</strong></summary>
+
+**Trả lời phỏng vấn:** nRF52840 dùng cho thiết bị IoT, cảm biến, thiết bị đeo và đồ dùng Bluetooth. Arduino Nano 33 BLE Sense, Adafruit Feather nRF52840, Nordic nRF52840 DK là các bo mạch dùng chip này. Router Wi-Fi thông thường không dùng nó làm bộ xử lý chính, nhưng một số thiết bị có thể dùng nó làm chip không dây phụ.
+
+**Giải thích / ví dụ:** nRF52840 là MCU, không phải MPU; router thường có SoC mạng riêng; Thread/Zigbee/BLE là các công nghệ không dây.
+
+</details>
+
+<details>
+<summary><strong>Câu 95: Cross Compiler là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Trình biên dịch chéo chạy trên máy phát triển nhưng tạo chương trình cho kiến trúc hoặc môi trường đích khác.
+
+**Giải thích / ví dụ:** Host: máy biên dịch; target: thiết bị chạy; ví dụ `arm-none-eabi-gcc`.
+
+</details>
+
+<details>
+<summary><strong>Câu 96: IDE khác Compiler thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** IDE là môi trường soạn thảo và quản lý dự án; compiler là công cụ dịch mã nguồn thành mã đích.
+
+**Giải thích / ví dụ:** Ví dụ: Visual Studio là IDE; MSVC hoặc GCC là trình biên dịch.
+
+</details>
+
+<details>
+<summary><strong>Câu 97: SEGGER Embedded Studio khác IAR thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Cả hai đều là IDE nhúng; khác về compiler, debugger, khả năng tối ưu, hệ sinh thái công cụ và kiến trúc hỗ trợ.
+
+**Giải thích / ví dụ:** SEGGER thường kết hợp J-Link; IAR có compiler và debugger C-SPY.
+
+</details>
+
+<details>
+<summary><strong>Câu 98: J-Link là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** J-Link là đầu dò nạp và debug của SEGGER, giúp máy tính kết nối MCU để nạp chương trình, đặt breakpoint, xem thanh ghi và bộ nhớ.
+
+**Giải thích / ví dụ:** SWD: giao tiếp debug hai tín hiệu chủ yếu; JTAG: giao tiếp kiểm thử và debug.
+
+</details>
+
+<details>
+<summary><strong>Câu 99: Bare-metal và RTOS khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Bare-metal chạy code trực tiếp không có hệ điều hành; RTOS quản lý task, mức ưu tiên và đồng bộ cho tác vụ thời gian thực.
+
+**Giải thích / ví dụ:** Bare-metal: không OS; scheduling: lập lịch thực thi.
+
+</details>
+
+<details>
+<summary><strong>Câu 100: Quy trình phát triển firmware trên MCU?</strong></summary>
+
+**Trả lời phỏng vấn:** Viết mã C/C++, cấu hình build, biên dịch, liên kết, tạo firmware, nạp xuống MCU rồi kiểm thử/debug trên thiết bị.
+
+**Giải thích / ví dụ:** Compile: biên dịch; link: liên kết; flash: nạp vào bộ nhớ chip.
+
+</details>
+
+
+### TRACE32, router và GDB
+
+<details>
+<summary><strong>Câu 101: TRACE32 là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** TRACE32 là bộ công cụ debug và phân tích hệ thống nhúng của Lauterbach; cho phép xem thanh ghi, bộ nhớ, breakpoint và thông tin thực thi trên chip phù hợp.
+
+**Giải thích / ví dụ:** Trace: thông tin theo dõi thực thi; JTAG/SWD: giao tiếp debug phần cứng.
+
+</details>
+
+<details>
+<summary><strong>Câu 102: TRACE32 khác J-Link thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** TRACE32 là hệ thống công cụ debug và phân tích chuyên sâu của Lauterbach; J-Link là dòng đầu dò nạp/debug của SEGGER.
+
+**Giải thích / ví dụ:** Cả hai phụ thuộc vào mức hỗ trợ của chip và giao tiếp debug.
+
+</details>
+
+<details>
+<summary><strong>Câu 103: Trong Router thường debug bằng gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Với OpenWrt/Linux, thường dùng SSH, `logread`, `dmesg`, GDB/gdbserver, UART console; khi cần mức thấp có thể dùng JTAG.
+
+**Giải thích / ví dụ:** SSH: truy cập từ xa; UART console: cổng lệnh nối tiếp; `tcpdump`: bắt gói mạng.
+
+</details>
+
+<details>
+<summary><strong>Câu 104: GDB và GDB Server là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** GDB là trình debug C/C++; gdbserver chạy trên thiết bị đích để GDB từ máy phát triển có thể kết nối và debug từ xa.
+
+**Giải thích / ví dụ:** GDB: GNU Debugger; remote debugging: debug trên thiết bị khác.
+
+</details>
+
+<details>
+<summary><strong>Câu 105: Debug bằng SSH khác JTAG thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** SSH cần hệ điều hành/dịch vụ mạng hoạt động và thích hợp xem log, chạy công cụ; JTAG cho phép debug CPU/firmware ở mức phần cứng nếu chip và bo mạch hỗ trợ.
+
+**Giải thích / ví dụ:** SSH: kết nối terminal qua mạng; JTAG: giao diện kiểm tra/debug phần cứng.
+
+</details>
+
+<details>
+<summary><strong>Câu 106: GDB là gì? Ví dụ debug Router?</strong></summary>
+
+**Trả lời phỏng vấn:** GDB cho phép đặt breakpoint, chạy từng bước, xem biến và call stack. Với OpenWrt có thể chạy `gdbserver :1234 ./app` trên router, dùng GDB phù hợp kiến trúc trên PC và `target remote 192.168.1.1:1234` để kết nối.
+
+**Giải thích / ví dụ:** `break main`: đặt điểm dừng; `next`: chạy qua dòng; `step`: vào hàm; `print x`: xem biến; `backtrace`: xem các hàm đang gọi. Cần chương trình đúng kiến trúc và có debug symbol.
+
+</details>
+
+
+### Qt/QML và thiết kế GUI
+
+<details>
+<summary><strong>Câu 107: Qt là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Qt là framework ứng dụng C++, hỗ trợ GUI và phát triển trên nhiều nền tảng như Windows, Linux và Embedded Linux.
+
+**Giải thích / ví dụ:** GUI: giao diện đồ họa; framework: bộ thư viện/công cụ; cross-platform: đa nền tảng.
+
+</details>
+
+<details>
+<summary><strong>Câu 108: QML là gì, khác C++ thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** QML là ngôn ngữ khai báo của Qt để mô tả giao diện và tương tác; C++ thường xử lý dữ liệu, chức năng và giao tiếp tầng dưới.
+
+**Giải thích / ví dụ:** QML: Qt Modeling Language; declarative: khai báo giao diện mong muốn.
+
+</details>
+
+<details>
+<summary><strong>Câu 109: MOC trong Qt là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** MOC (Meta-Object Compiler) đọc các khai báo mở rộng trong class C++ của Qt, ví dụ `Q_OBJECT`, và sinh mã C++ hỗ trợ meta-object, signal/slot; không phải trình chuyên chuyển QML thành C++.
+
+**Giải thích / ví dụ:** Q_OBJECT: macro Qt; signal: tín hiệu; slot: hàm nhận tín hiệu. Công cụ QML khác gồm qmlcachegen/qmlsc.
+
+</details>
+
+<details>
+<summary><strong>Câu 110: RCC trong Qt là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** RCC (Resource Compiler) đóng gói hình ảnh, icon, font và file tài nguyên được khai báo để ứng dụng Qt truy cập thuận tiện.
+
+**Giải thích / ví dụ:** Resource: tài nguyên; QRC: file mô tả tài nguyên.
+
+</details>
+
+<details>
+<summary><strong>Câu 111: Figma là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Figma là công cụ thiết kế giao diện, bố cục và bản mô phỏng tương tác trước khi lập trình.
+
+**Giải thích / ví dụ:** UI: giao diện người dùng; UX: trải nghiệm; prototype: bản mẫu mô phỏng.
+
+</details>
+
+<details>
+<summary><strong>Câu 112: Adobe XD là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Adobe XD là công cụ thiết kế UI/UX và prototype, có mục đích tương tự Figma, không phải compiler hay driver đồ họa.
+
+**Giải thích / ví dụ:** Prototype: mô hình tương tác; design: thiết kế.
+
+</details>
+
+
+### OpenGL, SDL và hiển thị
+
+<details>
+<summary><strong>Câu 113: OpenGL là gì, có phải Driver không?</strong></summary>
+
+**Trả lời phỏng vấn:** OpenGL là API đồ họa cho tác vụ vẽ 2D/3D; không phải driver phần cứng, mà được implementation/driver đồ họa thực thi.
+
+**Giải thích / ví dụ:** API: giao diện lập trình; GPU: bộ xử lý đồ họa; rendering: quá trình tạo hình.
+
+</details>
+
+<details>
+<summary><strong>Câu 114: SDL là gì, có phải Driver không?</strong></summary>
+
+**Trả lời phỏng vấn:** SDL (Simple DirectMedia Layer) là thư viện đa phương tiện C/C++ hỗ trợ cửa sổ, sự kiện đầu vào, âm thanh và vẽ hình; không phải GPU driver.
+
+**Giải thích / ví dụ:** Event: sự kiện; window: cửa sổ; SDL có thể kết hợp OpenGL.
+
+</details>
+
+<details>
+<summary><strong>Câu 115: OpenGL và SDL khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** OpenGL tập trung vào API vẽ đồ họa; SDL giúp quản lý cửa sổ, nhập liệu, âm thanh và cung cấp API vẽ 2D, có thể kết hợp OpenGL.
+
+**Giải thích / ví dụ:** Graphics API: giao diện đồ họa; multimedia: đa phương tiện.
+
+</details>
+
+<details>
+<summary><strong>Câu 116: Vì sao cài GUI thành công nhưng màn hình không lên hình?</strong></summary>
+
+**Trả lời phỏng vấn:** Ứng dụng có thể thiếu hoặc chọn sai driver, Qt Platform Plugin hay hệ thống hiển thị tương ứng; cần kiểm tra log, đầu ra đồ họa và tính tương thích phần cứng.
+
+**Giải thích / ví dụ:** Platform Plugin: thành phần kết nối Qt với hệ hiển thị; EGLFS/LinuxFB: plugin phổ biến trên nhúng.
+
+</details>
+
+
+### CMake, GCC và build đa nền tảng
+
+<details>
+<summary><strong>Câu 117: CMake là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** CMake là công cụ cấu hình và tạo hệ thống build cho C/C++; xác định mã nguồn, thư viện, compiler và tùy chọn build.
+
+**Giải thích / ví dụ:** `CMakeLists.txt`: file cấu hình; CMake không tự thay thế compiler.
+
+</details>
+
+<details>
+<summary><strong>Câu 118: GCC là gì, khác CMake thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** GCC (GNU Compiler Collection) là bộ trình biên dịch; CMake là công cụ tổ chức và tạo cấu hình build để gọi compiler và công cụ liên quan.
+
+**Giải thích / ví dụ:** GCC: bộ công cụ biên dịch GNU; build: tạo chương trình.
+
+</details>
+
+<details>
+<summary><strong>Câu 119: Cross-platform Build là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Xây dựng phần mềm để có thể biên dịch trên nhiều hệ điều hành/kiến trúc qua cách cấu hình và mã nguồn phù hợp.
+
+**Giải thích / ví dụ:** Cross-platform: đa nền tảng; cross-compilation: biên dịch từ host cho target khác.
+
+</details>
+
+<details>
+<summary><strong>Câu 120: Chỉ thị tiền xử lý là gì, dùng cho nhiều nền tảng thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Các chỉ thị bắt đầu bằng `#` được xử lý trước biên dịch, ví dụ `#include`, `#define`, `#ifdef`, `#elif`, `#endif` để chọn mã theo nền tảng.
+
+**Giải thích / ví dụ:** Preprocessor: bộ tiền xử lý; conditional compilation: biên dịch có điều kiện.
+
+</details>
+
+
+### Driver hiển thị trên Embedded Linux
+
+<details>
+<summary><strong>Câu 121: Framebuffer là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** Framebuffer là vùng bộ nhớ chứa dữ liệu điểm ảnh để hiển thị; Linux truyền thống thường có giao diện thiết bị `/dev/fb0`.
+
+**Giải thích / ví dụ:** Pixel: điểm ảnh; framebuffer không đồng nghĩa với driver đồ họa.
+
+</details>
+
+<details>
+<summary><strong>Câu 122: GPU Driver là gì, khác Framebuffer thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** GPU driver điều khiển phần cứng đồ họa và có thể hỗ trợ tăng tốc; framebuffer là vùng nhớ chứa hình ảnh, không phải hai loại driver đối lập tuyệt đối.
+
+**Giải thích / ví dụ:** Hardware acceleration: tăng tốc bằng phần cứng; GPU: bộ xử lý đồ họa.
+
+</details>
+
+<details>
+<summary><strong>Câu 123: DRM/KMS trên Linux là gì?</strong></summary>
+
+**Trả lời phỏng vấn:** DRM/KMS là hệ thống Linux quản lý thiết bị đồ họa, tài nguyên hiển thị và cấu hình chế độ màn hình.
+
+**Giải thích / ví dụ:** DRM: Direct Rendering Manager; KMS: Kernel Mode Setting; kernel: nhân Linux.
+
+</details>
+
+<details>
+<summary><strong>Câu 124: Qt hiển thị GUI trên Embedded Linux bằng cách nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Qt kết nối với hệ thống hiển thị qua Platform Plugin như `linuxfb`, `eglfs` hoặc Wayland theo driver và phần cứng.
+
+**Giải thích / ví dụ:** EGLFS: plugin Qt sử dụng EGL/OpenGL ES; LinuxFB: plugin framebuffer; Wayland: giao thức hiển thị.
+
+</details>
+
+<details>
+<summary><strong>Câu 125: Qt chạy nhưng màn hình đen, debug thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:** Xem log và trạng thái ứng dụng, kiểm tra driver/thiết bị `/dev/fb0` hoặc `/dev/dri`, plugin Qt, EGL/GPU và cấu hình màn hình; có thể bật `QT_DEBUG_PLUGINS=1`.
+
+**Giải thích / ví dụ:** `dmesg`: log kernel; DRM/KMS: quản lý hiển thị; không có `/dev/fb0` chưa chắc là lỗi nếu dùng DRM.
+
+</details>
+
+</details>
+
+<!-- END: KIEN THUC 1-125 NHUNG -->
 <!--
 MỞ RỘNG SAU NÀY:
 Có thể thêm một nhóm mới bằng cách sao chép cấu trúc <details> cấp ngoài, ví dụ:
