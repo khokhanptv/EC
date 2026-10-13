@@ -4505,7 +4505,7 @@ Test + log + GDB/core dump + theo dõi CPU/RAM
 <details>
 <summary><strong>Câu 10: `volatile` dùng để làm gì?</strong></summary>
 
-**Trả lời phỏng vấn:** `volatile` cho trình biên dịch biết giá trị có thể thay đổi ngoài luồng thực thi bình thường, thường dùng với thanh ghi phần cứng.
+**Trả lời phỏng vấn:** `volatile`  cho compiler biết rằng giá trị của biến có thể bị thay đổi bên ngoài luồng thực thi hiện tại (ví dụ ISR hoặc hardware register), vì vậy compiler không được tối ưu hóa việc truy cập biến đó. Không có volatile, compiler có thể giữ giá trị trong register và không đọc lại từ bộ nhớ. Có volatile, mỗi lần truy cập phải đọc/ghi trực tiếp từ bộ nhớ.
 
 **Giải thích / ví dụ:** Compiler: trình biên dịch; hardware register: thanh ghi phần cứng; ISR: hàm xử lý ngắt.
 
