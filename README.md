@@ -272,50 +272,45 @@ Là giao tiếp nối tiếp không đồng bộ, dùng để truyền và nhậ
 - `Stack`: LIFO – vào sau ra trước. ví dụ call stack
 - `Queue`: FIFO – vào trước ra trước. ví dụ truyền msg
 - `Deque`: có thể thêm/xóa ở cả hai đầu.
-- `Hash Table`: lưu dữ liệu theo key-value, truy cập nhanh theo key.
-- `Tree`: cấu trúc phân cấp cha-con.
-- `Binary Search Tree`: cây nhị phân có thứ tự.
 - `Heap`: cây dùng để lấy phần tử lớn nhất/nhỏ nhất nhanh.
-- `Graph`: biểu diễn các đỉnh và cạnh, dùng cho mạng, đường đi, quan hệ.
 
 ---
 
-## Các giải thuật phổ biến
 
-- `Linear Search`: duyệt lần lượt từng phần tử từ đầu đến cuối cho đến khi tìm thấy giá trị cần tìm.  
-  Độ phức tạp: `O(n)`.
+## Các giải thuật phổ biến trong C/C++
 
-- `Binary Search`: chia đôi vùng tìm kiếm sau mỗi lần so sánh. Chỉ dùng khi dữ liệu đã được sắp xếp.  
-  Độ phức tạp: `O(log n)`.
+### 1. Linear Search (Tìm kiếm tuyến tính)
+- Duyệt từng phần tử từ đầu đến cuối để tìm giá trị cần tìm.
+- Không yêu cầu dữ liệu được sắp xếp.
+- Độ phức tạp: `O(n)`.
 
-- `Bubble Sort`: so sánh hai phần tử liền kề, nếu sai thứ tự thì `swap`. Lặp lại nhiều lần cho đến khi mảng được sắp xếp.  
-  Độ phức tạp: `O(n²)`.
 
-- `Selection Sort`: mỗi vòng tìm phần tử nhỏ nhất hoặc lớn nhất trong phần chưa sắp xếp rồi `swap` về đúng vị trí.  
-  Độ phức tạp: `O(n²)`.
 
-- `Insertion Sort`: lấy từng phần tử và chèn nó vào đúng vị trí trong phần dữ liệu đã được sắp xếp trước đó.  
-  Độ phức tạp: `O(n²)`.
+### 2. Bubble Sort (Sắp xếp nổi bọt)
+- So sánh hai phần tử liền kề, sai thứ tự thì hoán đổi.
+- Dễ hiểu nhưng không hiệu quả với dữ liệu lớn.
+- 2 vòng for
+- Độ phức tạp: `O(n²)`.
 
-- `Merge Sort`: chia mảng thành các phần nhỏ, sắp xếp từng phần rồi `merge` lại thành mảng hoàn chỉnh.  
-  Độ phức tạp: `O(n log n)`.
 
-- `Quick Sort`: chọn một `pivot`, chia dữ liệu thành nhóm nhỏ hơn và lớn hơn pivot, sau đó tiếp tục xử lý đệ quy.  
-  Trung bình: `O(n log n)`, trường hợp xấu: `O(n²)`.
 
-- `DFS` - Depth First Search: duyệt sâu hết một nhánh của `Tree/Graph` rồi mới quay lại duyệt nhánh khác. Thường dùng `Stack` hoặc recursion.  
-  Độ phức tạp: `O(V + E)`.
-
-- `BFS` - Breadth First Search: duyệt lần lượt từng tầng, các node gần trước rồi mới đến node xa hơn. Thường dùng `Queue`.  
-  Độ phức tạp: `O(V + E)`.
 
 ---
 
-## Cách nhớ nhanh 3 thuật toán sắp xếp
+## Cách nhớ nhanh
 
-- `Bubble Sort` → so sánh 2 phần tử kế nhau rồi `swap`.
-- `Selection Sort` → tìm `min/max` rồi `swap`.
-- `Insertion Sort` → lấy phần tử rồi chèn vào đúng vị trí.
+- `Linear Search` → Tìm từng phần tử.
+- `Bubble Sort` → So sánh hai phần tử cạnh nhau rồi đổi chỗ.
+ 
+
+
+**Thuật ngữ:**
+- `O(n)`: Số thao tác tăng tuyến tính theo lượng dữ liệu.
+- `O(log n)`: Số thao tác tăng chậm khi dữ liệu tăng.
+- `O(n²)`: Số thao tác tăng theo bình phương lượng dữ liệu.
+- `V`: Số đỉnh trong đồ thị.
+- `E`: Số cạnh nối các đỉnh.
+
 
 </details>
 <details>
