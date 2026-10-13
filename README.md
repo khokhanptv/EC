@@ -5594,6 +5594,294 @@ Test + log + GDB/core dump + theo dõi CPU/RAM
 
 </details>
 
+
+
+# Kiến thức bổ sung 126–145: Sensor, Actuator và Communication
+
+## I. Sensor – Xử lý dữ liệu cảm biến
+
+<details>
+<summary><strong>Câu 126. Sensor là gì?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Sensor (cảm biến) là linh kiện dùng để đo các đại lượng vật lý như nhiệt độ, áp suất, nhịp tim hoặc nồng độ oxy trong máu, sau đó chuyển thành tín hiệu để hệ thống xử lý.
+
+**Ví dụ:** Cảm biến nhiệt độ trong máy theo dõi sinh hiệu.
+
+</details>
+
+<details>
+<summary><strong>Câu 127. ADC là gì? Tại sao cần ADC?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+ADC (Analog-to-Digital Converter) là bộ chuyển đổi tín hiệu analog (tương tự) thành giá trị digital (số) để MCU có thể xử lý.
+
+**Ví dụ:** MCU sử dụng ADC để đọc điện áp từ cảm biến nhiệt độ analog.
+
+</details>
+
+<details>
+<summary><strong>Câu 128. MCU đọc dữ liệu cảm biến bằng những cách nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+MCU có thể đọc dữ liệu cảm biến bằng:
+- **ADC:** Đọc tín hiệu analog.
+- **I2C:** Giao tiếp với cảm biến digital.
+- **SPI:** Giao tiếp tốc độ cao với cảm biến.
+- **UART:** Nhận dữ liệu từ module cảm biến.
+
+Tùy loại cảm biến mà lựa chọn giao tiếp phù hợp.
+
+</details>
+
+<details>
+<summary><strong>Câu 129. Polling và Interrupt khác nhau như thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+- **Polling:** MCU chủ động kiểm tra trạng thái cảm biến liên tục hoặc định kỳ.
+- **Interrupt:** Phần cứng phát tín hiệu ngắt để MCU xử lý sự kiện.
+
+Interrupt giúp tránh kiểm tra liên tục nhưng ISR cần được xử lý ngắn gọn.
+
+</details>
+
+<details>
+<summary><strong>Câu 130. Làm thế nào để giảm nhiễu dữ liệu cảm biến?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Một số phương pháp:
+- Moving Average: Lấy trung bình nhiều mẫu.
+- Low-pass Filter: Bộ lọc thông thấp.
+- Loại bỏ hoặc đánh dấu các giá trị bất thường.
+- Lọc nhiễu bằng phần cứng.
+
+**Ví dụ:** Lấy trung bình 10 mẫu nhiệt độ để giảm dao động do nhiễu.
+
+</details>
+
+<details>
+<summary><strong>Câu 131. Sampling Rate là gì?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Sampling Rate là tần số lấy mẫu, tức số lần đọc tín hiệu trong một giây.
+
+**Ví dụ:** 100 Hz nghĩa là lấy 100 mẫu mỗi giây.
+
+Tần số lấy mẫu phải phù hợp với đặc tính tín hiệu để tránh mất thông tin và hiện tượng aliasing (chồng phổ).
+
+</details>
+
+<details>
+<summary><strong>Câu 132. Nếu cảm biến trả về dữ liệu không hợp lệ, xử lý thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+- Kiểm tra trạng thái kết nối và timeout.
+- Kiểm tra checksum hoặc CRC nếu có.
+- Kiểm tra giá trị có nằm trong phạm vi hợp lệ không.
+- Kiểm tra dữ liệu có còn mới không.
+- Báo lỗi và đưa hệ thống về trạng thái an toàn phù hợp khi cần.
+
+**Ví dụ:** Nếu mất tín hiệu cảm biến SpO2, thiết bị cần thông báo lỗi đo thay vì tiếp tục hiển thị giá trị cũ như dữ liệu hiện tại.
+
+</details>
+
+---
+
+## II. Actuator – Điều khiển cơ cấu chấp hành
+
+<details>
+<summary><strong>Câu 133. Actuator là gì? Cho ví dụ.</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Actuator (cơ cấu chấp hành) là bộ phận nhận lệnh điều khiển và tạo ra tác động vật lý.
+
+**Ví dụ:**
+- Motor: Động cơ.
+- Relay: Rơ-le đóng/ngắt mạch.
+- Solenoid Valve: Van điện từ.
+- Buzzer: Còi cảnh báo.
+
+</details>
+
+<details>
+<summary><strong>Câu 134. GPIO điều khiển Actuator như thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+MCU sử dụng GPIO để xuất tín hiệu HIGH hoặc LOW nhằm điều khiển mạch driver, transistor hoặc relay.
+
+**Ví dụ:** MCU xuất HIGH để kích hoạt còi cảnh báo thông qua mạch điều khiển.
+
+**Lưu ý:** Không nên nối trực tiếp tải công suất lớn vào GPIO.
+
+</details>
+
+<details>
+<summary><strong>Câu 135. PWM là gì? Ứng dụng của PWM?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+PWM (Pulse Width Modulation) là phương pháp điều chế độ rộng xung.
+
+Thay đổi Duty Cycle (tỷ lệ thời gian tín hiệu ở mức HIGH trong một chu kỳ) để điều chỉnh công suất trung bình đưa tới tải.
+
+**Ứng dụng:**
+- Điều chỉnh tốc độ động cơ.
+- Điều chỉnh độ sáng LED.
+- Điều khiển một số loại cơ cấu chấp hành.
+
+</details>
+
+<details>
+<summary><strong>Câu 136. Tại sao cần mạch Driver khi điều khiển động cơ?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+GPIO của MCU chỉ có khả năng cấp dòng điện nhỏ, trong khi động cơ thường cần dòng điện lớn hơn.
+
+Mạch Driver giúp:
+- Cấp công suất phù hợp cho động cơ.
+- Điều khiển tốc độ hoặc chiều quay tùy loại driver.
+- Bảo vệ MCU khỏi các tác động điện không mong muốn.
+
+</details>
+
+<details>
+<summary><strong>Câu 137. Fail-safe là gì trong thiết bị y tế?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Fail-safe là thiết kế để khi hệ thống gặp lỗi, thiết bị chuyển về trạng thái an toàn đã được xác định.
+
+**Ví dụ:** Khi phát hiện lỗi điều khiển, hệ thống ngừng một cơ cấu truyền động có nguy cơ gây nguy hiểm và phát cảnh báo.
+
+Trạng thái an toàn phải được xác định theo yêu cầu và phân tích rủi ro của từng thiết bị.
+
+</details>
+
+---
+
+## III. Communication – Giao tiếp và truyền thông
+
+<details>
+<summary><strong>Câu 138. USB là gì? Ứng dụng trong Embedded?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+USB (Universal Serial Bus) là chuẩn kết nối và truyền dữ liệu giữa các thiết bị.
+
+**Ứng dụng:**
+- Kết nối thiết bị y tế với máy tính.
+- Xuất dữ liệu đo.
+- Cập nhật firmware.
+- Kết nối thiết bị ngoại vi.
+
+</details>
+
+<details>
+<summary><strong>Câu 139. USB Host và USB Device khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+- **USB Host:** Quản lý quá trình kết nối và giao tiếp với thiết bị USB.
+- **USB Device:** Thiết bị ngoại vi giao tiếp dưới sự quản lý của Host.
+
+**Ví dụ:** Máy tính là USB Host, thiết bị đo kết nối với máy tính có thể hoạt động như USB Device.
+
+</details>
+
+<details>
+<summary><strong>Câu 140. Ethernet là gì? Ứng dụng trong thiết bị y tế?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Ethernet là công nghệ kết nối mạng có dây.
+
+**Ứng dụng:**
+- Truyền dữ liệu đo đến máy tính.
+- Kết nối với máy chủ.
+- Kết nối hệ thống giám sát.
+- Truyền dữ liệu trong mạng nội bộ bệnh viện.
+
+</details>
+
+<details>
+<summary><strong>Câu 141. TCP và UDP khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+- **TCP:** Giao thức hướng kết nối, bảo đảm dữ liệu được truyền theo đúng thứ tự và có cơ chế truyền lại dữ liệu bị mất.
+- **UDP:** Giao thức không kết nối, overhead thấp hơn nhưng không bảo đảm dữ liệu đến nơi hoặc đúng thứ tự.
+
+**Ví dụ:**
+- TCP: Truyền dữ liệu cần tính toàn vẹn và thứ tự.
+- UDP: Truyền dữ liệu thời gian thực khi ứng dụng có thể chấp nhận một số gói bị mất.
+
+</details>
+
+<details>
+<summary><strong>Câu 142. Bluetooth Classic và BLE khác nhau thế nào?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+- **Bluetooth Classic:** Thường phù hợp với kết nối truyền dữ liệu liên tục như âm thanh.
+- **BLE (Bluetooth Low Energy):** Được thiết kế để tiết kiệm năng lượng, phù hợp với cảm biến và thiết bị đeo.
+
+**Ví dụ:** Thiết bị đo sức khỏe đeo tay có thể sử dụng BLE để truyền dữ liệu đến điện thoại.
+
+</details>
+
+<details>
+<summary><strong>Câu 143. BLE Central và Peripheral là gì?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+- **Central:** Thiết bị thường thực hiện tìm kiếm và khởi tạo kết nối.
+- **Peripheral:** Thiết bị thường phát quảng bá (advertising) và chấp nhận kết nối.
+
+**Ví dụ:** Điện thoại đóng vai trò Central, cảm biến nhịp tim đóng vai trò Peripheral.
+
+</details>
+
+<details>
+<summary><strong>Câu 144. Timeout trong giao tiếp là gì? Tại sao cần Timeout?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Timeout là giới hạn thời gian chờ phản hồi từ thiết bị hoặc hệ thống khác.
+
+Nếu hết thời gian mà không nhận được phản hồi, chương trình sẽ báo lỗi hoặc thực hiện cơ chế xử lý phù hợp.
+
+**Ví dụ:** MCU gửi lệnh đọc cảm biến nhưng không nhận được phản hồi trong thời gian quy định thì báo timeout.
+
+**Mục đích:** Tránh chương trình chờ vô thời hạn.
+
+</details>
+
+<details>
+<summary><strong>Câu 145. Làm thế nào để kiểm tra dữ liệu truyền nhận có bị lỗi?</strong></summary>
+
+**Trả lời phỏng vấn:**
+
+Một số phương pháp kiểm tra:
+- **Checksum:** Kiểm tra tổng kiểm tra dữ liệu.
+- **CRC (Cyclic Redundancy Check):** Phát hiện lỗi dữ liệu khi truyền.
+- **Length:** Kiểm tra độ dài gói tin.
+- **Timeout:** Kiểm tra quá thời gian chờ.
+- **Sequence Number:** Kiểm tra thứ tự gói tin nếu giao thức hỗ trợ.
+
+**Ví dụ:** Khi nhận gói tin từ cảm biến, MCU kiểm tra CRC trước khi sử dụng dữ liệu.
+
+</details>
+
 </details>
 
 <!-- END: KIEN THUC 1-125 NHUNG -->
