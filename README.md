@@ -1875,7 +1875,7 @@ Container adapter cung cấp một giao diện sử dụng đặc biệt trên m
 
 ## 10. `atomic`
 
-> Cho phép thao tác đơn giản trên dữ liệu được thực hiện an toàn giữa nhiều thread mà không cần mutex trong nhiều trường hợp.
+> Atomic đảm bảo tại một thời điểm, một thao tác cập nhật biến được thực hiện trọn vẹn, không bị thao tác của thread khác chen vào giữa.
 >
 > **Ví dụ:** Nhiều thread cùng tăng biến `counter`.
 >
@@ -4505,7 +4505,7 @@ Test + log + GDB/core dump + theo dõi CPU/RAM
 <details>
 <summary><strong>Câu 10: `volatile` dùng để làm gì?</strong></summary>
 
-**Trả lời phỏng vấn:** `volatile`  cho compiler biết rằng giá trị của biến có thể bị thay đổi bên ngoài luồng thực thi hiện tại (ví dụ ISR hoặc hardware register), vì vậy compiler không được tối ưu hóa việc truy cập biến đó. Không có volatile, compiler có thể giữ giá trị trong register và không đọc lại từ bộ nhớ. Có volatile, mỗi lần truy cập phải đọc/ghi trực tiếp từ bộ nhớ.
+**Trả lời phỏng vấn:** `volatile`   báo cho compiler biết rằng giá trị của biến có thể thay đổi bất ngờ từ bên ngoài luồng thực thi hiện tại( ngắt hoặc thanh ghi phần cứng), nên mỗi lần đọc/ghi phải truy cập giá trị thực trong memory, không được tự ý tối ưu bằng cách giữ giá trị cũ trong register.
 
 **Giải thích / ví dụ:** Compiler: trình biên dịch; hardware register: thanh ghi phần cứng; ISR: hàm xử lý ngắt.
 
