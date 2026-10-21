@@ -8,6 +8,327 @@
 ---
 <details>
 <summary><strong>CÂU HỎI PHỎNG VẤN EMBEDDED / C++</strong></summary>
+
+# LUYỆN PHỎNG VẤN EMBEDDED C/C++ – NIHON KOHDEN
+
+## PHẦN 1. GIỚI THIỆU BẢN THÂN VÀ KINH NGHIỆM
+
+Tôi có hơn 5 năm kinh nghiệm phát triển phần mềm C/C++, bao gồm Embedded Software và Windows Desktop Application.
+
+Trước đây, tôi từng làm việc tại FPT Software và FPT Telecom, tham gia các dự án liên quan đến thiết bị y tế, Automotive và IoT.
+
+**Dự án gần đây nhất của tôi là FUJIFILM Healthcare**, phát triển và bảo trì phần mềm cho hệ thống máy siêu âm.
+
+Trong dự án này, tôi chủ yếu sử dụng C++, MFC, Win32 API và SQLite. Công việc chính của tôi là phân tích source code, điều tra và sửa lỗi phần mềm, đặc biệt là các lỗi liên quan đến UI, multithreading, database và xử lý dữ liệu.
+
+Ngoài ra, tôi cũng viết tài liệu kỹ thuật, test case, phân tích phạm vi ảnh hưởng sau khi sửa lỗi và thực hiện regression testing.
+
+**Trước đó, tôi tham gia dự án Automotive của Hyundai AutoEver**, phát triển và kiểm thử phần mềm ECU theo chuẩn AUTOSAR Classic.
+
+Tôi phụ trách thiết kế và thực hiện test case cho module EthIf dựa trên tài liệu SWS và ECUC, kiểm tra hoạt động của API, phân tích các trường hợp test fail và thực hiện regression testing.
+
+Công nghệ sử dụng gồm Embedded C/C++, AUTOSAR Classic, mSQT, Infineon AURIX TC397, TASKING Compiler và Mobilgene.
+
+**Trước khi làm việc tại FPT Software, tôi làm việc tại FPT Telecom**, tham gia các dự án phần mềm nhúng cho thiết bị mạng và IoT như Router, Modem, FPT Play Box và Smart Home.
+
+Các công nghệ tôi đã sử dụng gồm C/C++, OpenWrt, Linux, Wi-Fi và MQTT. Công việc liên quan đến phát triển chức năng kết nối, điều khiển, giám sát thiết bị, phân tích lỗi và kiểm thử.
+
+Thông qua các dự án này, tôi đã tích lũy kinh nghiệm về C/C++, debugging, multithreading, communication protocols và software testing.
+
+Tôi mong muốn tiếp tục phát triển chuyên môn trong lĩnh vực Embedded Software, đặc biệt là các sản phẩm thiết bị y tế đòi hỏi độ an toàn và độ tin cậy cao.
+
+---
+
+# PHẦN 2. CÂU HỎI PHỎNG VẤN DỰ ÁN FPT TELECOM – IoT
+
+## Nhóm 1. Giới thiệu dự án IoT tại FPT Telecom
+
+<details>
+<summary><strong>1. Bạn đã làm những dự án gì tại FPT Telecom?</strong></summary>
+
+Tôi từng tham gia phát triển phần mềm nhúng cho các thiết bị FPT Play Box, Smart Home, Router và Modem. Công việc liên quan đến phát triển chức năng kết nối, điều khiển và giám sát thiết bị bằng C/C++.
+
+</details>
+
+<details>
+<summary><strong>2. Vai trò chính của bạn trong các dự án là gì?</strong></summary>
+
+Ở giai đoạn đầu, tôi làm Embedded Software Engineer, tham gia phát triển chức năng, tích hợp, kiểm thử và debug. Giai đoạn sau, tôi đảm nhận vai trò Project Manager, quản lý tiến độ và phối hợp giữa các nhóm phát triển, kiểm thử.
+
+</details>
+
+<details>
+<summary><strong>3. Dự án sử dụng những công nghệ gì?</strong></summary>
+
+Chủ yếu sử dụng C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi và MQTT. Tôi cũng sử dụng Git, SVN để quản lý source code.
+
+</details>
+
+<details>
+<summary><strong>4. IoT là gì?</strong></summary>
+
+IoT (Internet of Things) là hệ thống các thiết bị có khả năng kết nối mạng để thu thập dữ liệu, trao đổi thông tin, giám sát hoặc điều khiển từ xa.
+
+</details>
+
+<details>
+<summary><strong>5. Kiến trúc cơ bản của một hệ thống IoT như thế nào?</strong></summary>
+
+Thông thường gồm ba thành phần: thiết bị IoT, hệ thống mạng truyền thông và server/cloud. Thiết bị thu thập dữ liệu hoặc thực hiện lệnh điều khiển, sau đó giao tiếp với server qua các giao thức như MQTT hoặc HTTP.
+
+</details>
+
+---
+
+## Nhóm 2. Embedded C/C++ và OpenWrt
+
+<details>
+<summary><strong>6. OpenWrt là gì?</strong></summary>
+
+OpenWrt là hệ điều hành mã nguồn mở dựa trên Linux, thường được sử dụng cho Router và các thiết bị mạng nhúng. Nó hỗ trợ quản lý mạng, cấu hình thiết bị và phát triển ứng dụng C/C++.
+
+</details>
+
+<details>
+<summary><strong>7. OpenWrt khác RTOS như thế nào?</strong></summary>
+
+OpenWrt sử dụng Linux, chủ yếu phục vụ các thiết bị mạng và ứng dụng cần nhiều chức năng hệ thống. RTOS tập trung vào khả năng đáp ứng thời gian thực với độ trễ có thể dự đoán được.
+
+</details>
+
+<details>
+<summary><strong>8. Bạn biên dịch chương trình C/C++ cho thiết bị OpenWrt như thế nào?</strong></summary>
+
+Sử dụng cross compiler và OpenWrt SDK để biên dịch chương trình trên máy phát triển, tạo file thực thi phù hợp với kiến trúc CPU của thiết bị đích.
+
+</details>
+
+<details>
+<summary><strong>9. Cross compiler là gì?</strong></summary>
+
+Cross compiler là trình biên dịch chạy trên một nền tảng nhưng tạo chương trình thực thi cho nền tảng khác. Ví dụ, biên dịch trên máy x86 để tạo chương trình chạy trên thiết bị ARM.
+
+</details>
+
+<details>
+<summary><strong>10. Bạn debug phần mềm trên thiết bị Embedded Linux như thế nào?</strong></summary>
+
+Có thể sử dụng log, SSH, GDB hoặc phân tích trạng thái process. Khi gặp lỗi, tôi ưu tiên kiểm tra log, tái hiện lỗi và xác định nguyên nhân trước khi sửa code.
+
+</details>
+
+<details>
+<summary><strong>11. Process và Thread khác nhau như thế nào?</strong></summary>
+
+Process có không gian địa chỉ riêng, còn các thread trong cùng process chia sẻ bộ nhớ và tài nguyên của process. Thread giao tiếp nhanh hơn nhưng cần đồng bộ khi truy cập dữ liệu chung.
+
+</details>
+
+<details>
+<summary><strong>12. Nếu một ứng dụng trên OpenWrt bị crash, bạn sẽ xử lý thế nào?</strong></summary>
+
+Tôi kiểm tra log và điều kiện xảy ra lỗi, tìm cách tái hiện, sau đó sử dụng debugger hoặc core dump nếu có để xác định vị trí lỗi. Cuối cùng, sửa code và thực hiện regression test.
+
+</details>
+
+---
+
+## Nhóm 3. MQTT và giao tiếp IoT
+
+<details>
+<summary><strong>13. MQTT là gì?</strong></summary>
+
+MQTT là giao thức truyền thông nhẹ dựa trên mô hình Publish/Subscribe, thường sử dụng TCP và phù hợp với các thiết bị IoT có tài nguyên hoặc băng thông hạn chế.
+
+</details>
+
+<details>
+<summary><strong>14. MQTT hoạt động như thế nào?</strong></summary>
+
+MQTT gồm Broker, Publisher và Subscriber. Publisher gửi message đến một topic trên Broker, sau đó Broker chuyển message đến các client đã subscribe topic đó.
+
+**Mô hình:**
+
+`IoT Device (Publisher) → MQTT Broker → Application (Subscriber)`
+
+</details>
+
+<details>
+<summary><strong>15. MQTT khác HTTP như thế nào?</strong></summary>
+
+HTTP chủ yếu sử dụng mô hình Request/Response, còn MQTT sử dụng Publish/Subscribe. MQTT phù hợp với các ứng dụng IoT cần trao đổi message thường xuyên và có độ overhead thấp.
+
+</details>
+
+<details>
+<summary><strong>16. MQTT có những mức QoS nào?</strong></summary>
+
+- **QoS 0:** At most once — gửi tối đa một lần.
+- **QoS 1:** At least once — đảm bảo nhận ít nhất một lần, có thể trùng.
+- **QoS 2:** Exactly once — đảm bảo message được nhận đúng một lần theo cơ chế MQTT.
+
+</details>
+
+<details>
+<summary><strong>17. Nếu thiết bị mất kết nối MQTT thì xử lý thế nào?</strong></summary>
+
+Phát hiện mất kết nối, ghi log, thực hiện reconnect với khoảng chờ phù hợp và khôi phục subscription khi cần. Với dữ liệu quan trọng, cần có cơ chế lưu tạm hoặc đồng bộ lại sau khi kết nối phục hồi.
+
+</details>
+
+<details>
+<summary><strong>18. MQTT Broker là gì?</strong></summary>
+
+Broker là server trung gian nhận message từ Publisher và phân phối đến các Subscriber dựa trên topic mà họ đăng ký.
+
+</details>
+
+<details>
+<summary><strong>19. Làm sao để bảo mật giao tiếp MQTT?</strong></summary>
+
+Có thể sử dụng TLS để mã hóa đường truyền, xác thực client và cấu hình quyền Publish/Subscribe theo từng topic.
+
+</details>
+
+---
+
+## Nhóm 4. Wi-Fi, Networking và Communication
+
+<details>
+<summary><strong>20. TCP và UDP khác nhau như thế nào?</strong></summary>
+
+TCP là giao thức hướng kết nối, cung cấp truyền dữ liệu tin cậy và đúng thứ tự. UDP không thiết lập kết nối, overhead thấp hơn nhưng không tự đảm bảo dữ liệu đến nơi hoặc đúng thứ tự.
+
+</details>
+
+<details>
+<summary><strong>21. Socket là gì?</strong></summary>
+
+Socket là điểm cuối giao tiếp mạng, cho phép các process trao đổi dữ liệu thông qua các giao thức như TCP hoặc UDP.
+
+</details>
+
+<details>
+<summary><strong>22. Nếu thiết bị kết nối Wi-Fi nhưng không giao tiếp được với server, bạn sẽ kiểm tra gì?</strong></summary>
+
+Tôi kiểm tra IP, gateway, DNS, khả năng kết nối mạng, trạng thái TCP connection và log ứng dụng để xác định lỗi nằm ở mạng hay phần mềm.
+
+</details>
+
+<details>
+<summary><strong>23. IP Address và MAC Address khác nhau thế nào?</strong></summary>
+
+IP Address là địa chỉ logic dùng để định tuyến trong mạng IP. MAC Address là địa chỉ của giao diện mạng, thường được sử dụng tại tầng liên kết dữ liệu.
+
+</details>
+
+<details>
+<summary><strong>24. Nếu server không phản hồi, ứng dụng Embedded nên xử lý thế nào?</strong></summary>
+
+Sử dụng timeout, kiểm tra trạng thái kết nối và retry có giới hạn. Không nên để chương trình chờ vô thời hạn vì có thể làm ảnh hưởng đến các chức năng khác.
+
+</details>
+
+<details>
+<summary><strong>25. Làm thế nào để kiểm tra thiết bị có kết nối Internet?</strong></summary>
+
+Có thể kiểm tra IP, gateway, DNS và thử kết nối đến endpoint của dịch vụ. Chỉ ping gateway thành công chưa đủ để khẳng định thiết bị có Internet.
+
+</details>
+
+---
+
+## Nhóm 5. Memory, Multithreading và Debugging
+
+<details>
+<summary><strong>26. Memory leak là gì?</strong></summary>
+
+Memory leak xảy ra khi chương trình cấp phát bộ nhớ nhưng không giải phóng sau khi không còn sử dụng, khiến lượng bộ nhớ khả dụng giảm dần.
+
+</details>
+
+<details>
+<summary><strong>27. Làm sao phát hiện memory leak trên Embedded Linux?</strong></summary>
+
+Có thể theo dõi mức sử dụng RAM của process qua `/proc`, `top`, `ps` hoặc sử dụng công cụ như Valgrind nếu môi trường hỗ trợ.
+
+</details>
+
+<details>
+<summary><strong>28. Race condition là gì?</strong></summary>
+
+Race condition xảy ra khi kết quả chương trình phụ thuộc vào thứ tự hoặc thời điểm các luồng thực thi. Nếu nhiều thread truy cập và thay đổi dữ liệu chung không được đồng bộ, có thể dẫn đến kết quả sai.
+
+</details>
+
+<details>
+<summary><strong>29. Mutex dùng để làm gì?</strong></summary>
+
+Mutex dùng để bảo vệ tài nguyên dùng chung, đảm bảo chỉ một thread sở hữu mutex và truy cập vùng critical section được bảo vệ tại một thời điểm.
+
+</details>
+
+<details>
+<summary><strong>30. Nếu thiết bị chạy nhiều ngày rồi bị treo, bạn xử lý như thế nào?</strong></summary>
+
+Tôi sẽ kiểm tra log và tài nguyên hệ thống, đặc biệt là RAM, CPU, thread và file descriptor. Sau đó xem xét các nguyên nhân như memory leak, deadlock hoặc lỗi giao tiếp, tìm cách tái hiện và sửa nguyên nhân gốc.
+
+</details>
+
+---
+
+## Nhóm 6. Câu hỏi tình huống liên quan đến Nihon Kohden
+
+<details>
+<summary><strong>31. Kinh nghiệm IoT của bạn có thể áp dụng vào thiết bị y tế như thế nào?</strong></summary>
+
+Tôi có thể áp dụng kiến thức Embedded C/C++, xử lý dữ liệu, giao tiếp thiết bị, debugging và kiểm thử. Tuy nhiên, thiết bị y tế có các yêu cầu an toàn và độ tin cậy đặc thù mà tôi cần tiếp tục tìm hiểu.
+
+</details>
+
+<details>
+<summary><strong>32. Nếu cảm biến IoT ngừng gửi dữ liệu thì bạn xử lý ra sao?</strong></summary>
+
+Tôi sẽ kiểm tra timeout, trạng thái kết nối và tính hợp lệ của dữ liệu. Khi phát hiện lỗi, hệ thống cần thông báo trạng thái phù hợp và thực hiện cơ chế phục hồi theo yêu cầu thiết kế.
+
+</details>
+
+<details>
+<summary><strong>33. Nếu nhiều thiết bị cùng gửi dữ liệu về server thì làm sao xử lý?</strong></summary>
+
+Có thể sử dụng kiến trúc message-based, MQTT Broker và các cơ chế buffering hoặc queue để tiếp nhận, phân phối và xử lý dữ liệu. Cần đánh giá thêm throughput và tài nguyên hệ thống.
+
+</details>
+
+<details>
+<summary><strong>34. Nếu nhận được dữ liệu cảm biến sai, bạn xử lý thế nào?</strong></summary>
+
+Tôi sẽ kiểm tra định dạng gói tin, độ dài, checksum hoặc CRC nếu có, đồng thời kiểm tra dữ liệu nằm trong phạm vi hợp lệ. Không nên sử dụng dữ liệu lỗi để thực hiện điều khiển.
+
+</details>
+
+<details>
+<summary><strong>35. Theo bạn, yếu tố nào quan trọng nhất khi phát triển phần mềm thiết bị y tế?</strong></summary>
+
+Tôi cho rằng an toàn và độ tin cậy là những yếu tố quan trọng hàng đầu. Phần mềm cần xử lý lỗi có kiểm soát, bảo vệ dữ liệu và được kiểm thử đầy đủ theo yêu cầu và mức độ rủi ro của thiết bị.
+
+</details>
+
+---
+
+# PHẦN 3. CÁC CÂU HỎI CẦN ƯU TIÊN ÔN TẬP
+
+| STT | Câu hỏi cần chuẩn bị |
+|---|---|
+| 1 | Tại FPT Telecom, bạn trực tiếp phát triển những chức năng Embedded C/C++ nào? |
+| 2 | Bạn sử dụng MQTT để giải quyết bài toán gì trong hệ thống IoT? |
+| 3 | OpenWrt là gì và khác RTOS như thế nào? |
+| 4 | Bạn đã từng gặp lỗi kỹ thuật nào khó trong dự án IoT và xử lý ra sao? |
+| 5 | Kinh nghiệm phát triển thiết bị IoT có thể áp dụng như thế nào vào thiết bị y tế? |
+
+**Lưu ý khi phỏng vấn:** Cần chuẩn bị ít nhất một chức năng Embedded C/C++ đã trực tiếp lập trình và một lỗi thực tế từng xử lý tại FPT Telecom, bao gồm nguyên nhân, cách khắc phục và kết quả.
+
+
 <details>
 <summary><strong>Câu 0: Qúa trình biên dịch</strong></summary>
 
