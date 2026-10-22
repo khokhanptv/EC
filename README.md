@@ -9,7 +9,276 @@
 <details>
 <summary><strong>CÂU HỎI PHỎNG VẤN EMBEDDED / C++</strong></summary>
 
+
+<details>
+<summary><h2>📚 TỔNG HỢP 12 NHÓM KIẾN THỨC PHỎNG VẤN EMBEDDED C/C++</h2></summary>
+
+> Kiến thức chuẩn bị cho vị trí Embedded Software Engineer – Nihon Kohden.
+>
+> **Trọng tâm:** C/C++, Embedded Systems, RTOS, Qt, Communication, Multithreading và Medical Device Software.
+
+---
+
+<details>
+<summary><strong>NHÓM 1. C PROGRAMMING</strong></summary>
+
+- Data types, signed/unsigned, sizeof.
+- Pointer, double pointer, void pointer, pointer arithmetic.
+- const, static, volatile, extern.
+- Stack, heap, .text, .data, .bss.
+- malloc, calloc, realloc, free.
+- Memory leak, dangling pointer, buffer overflow.
+- Struct, union, enum, typedef.
+- Struct padding, memory alignment.
+- Bitwise operators và bit masking.
+- Function pointer, callback.
+- Macro và preprocessor.
+- Array, string, memcpy, memmove.
+- Endianness.
+- Undefined behavior.
+- Reentrancy, thread safety, volatile vs atomic.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 2. C++ PROGRAMMING</strong></summary>
+
+- Class, object, struct vs class.
+- 4 tính chất OOP.
+- Inheritance, encapsulation, polymorphism, abstraction.
+- Overloading, overriding.
+- Virtual function, abstract class, virtual destructor.
+- Constructor, destructor.
+- Copy constructor, move semantics.
+- Rule of Three/Five/Zero.
+- Pointer vs reference.
+- new/delete, RAII.
+- Smart pointer: unique_ptr, shared_ptr, weak_ptr.
+- STL: vector, list, map, unordered_map, queue.
+- Template, lambda, iterator.
+- Exception handling.
+- Modern C++: auto, nullptr, constexpr, enum class.
+- std::thread, mutex, atomic, condition_variable.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 3. EMBEDDED SYSTEMS</strong></summary>
+
+- MCU vs MPU.
+- Flash, RAM, ROM, EEPROM.
+- Memory-mapped I/O.
+- Register và GPIO.
+- Polling, interrupt, DMA.
+- ISR, interrupt latency, interrupt priority.
+- Timer, PWM, ADC, DAC.
+- Watchdog.
+- Bootloader, firmware.
+- Startup code, linker script.
+- Cross compiler và toolchain.
+- JTAG, SWD, debugging.
+- Bare-metal vs RTOS vs Embedded Linux.
+- Sensor, actuator, HAL, driver.
+- Timeout, retry, CRC và fault handling.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 4. RTOS</strong></summary>
+
+- RTOS vs General Purpose OS.
+- Hard real-time, soft real-time.
+- Task/thread và task states.
+- Scheduling, priority, preemption.
+- Context switching.
+- Tick, time slicing.
+- Mutex, semaphore.
+- Queue, event group.
+- Race condition, deadlock, starvation.
+- Priority inversion, priority inheritance.
+- ISR-to-task communication.
+- Critical section.
+- Stack overflow, heap fragmentation.
+- Watchdog và task monitoring.
+- Deadline, WCET.
+- FreeRTOS API cơ bản.
+- Thiết kế task xử lý sensor, communication và UI.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 5. QT FRAMEWORK / GUI</strong></summary>
+
+- Qt là gì?
+- Qt Widgets vs Qt Quick/QML.
+- QObject, QWidget, QMainWindow.
+- Signals và Slots.
+- Event loop.
+- QThread và worker object.
+- Thread affinity, queued connection.
+- Cập nhật UI từ worker thread.
+- QTimer.
+- QString, QByteArray, QList.
+- Qt parent-child ownership.
+- Qt Designer và layout.
+- QSerialPort, QTcpSocket.
+- Model/View architecture.
+- So sánh Qt với MFC.
+- Blocking vs non-blocking UI.
+- Thiết kế UI hiển thị sensor, alarm, error.
+- Xử lý UI bị treo hoặc giật lag.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 6. COMMUNICATION PROTOCOLS</strong></summary>
+
+- UART.
+- SPI.
+- I2C.
+- Ethernet.
+- TCP/IP.
+- TCP vs UDP.
+- Socket programming.
+- USB.
+- Bluetooth/BLE.
+- CAN.
+- CRC, checksum.
+- Ring buffer.
+- Packet parsing.
+- Timeout, retry, reconnection.
+- Xử lý mất kết nối sensor.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 7. MULTITHREADING & CONCURRENCY</strong></summary>
+
+- Process vs thread.
+- Thread lifecycle.
+- Race condition.
+- Mutex, semaphore.
+- Deadlock, livelock, starvation.
+- Condition variable.
+- Producer-consumer.
+- Atomic vs volatile.
+- Critical section.
+- Thread-safe queue.
+- UI thread vs worker thread.
+- Cancel mechanism.
+- Shared memory, shared state.
+- Debug lỗi đa luồng.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 8. MEDICAL DEVICE SOFTWARE & SAFETY</strong></summary>
+
+- IEC 62304.
+- Software safety classification A/B/C.
+- Software development lifecycle.
+- Verification vs validation.
+- Requirement traceability.
+- ISO 14971.
+- IEC 60601.
+- IEC 62366-1.
+- Risk management.
+- Fail-safe, fault detection, recovery.
+- Sensor failure handling.
+- Alarm handling.
+- Patient data integrity.
+- Unit, integration, system, regression testing.
+- Impact analysis.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 9. DEBUGGING, TESTING & DESIGN</strong></summary>
+
+- Unit test, integration test, system test.
+- Test case, expected/actual results.
+- Boundary value, negative test.
+- Mock, stub, test harness.
+- Unity, CMock, Ceedling.
+- Requirement coverage.
+- Root cause analysis.
+- Log analysis, crash dump.
+- Memory leak detection.
+- Software architecture.
+- State machine.
+- UML: class, sequence, activity diagram.
+- Basic design, detailed design.
+- Code review.
+- Static analysis.
+- Regression test và impact analysis.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 10. FUJIFILM HEALTHCARE</strong></summary>
+
+- Data Management, Store/Print.
+- MFC, event-driven programming.
+- Message handling.
+- Multithreading.
+- Background Auto Delete.
+- Cancel mechanism.
+- PostMessage.
+- SQLite.
+- DICOM, MPPS, Storage Commitment.
+- Debug, root cause analysis.
+- Impact analysis, regression test.
+- Phối hợp với QA và khách hàng Nhật.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 11. AUTOSAR & FPT TELECOM</strong></summary>
+
+- AUTOSAR Classic architecture.
+- Application, RTE, BSW, MCAL.
+- EthIf.
+- SWS, ECUC, ARXML.
+- mSQT test cases.
+- DET, API verification.
+- AURIX TC397, TASKING, Mobilgene.
+- OpenWrt.
+- Embedded Linux.
+- Wi-Fi, MQTT.
+- Device connectivity.
+- Embedded debugging.
+
+</details>
+
+<details>
+<summary><strong>NHÓM 12. HR & BEHAVIORAL INTERVIEW</strong></summary>
+
+- Giới thiệu bản thân.
+- Giải thích kinh nghiệm và dự án.
+- Vì sao ứng tuyển Nihon Kohden?
+- Vì sao muốn phát triển thiết bị y tế?
+- Cách trả lời khi chưa có kinh nghiệm Qt/RTOS.
+- Một bug khó từng xử lý.
+- Phương pháp phân tích nguyên nhân lỗi.
+- Phối hợp với Hardware/QA.
+- Làm việc với khách hàng Nhật.
+- Safety vs deadline.
+- Câu hỏi hỏi lại người phỏng vấn.
+
+</details>
+
+</details>
+
+
+
+
 # LUYỆN PHỎNG VẤN EMBEDDED C/C++ – NIHON KOHDEN
+
+Nihon Kohden là công ty của Nhật Bản, được thành lập vào năm 1951, chuyên nghiên cứu, phát triển và sản xuất các thiết bị điện tử y tế.
+
+Một số sản phẩm tiêu biểu :máy điện tim , máy điện não  và máy khử rung tim .
+
+Về vcông việc của tôi tập trung vào phát triển phần mềm nhúng bằng C/C++, phát triển giao diện Qt, điều khiển trên RTOS và xử lý dữ liệu từ cảm biến.
 
 ## PHẦN 1. GIỚI THIỆU BẢN THÂN VÀ KINH NGHIỆM
 
