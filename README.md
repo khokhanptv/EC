@@ -9,263 +9,1831 @@
 <details>
 <summary><strong>CÂU HỎI PHỎNG VẤN EMBEDDED / C++</strong></summary>
 
-
 <details>
-<summary><h2>📚 TỔNG HỢP 12 NHÓM KIẾN THỨC PHỎNG VẤN EMBEDDED C/C++</h2></summary>
+<summary><h2>📚 TỔNG HỢP 12 NHÓM KIẾN THỨC — EMBEDDED C/C++</h2></summary>
 
-> Kiến thức chuẩn bị cho vị trí Embedded Software Engineer – Nihon Kohden.
->
-> **Trọng tâm:** C/C++, Embedded Systems, RTOS, Qt, Communication, Multithreading và Medical Device Software.
+> Nhấn vào từng **nhóm** rồi từng **khái niệm** để xem giải thích ngắn và ví dụ.
 
----
 
 <details>
 <summary><strong>NHÓM 1. C PROGRAMMING</strong></summary>
 
-- Data types, signed/unsigned, sizeof.
-- Pointer, double pointer, void pointer, pointer arithmetic.
-- const, static, volatile, extern.
-- Stack, heap, .text, .data, .bss.
-- malloc, calloc, realloc, free.
-- Memory leak, dangling pointer, buffer overflow.
-- Struct, union, enum, typedef.
-- Struct padding, memory alignment.
-- Bitwise operators và bit masking.
-- Function pointer, callback.
-- Macro và preprocessor.
-- Array, string, memcpy, memmove.
-- Endianness.
-- Undefined behavior.
-- Reentrancy, thread safety, volatile vs atomic.
+<details>
+<summary><strong>Data types</strong></summary>
+
+**Là gì?** Kiểu dữ liệu quy định loại giá trị và phép toán được phép.  
+**Ví dụ:** `int age = 20; float temp = 36.5f; char c = 'A';`
 
 </details>
+
+<details>
+<summary><strong>signed / unsigned</strong></summary>
+
+**Là gì?** `signed` biểu diễn số âm và dương; `unsigned` chỉ biểu diễn số không âm.  
+**Ví dụ:** `uint8_t x = 255; int8_t y = -1;`
+
+</details>
+
+<details>
+<summary><strong>sizeof</strong></summary>
+
+**Là gì?** Toán tử trả về kích thước đối tượng/kiểu theo byte, kiểu trả về là `size_t`.  
+**Ví dụ:** `sizeof(uint32_t)` thường là `4` nếu `CHAR_BIT == 8`.
+
+</details>
+
+<details>
+<summary><strong>Pointer</strong></summary>
+
+**Là gì?** Biến lưu địa chỉ của đối tượng khác.  
+**Ví dụ:** `int x=5; int *p=&x;` → `*p` là `5`.
+
+</details>
+
+<details>
+<summary><strong>Double pointer</strong></summary>
+
+**Là gì?** Con trỏ trỏ tới một con trỏ khác.  
+**Ví dụ:** `int *p=&x; int **pp=&p;` → `**pp` là `x`.
+
+</details>
+
+<details>
+<summary><strong>void pointer</strong></summary>
+
+**Là gì?** Con trỏ có thể chứa địa chỉ nhiều kiểu; phải chuyển kiểu phù hợp trước khi giải tham chiếu.  
+**Ví dụ:** `void *p=&x; int v=*(int*)p;`
+
+</details>
+
+<details>
+<summary><strong>Pointer arithmetic</strong></summary>
+
+**Là gì?** Cộng 1 vào con trỏ sẽ đi tới phần tử tiếp theo theo kiểu dữ liệu.  
+**Ví dụ:** `int a[2]={3,4}; int *p=a; *(p+1)` là `4`.
+
+</details>
+
+<details>
+<summary><strong>Array / pointer</strong></summary>
+
+**Là gì?** Mảng chứa nhiều phần tử liên tiếp; trong nhiều biểu thức tên mảng chuyển thành pointer tới phần tử đầu, nhưng không phải một pointer variable.  
+**Ví dụ:** `int a[3]; sizeof(a)` là kích thước toàn mảng trong cùng scope.
+
+</details>
+
+<details>
+<summary><strong>const</strong></summary>
+
+**Là gì?** Ngăn sửa đối tượng qua đường truy cập `const`.  
+**Ví dụ:** `const int x=10;` không thể viết `x=20;`.
+
+</details>
+
+<details>
+<summary><strong>static</strong></summary>
+
+**Là gì?** Biến local `static` giữ giá trị giữa các lần gọi; ở file scope giới hạn linkage.  
+**Ví dụ:** `static int count=0; count++;`
+
+</details>
+
+<details>
+<summary><strong>volatile</strong></summary>
+
+**Là gì?** Báo compiler rằng giá trị có thể đổi ngoài luồng thông thường; **không** đảm bảo atomic/thread-safe.  
+**Ví dụ:** `volatile uint32_t *reg=(volatile uint32_t*)ADDR;`
+
+</details>
+
+<details>
+<summary><strong>extern</strong></summary>
+
+**Là gì?** Khai báo một biến/hàm có định nghĩa ở nơi khác.  
+**Ví dụ:** `extern int g_counter;`
+
+</details>
+
+<details>
+<summary><strong>Stack / Heap</strong></summary>
+
+**Là gì?** Stack thường chứa biến cục bộ và call frames; heap phục vụ cấp phát động.  
+**Ví dụ:** `int x=1; int *p=malloc(sizeof *p); free(p);`
+
+</details>
+
+<details>
+<summary><strong>.text / .data / .bss</strong></summary>
+
+**Là gì?** `.text` thường chứa mã; `.data` dữ liệu global/static khởi tạo khác 0; `.bss` dữ liệu zero-initialized.  
+**Ví dụ:** `int a=3;` → `.data`; `static int b;` → `.bss` (thông thường).
+
+</details>
+
+<details>
+<summary><strong>malloc / calloc / realloc / free</strong></summary>
+
+**Là gì?** Các hàm cấp phát, cấp phát và zero-initialize, thay đổi kích thước, giải phóng bộ nhớ động.  
+**Ví dụ:** `int *p=malloc(5*sizeof *p); free(p);`
+
+</details>
+
+<details>
+<summary><strong>Memory leak</strong></summary>
+
+**Là gì?** Bộ nhớ cấp phát không được giải phóng và không còn cách thu hồi hợp lệ.  
+**Ví dụ:** `p=malloc(100); p=NULL;` làm mất địa chỉ vùng cấp phát.
+
+</details>
+
+<details>
+<summary><strong>Dangling / wild pointer</strong></summary>
+
+**Là gì?** Dangling: trỏ tới đối tượng hết lifetime; wild: con trỏ chưa được khởi tạo hợp lệ.  
+**Ví dụ:** `free(p); *p=1;` là lỗi use-after-free.
+
+</details>
+
+<details>
+<summary><strong>Buffer overflow</strong></summary>
+
+**Là gì?** Ghi/đọc vượt giới hạn mảng hoặc buffer.  
+**Ví dụ:** `char a[4]; strcpy(a,"hello");` ghi tràn.
+
+</details>
+
+<details>
+<summary><strong>struct / union / enum / typedef</strong></summary>
+
+**Là gì?** `struct` gom các field; `union` chia sẻ vùng nhớ; `enum` là tập hằng số; `typedef` đặt bí danh kiểu.  
+**Ví dụ:** `typedef struct {int id;} Device;`
+
+</details>
+
+<details>
+<summary><strong>Padding / alignment</strong></summary>
+
+**Là gì?** Compiler có thể chèn byte trống để đáp ứng căn chỉnh dữ liệu.  
+**Ví dụ:** `struct {char c; int x;}` thường lớn hơn `sizeof(char)+sizeof(int)`.
+
+</details>
+
+<details>
+<summary><strong>Bitwise / bit mask</strong></summary>
+
+**Là gì?** Dùng `&`, `|`, `^`, `~`, `<<`, `>>` để thao tác bit.  
+**Ví dụ:** `reg |= (1U<<5);` bật bit 5.
+
+</details>
+
+<details>
+<summary><strong>Function pointer / callback</strong></summary>
+
+**Là gì?** Biến lưu địa chỉ hàm; callback là hàm được truyền cho nơi khác để gọi khi cần.  
+**Ví dụ:** `void (*cb)(void)=handler; cb();`
+
+</details>
+
+<details>
+<summary><strong>Macro / preprocessor</strong></summary>
+
+**Là gì?** Lệnh tiền xử lý để định nghĩa macro, include, điều kiện biên dịch.  
+**Ví dụ:** `#define BIT(n) (1U << (n))`.
+
+</details>
+
+<details>
+<summary><strong>String / memcpy / memmove</strong></summary>
+
+**Là gì?** Chuỗi C kết thúc bằng `\0`; `memcpy` sao chép vùng không chồng lấp; `memmove` xử lý vùng chồng lấp.  
+**Ví dụ:** `memmove(buf+1,buf,3);`
+
+</details>
+
+<details>
+<summary><strong>Endianness</strong></summary>
+
+**Là gì?** Thứ tự lưu byte của giá trị nhiều byte trong bộ nhớ.  
+**Ví dụ:** `0x1234` có byte thấp `0x34` ở địa chỉ thấp trên little-endian.
+
+</details>
+
+<details>
+<summary><strong>Undefined behavior</strong></summary>
+
+**Là gì?** Hành vi không được chuẩn C bảo đảm, không có kết quả đáng tin.  
+**Ví dụ:** `int a[2]; a[2]=1;` truy cập ngoài mảng.
+
+</details>
+
+<details>
+<summary><strong>Reentrancy</strong></summary>
+
+**Là gì?** Hàm có thể được gọi chồng lấp an toàn mà không làm sai trạng thái.  
+**Ví dụ:** Hàm chỉ dùng biến local và không dùng shared mutable state thường dễ reentrant.
+
+</details>
+
+<details>
+<summary><strong>Thread safety / atomic</strong></summary>
+
+**Là gì?** Thread-safe: an toàn khi gọi đồng thời; atomic: thao tác không bị quan sát ở trạng thái dở dang theo mô hình bộ nhớ.  
+**Ví dụ:** `atomic_fetch_add(&counter,1);` cho bộ đếm dùng chung.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 2. C++ PROGRAMMING</strong></summary>
 
-- Class, object, struct vs class.
-- 4 tính chất OOP.
-- Inheritance, encapsulation, polymorphism, abstraction.
-- Overloading, overriding.
-- Virtual function, abstract class, virtual destructor.
-- Constructor, destructor.
-- Copy constructor, move semantics.
-- Rule of Three/Five/Zero.
-- Pointer vs reference.
-- new/delete, RAII.
-- Smart pointer: unique_ptr, shared_ptr, weak_ptr.
-- STL: vector, list, map, unordered_map, queue.
-- Template, lambda, iterator.
-- Exception handling.
-- Modern C++: auto, nullptr, constexpr, enum class.
-- std::thread, mutex, atomic, condition_variable.
+<details>
+<summary><strong>Class / Object</strong></summary>
+
+**Là gì?** Class là bản thiết kế; object là thể hiện được tạo từ class.  
+**Ví dụ:** `class Led {}; Led led;`
 
 </details>
+
+<details>
+<summary><strong>struct vs class</strong></summary>
+
+**Là gì?** C++ giống nhau về khả năng; khác quyền truy cập/kế thừa mặc định: `struct` public, `class` private.  
+**Ví dụ:** `struct A {int x;};` → `x` public.
+
+</details>
+
+<details>
+<summary><strong>Encapsulation</strong></summary>
+
+**Là gì?** Gom dữ liệu và hành vi, kiểm soát truy cập để bảo vệ trạng thái.  
+**Ví dụ:** `private: int speed; public: void setSpeed(int);`
+
+</details>
+
+<details>
+<summary><strong>Inheritance</strong></summary>
+
+**Là gì?** Class con kế thừa giao diện/hành vi của class cha.  
+**Ví dụ:** `class Car : public Vehicle {};`
+
+</details>
+
+<details>
+<summary><strong>Polymorphism</strong></summary>
+
+**Là gì?** Cùng giao diện nhưng hành vi khác theo loại object; runtime qua hàm virtual.  
+**Ví dụ:** `Base* p=&derived; p->run();`
+
+</details>
+
+<details>
+<summary><strong>Abstraction</strong></summary>
+
+**Là gì?** Chỉ lộ thao tác quan trọng, ẩn chi tiết triển khai.  
+**Ví dụ:** `class Sensor {public: virtual int read()=0;};`
+
+</details>
+
+<details>
+<summary><strong>Overloading</strong></summary>
+
+**Là gì?** Nhiều hàm cùng tên, khác danh sách tham số.  
+**Ví dụ:** `print(int); print(float);`
+
+</details>
+
+<details>
+<summary><strong>Overriding</strong></summary>
+
+**Là gì?** Class con định nghĩa lại virtual function của class cha với chữ ký phù hợp.  
+**Ví dụ:** `void run() override;`
+
+</details>
+
+<details>
+<summary><strong>Virtual function</strong></summary>
+
+**Là gì?** Cho phép gọi đúng hàm ở object dẫn xuất qua base pointer/reference.  
+**Ví dụ:** `virtual void start();`
+
+</details>
+
+<details>
+<summary><strong>Pure virtual / abstract</strong></summary>
+
+**Là gì?** Hàm `=0` giúp tạo interface; class còn pure virtual thì abstract.  
+**Ví dụ:** `virtual void draw()=0;`
+
+</details>
+
+<details>
+<summary><strong>Virtual destructor</strong></summary>
+
+**Là gì?** Cần khi xóa object dẫn xuất qua con trỏ base để giải phóng đầy đủ.  
+**Ví dụ:** `virtual ~Base()=default;`
+
+</details>
+
+<details>
+<summary><strong>Constructor / Destructor</strong></summary>
+
+**Là gì?** Constructor khởi tạo object; destructor giải phóng tài nguyên khi lifetime kết thúc.  
+**Ví dụ:** `Device(){} ~Device(){}`.
+
+</details>
+
+<details>
+<summary><strong>Initialization list</strong></summary>
+
+**Là gì?** Khởi tạo member trước thân constructor; bắt buộc cho reference/const member.  
+**Ví dụ:** `Device(int x): id(x) {}`.
+
+</details>
+
+<details>
+<summary><strong>Copy / Move</strong></summary>
+
+**Là gì?** Copy tạo bản sao; move chuyển giao tài nguyên của object nguồn khi phù hợp.  
+**Ví dụ:** `std::vector<int> b=std::move(a);`
+
+</details>
+
+<details>
+<summary><strong>Rule of Three / Five / Zero</strong></summary>
+
+**Là gì?** Khi tự quản lý tài nguyên, cân nhắc copy/move/destructor cùng nhau; ưu tiên Rule of Zero nhờ RAII.  
+**Ví dụ:** Dùng `std::vector` thay raw `new[]`.
+
+</details>
+
+<details>
+<summary><strong>Pointer vs reference</strong></summary>
+
+**Là gì?** Pointer có thể null/đổi đích; reference phải được gắn với đối tượng khi khởi tạo.  
+**Ví dụ:** `int *p=&x; int &r=x;`
+
+</details>
+
+<details>
+<summary><strong>new / delete</strong></summary>
+
+**Là gì?** Cấp phát/tạo object và hủy/giải phóng trong C++.  
+**Ví dụ:** `auto p=new Device; delete p;`
+
+</details>
+
+<details>
+<summary><strong>RAII</strong></summary>
+
+**Là gì?** Gắn lifetime tài nguyên với lifetime của object.  
+**Ví dụ:** `std::lock_guard<std::mutex> lock(m);`
+
+</details>
+
+<details>
+<summary><strong>unique_ptr / shared_ptr / weak_ptr</strong></summary>
+
+**Là gì?** Sở hữu duy nhất / cùng sở hữu / quan sát không tăng reference count.  
+**Ví dụ:** `auto p=std::make_unique<Device>();`
+
+</details>
+
+<details>
+<summary><strong>STL containers</strong></summary>
+
+**Là gì?** `vector`: mảng động; `list`: linked list; `map`: cây có thứ tự; `unordered_map`: hash; `queue`: FIFO.  
+**Ví dụ:** `std::vector<int> v{1,2};`
+
+</details>
+
+<details>
+<summary><strong>Iterator / algorithm / lambda</strong></summary>
+
+**Là gì?** Iterator duyệt container, algorithm xử lý dữ liệu, lambda định nghĩa hàm ngắn tại chỗ.  
+**Ví dụ:** `std::sort(v.begin(),v.end());`
+
+</details>
+
+<details>
+<summary><strong>Template</strong></summary>
+
+**Là gì?** Viết hàm/class tổng quát theo kiểu dữ liệu.  
+**Ví dụ:** `template<class T> T max2(T a,T b){return a>b?a:b;}`
+
+</details>
+
+<details>
+<summary><strong>Exception</strong></summary>
+
+**Là gì?** Cơ chế báo và xử lý lỗi qua `throw`, `try`, `catch`; cần chú ý policy trên embedded.  
+**Ví dụ:** `try{f();}catch(const std::exception& e){}`.
+
+</details>
+
+<details>
+<summary><strong>Modern C++</strong></summary>
+
+**Là gì?** `auto` suy luận kiểu; `nullptr` null pointer; `enum class` enum mạnh kiểu; `constexpr` cho hằng tính được lúc biên dịch khi đủ điều kiện.  
+**Ví dụ:** `constexpr int N=8;`
+
+</details>
+
+<details>
+<summary><strong>std::thread / mutex / atomic</strong></summary>
+
+**Là gì?** Tạo luồng / bảo vệ dữ liệu dùng chung / phép toán nguyên tử.  
+**Ví dụ:** `std::atomic<int> count{0}; ++count;`
+
+</details>
+
+<details>
+<summary><strong>condition_variable</strong></summary>
+
+**Là gì?** Cho thread chờ tín hiệu và điều kiện, tránh polling liên tục.  
+**Ví dụ:** `cv.wait(lock, []{return ready;});`
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 3. EMBEDDED SYSTEMS</strong></summary>
 
-- MCU vs MPU.
-- Flash, RAM, ROM, EEPROM.
-- Memory-mapped I/O.
-- Register và GPIO.
-- Polling, interrupt, DMA.
-- ISR, interrupt latency, interrupt priority.
-- Timer, PWM, ADC, DAC.
-- Watchdog.
-- Bootloader, firmware.
-- Startup code, linker script.
-- Cross compiler và toolchain.
-- JTAG, SWD, debugging.
-- Bare-metal vs RTOS vs Embedded Linux.
-- Sensor, actuator, HAL, driver.
-- Timeout, retry, CRC và fault handling.
+<details>
+<summary><strong>MCU vs MPU</strong></summary>
+
+**Là gì?** MCU tích hợp CPU, RAM, Flash và ngoại vi; MPU thường cần bộ nhớ/ngoại vi ngoài, hay chạy OS phức tạp.  
+**Ví dụ:** STM32 (MCU), Cortex-A SoC (MPU-based).
 
 </details>
+
+<details>
+<summary><strong>Flash / RAM / ROM / EEPROM</strong></summary>
+
+**Là gì?** Flash lưu firmware; RAM lưu dữ liệu khi chạy; ROM không ghi trong sử dụng bình thường; EEPROM lưu cấu hình không mất khi tắt nguồn.  
+**Ví dụ:** Firmware trong Flash, biến runtime trong RAM.
+
+</details>
+
+<details>
+<summary><strong>Memory-mapped I/O</strong></summary>
+
+**Là gì?** Thanh ghi ngoại vi được ánh xạ vào địa chỉ bộ nhớ.  
+**Ví dụ:** `*(volatile uint32_t*)REG_ADDR` truy cập register nếu địa chỉ hợp lệ.
+
+</details>
+
+<details>
+<summary><strong>GPIO / register</strong></summary>
+
+**Là gì?** GPIO là chân vào/ra; register chứa các bit điều khiển hoặc trạng thái.  
+**Ví dụ:** `GPIO_OUT |= LED_BIT;`
+
+</details>
+
+<details>
+<summary><strong>Polling</strong></summary>
+
+**Là gì?** CPU liên tục kiểm tra cờ/trạng thái để biết sự kiện.  
+**Ví dụ:** `while(!(STATUS&READY_BIT)) {}`.
+
+</details>
+
+<details>
+<summary><strong>Interrupt / ISR</strong></summary>
+
+**Là gì?** Ngoại vi phát sự kiện ngắt; ISR xử lý nhanh và thường báo task xử lý tiếp.  
+**Ví dụ:** UART RX interrupt thông báo dữ liệu mới.
+
+</details>
+
+<details>
+<summary><strong>DMA</strong></summary>
+
+**Là gì?** Truyền dữ liệu bộ nhớ–ngoại vi với ít can thiệp CPU.  
+**Ví dụ:** ADC DMA ghi mẫu vào buffer.
+
+</details>
+
+<details>
+<summary><strong>Interrupt latency / priority</strong></summary>
+
+**Là gì?** Latency là thời gian từ sự kiện đến khi ISR bắt đầu; priority quyết định thứ tự phục vụ theo controller.  
+**Ví dụ:** Ngắt khẩn cấp ưu tiên cao.
+
+</details>
+
+<details>
+<summary><strong>Timer / PWM</strong></summary>
+
+**Là gì?** Timer đo hoặc tạo chu kỳ; PWM thay duty cycle để điều khiển công suất.  
+**Ví dụ:** PWM 25% duty điều khiển độ sáng LED.
+
+</details>
+
+<details>
+<summary><strong>ADC / DAC</strong></summary>
+
+**Là gì?** ADC chuyển tín hiệu analog thành số; DAC chuyển số thành analog.  
+**Ví dụ:** ADC đọc điện áp sensor.
+
+</details>
+
+<details>
+<summary><strong>Watchdog</strong></summary>
+
+**Là gì?** Bộ đếm thời gian yêu cầu software refresh; hết hạn sẽ kích hoạt phản ứng như reset theo cấu hình.  
+**Ví dụ:** Task giám sát lỗi không kick watchdog.
+
+</details>
+
+<details>
+<summary><strong>Bootloader / firmware</strong></summary>
+
+**Là gì?** Bootloader chuẩn bị nạp/chạy hoặc cập nhật firmware; firmware là phần mềm trên thiết bị.  
+**Ví dụ:** Bootloader nhận bản cập nhật qua UART.
+
+</details>
+
+<details>
+<summary><strong>Startup code / linker script</strong></summary>
+
+**Là gì?** Startup khởi tạo runtime; linker script quy định bố trí các section trong Flash/RAM.  
+**Ví dụ:** Copy `.data`, zero `.bss` trước `main()`.
+
+</details>
+
+<details>
+<summary><strong>Cross compiler / toolchain</strong></summary>
+
+**Là gì?** Biên dịch trên host cho kiến trúc target; toolchain gồm compiler, linker, debugger...  
+**Ví dụ:** `arm-none-eabi-gcc` cho ARM bare-metal.
+
+</details>
+
+<details>
+<summary><strong>JTAG / SWD</strong></summary>
+
+**Là gì?** Giao diện nạp và debug phần cứng.  
+**Ví dụ:** SWD + ST-Link debug STM32.
+
+</details>
+
+<details>
+<summary><strong>Bare-metal / RTOS / Embedded Linux</strong></summary>
+
+**Là gì?** Bare-metal không có OS; RTOS lập lịch có yêu cầu thời gian; Embedded Linux giàu dịch vụ hệ thống.  
+**Ví dụ:** STM32 bare-metal, FreeRTOS, OpenWrt.
+
+</details>
+
+<details>
+<summary><strong>Sensor / actuator</strong></summary>
+
+**Là gì?** Sensor đo đại lượng; actuator tác động vật lý.  
+**Ví dụ:** Cảm biến nhiệt độ và motor.
+
+</details>
+
+<details>
+<summary><strong>Driver / HAL</strong></summary>
+
+**Là gì?** Driver điều khiển ngoại vi; HAL cung cấp API trừu tượng hóa phần cứng.  
+**Ví dụ:** `HAL_UART_Transmit(...)`.
+
+</details>
+
+<details>
+<summary><strong>Timeout / retry / CRC</strong></summary>
+
+**Là gì?** Timeout giới hạn chờ; retry thử lại; CRC phát hiện lỗi dữ liệu.  
+**Ví dụ:** Gói UART sai CRC bị loại bỏ.
+
+</details>
+
+<details>
+<summary><strong>Hardware debug</strong></summary>
+
+**Là gì?** Kết hợp register view, breakpoint, UART log, logic analyzer, oscilloscope.  
+**Ví dụ:** Logic analyzer kiểm tra xung SPI.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 4. RTOS</strong></summary>
 
-- RTOS vs General Purpose OS.
-- Hard real-time, soft real-time.
-- Task/thread và task states.
-- Scheduling, priority, preemption.
-- Context switching.
-- Tick, time slicing.
-- Mutex, semaphore.
-- Queue, event group.
-- Race condition, deadlock, starvation.
-- Priority inversion, priority inheritance.
-- ISR-to-task communication.
-- Critical section.
-- Stack overflow, heap fragmentation.
-- Watchdog và task monitoring.
-- Deadline, WCET.
-- FreeRTOS API cơ bản.
-- Thiết kế task xử lý sensor, communication và UI.
+<details>
+<summary><strong>RTOS</strong></summary>
+
+**Là gì?** Hệ điều hành giúp xử lý tác vụ với thời gian đáp ứng có thể dự đoán theo thiết kế.  
+**Ví dụ:** FreeRTOS cho MCU.
 
 </details>
+
+<details>
+<summary><strong>G​​POS vs RTOS</strong></summary>
+
+**Là gì?** GP​OS tối ưu khả năng sử dụng/throughput đa mục đích; RTOS tập trung deadline và độ trễ xác định.  
+**Ví dụ:** Windows desktop vs FreeRTOS.
+
+</details>
+
+<details>
+<summary><strong>Hard / Soft real-time</strong></summary>
+
+**Là gì?** Hard: trễ deadline là lỗi nghiêm trọng; soft: trễ làm giảm chất lượng.  
+**Ví dụ:** Điều khiển bảo vệ an toàn vs cập nhật số liệu giao diện.
+
+</details>
+
+<details>
+<summary><strong>Task / thread</strong></summary>
+
+**Là gì?** Đơn vị thực thi được scheduler quản lý.  
+**Ví dụ:** Task đọc ADC và task truyền UART.
+
+</details>
+
+<details>
+<summary><strong>Task states</strong></summary>
+
+**Là gì?** Các trạng thái thường gặp: Running, Ready, Blocked, Suspended.  
+**Ví dụ:** Task chờ queue → Blocked.
+
+</details>
+
+<details>
+<summary><strong>Preemptive / cooperative</strong></summary>
+
+**Là gì?** Preemptive cho phép task ưu tiên cao giành CPU; cooperative nhường CPU tự nguyện.  
+**Ví dụ:** Task khẩn cấp preempt task nền.
+
+</details>
+
+<details>
+<summary><strong>Priority / time slicing</strong></summary>
+
+**Là gì?** Priority xác định mức ưu tiên; time slicing chia CPU giữa các task cùng ưu tiên khi được cấu hình.  
+**Ví dụ:** Hai task cùng mức chạy luân phiên.
+
+</details>
+
+<details>
+<summary><strong>Context switching</strong></summary>
+
+**Là gì?** Lưu trạng thái task cũ và khôi phục task mới.  
+**Ví dụ:** ISR đánh thức task ưu tiên cao.
+
+</details>
+
+<details>
+<summary><strong>Tick / tickless</strong></summary>
+
+**Là gì?** Tick là nhịp thời gian hệ thống; tickless giảm tick khi idle để tiết kiệm năng lượng.  
+**Ví dụ:** `vTaskDelay(pdMS_TO_TICKS(10))`.
+
+</details>
+
+<details>
+<summary><strong>Mutex</strong></summary>
+
+**Là gì?** Khóa bảo vệ tài nguyên dùng chung, thường có ownership và priority inheritance.  
+**Ví dụ:** Hai task dùng chung I2C bus.
+
+</details>
+
+<details>
+<summary><strong>Binary / counting semaphore</strong></summary>
+
+**Là gì?** Binary semaphore dùng tín hiệu/đồng bộ; counting semaphore đếm nhiều sự kiện/tài nguyên.  
+**Ví dụ:** ISR give semaphore để đánh thức task.
+
+</details>
+
+<details>
+<summary><strong>Queue</strong></summary>
+
+**Là gì?** Truyền dữ liệu an toàn giữa các task bằng message.  
+**Ví dụ:** Task ADC gửi mẫu sang task xử lý.
+
+</details>
+
+<details>
+<summary><strong>Event group / task notification</strong></summary>
+
+**Là gì?** Cơ chế thông báo một hoặc nhiều sự kiện tới task.  
+**Ví dụ:** Thông báo `DATA_READY`.
+
+</details>
+
+<details>
+<summary><strong>Race condition / deadlock / starvation</strong></summary>
+
+**Là gì?** Race: kết quả phụ thuộc timing; deadlock: chờ nhau vĩnh viễn; starvation: task thiếu cơ hội chạy.  
+**Ví dụ:** A giữ mutex1 chờ mutex2, B ngược lại.
+
+</details>
+
+<details>
+<summary><strong>Priority inversion / inheritance</strong></summary>
+
+**Là gì?** Task ưu tiên thấp giữ khóa khiến task cao phải chờ; inheritance nâng tạm priority của chủ khóa.  
+**Ví dụ:** Low giữ mutex, High đợi.
+
+</details>
+
+<details>
+<summary><strong>ISR-to-task</strong></summary>
+
+**Là gì?** ISR nên làm ít việc, báo task thực hiện xử lý nặng.  
+**Ví dụ:** `xQueueSendFromISR(...)`.
+
+</details>
+
+<details>
+<summary><strong>Critical section</strong></summary>
+
+**Là gì?** Vùng cần bảo vệ khỏi truy cập đồng thời; trên MCU có thể dùng khóa hoặc che ngắt thích hợp.  
+**Ví dụ:** Bảo vệ cập nhật thanh ghi dùng chung.
+
+</details>
+
+<details>
+<summary><strong>Task stack / heap fragmentation</strong></summary>
+
+**Là gì?** Mỗi task có stack; cấp phát heap động có thể phân mảnh nếu dùng không cẩn thận.  
+**Ví dụ:** Theo dõi high water mark của stack.
+
+</details>
+
+<details>
+<summary><strong>Deadline / WCET</strong></summary>
+
+**Là gì?** Deadline là hạn hoàn tất; WCET là thời gian chạy tối đa trong điều kiện phân tích xác định.  
+**Ví dụ:** Task sensor cần hoàn thành trong 5 ms.
+
+</details>
+
+<details>
+<summary><strong>Watchdog / monitoring</strong></summary>
+
+**Là gì?** Giám sát sức khỏe task và phục hồi khi hệ thống không còn đáp ứng.  
+**Ví dụ:** Task giám sát chỉ kick watchdog nếu các task quan trọng khỏe.
+
+</details>
+
+<details>
+<summary><strong>FreeRTOS API</strong></summary>
+
+**Là gì?** API tạo task, delay, queue, semaphore...  
+**Ví dụ:** `xTaskCreate`, `vTaskDelay`, `xQueueSend`.
+
+</details>
+
+<details>
+<summary><strong>Thiết kế task</strong></summary>
+
+**Là gì?** Tách thu nhận sensor, xử lý, giao tiếp, UI; chọn priority và IPC dựa vào yêu cầu thời gian.  
+**Ví dụ:** ADC ISR → queue → processing task.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 5. QT FRAMEWORK / GUI</strong></summary>
 
-- Qt là gì?
-- Qt Widgets vs Qt Quick/QML.
-- QObject, QWidget, QMainWindow.
-- Signals và Slots.
-- Event loop.
-- QThread và worker object.
-- Thread affinity, queued connection.
-- Cập nhật UI từ worker thread.
-- QTimer.
-- QString, QByteArray, QList.
-- Qt parent-child ownership.
-- Qt Designer và layout.
-- QSerialPort, QTcpSocket.
-- Model/View architecture.
-- So sánh Qt với MFC.
-- Blocking vs non-blocking UI.
-- Thiết kế UI hiển thị sensor, alarm, error.
-- Xử lý UI bị treo hoặc giật lag.
+<details>
+<summary><strong>Qt</strong></summary>
+
+**Là gì?** Framework C++ đa nền tảng để xây dựng GUI và ứng dụng.  
+**Ví dụ:** GUI thiết bị y tế bằng Qt.
 
 </details>
+
+<details>
+<summary><strong>Qt Widgets vs Qt Quick/QML</strong></summary>
+
+**Là gì?** Widgets dùng các widget C++; Quick/QML dùng giao diện khai báo, phù hợp animation/touch UI.  
+**Ví dụ:** `QPushButton` vs QML `Button`.
+
+</details>
+
+<details>
+<summary><strong>QObject / QWidget / QMainWindow</strong></summary>
+
+**Là gì?** `QObject` hỗ trợ object model; `QWidget` là thành phần UI; `QMainWindow` là cửa sổ chính.  
+**Ví dụ:** `class MainWindow : public QMainWindow`.
+
+</details>
+
+<details>
+<summary><strong>Signals / Slots</strong></summary>
+
+**Là gì?** Cơ chế phát sự kiện và kết nối hàm xử lý giữa các object.  
+**Ví dụ:** `connect(button,&QPushButton::clicked,this,&MainWindow::onClick);`
+
+</details>
+
+<details>
+<summary><strong>Event loop</strong></summary>
+
+**Là gì?** Vòng lặp nhận và phân phối sự kiện; xử lý block dài sẽ làm UI kém phản hồi.  
+**Ví dụ:** Click button → slot được gọi.
+
+</details>
+
+<details>
+<summary><strong>QThread / worker object</strong></summary>
+
+**Là gì?** Chạy tác vụ dài ở thread khác; pattern worker dùng QObject chuyển sang QThread.  
+**Ví dụ:** Worker đọc sensor ở background.
+
+</details>
+
+<details>
+<summary><strong>Thread affinity</strong></summary>
+
+**Là gì?** QObject thuộc một thread; event queued được xử lý trong thread có event loop của object nhận.  
+**Ví dụ:** Worker `moveToThread(&thread)`.
+
+</details>
+
+<details>
+<summary><strong>Queued connection</strong></summary>
+
+**Là gì?** Signal được chuyển thành event tới receiver thread, tránh gọi trực tiếp cross-thread ngoài ý muốn.  
+**Ví dụ:** Worker emit `dataReady(value)` tới UI.
+
+</details>
+
+<details>
+<summary><strong>Update UI an toàn</strong></summary>
+
+**Là gì?** Hầu hết widget phải thao tác trong GUI thread.  
+**Ví dụ:** Worker emit signal, UI slot `label->setText(...)`.
+
+</details>
+
+<details>
+<summary><strong>QTimer</strong></summary>
+
+**Là gì?** Phát tín hiệu timeout sau khoảng thời gian, cần event loop hoạt động.  
+**Ví dụ:** Refresh UI mỗi 100 ms.
+
+</details>
+
+<details>
+<summary><strong>QString / QByteArray / QList</strong></summary>
+
+**Là gì?** Chuỗi Unicode / mảng byte / container danh sách trong Qt.  
+**Ví dụ:** `QByteArray frame = port.readAll();`
+
+</details>
+
+<details>
+<summary><strong>Parent-child ownership</strong></summary>
+
+**Là gì?** Parent QObject thường tự hủy child QObject cùng lúc bị hủy.  
+**Ví dụ:** `new QPushButton("OK", this)`.
+
+</details>
+
+<details>
+<summary><strong>Qt Designer / layout</strong></summary>
+
+**Là gì?** Designer dựng giao diện; layout sắp xếp widget co giãn.  
+**Ví dụ:** `QVBoxLayout`.
+
+</details>
+
+<details>
+<summary><strong>QSerialPort / QTcpSocket</strong></summary>
+
+**Là gì?** API Qt cho UART serial và TCP networking.  
+**Ví dụ:** `port.setBaudRate(115200);`
+
+</details>
+
+<details>
+<summary><strong>Model/View</strong></summary>
+
+**Là gì?** Tách dữ liệu model khỏi cách hiển thị view.  
+**Ví dụ:** `QTableView` với `QAbstractTableModel`.
+
+</details>
+
+<details>
+<summary><strong>Qt vs MFC</strong></summary>
+
+**Là gì?** Cả hai event-driven; MFC thường dựa Windows message map, Qt dùng signals/slots và đa nền tảng.  
+**Ví dụ:** `ON_BN_CLICKED` so với `connect`.
+
+</details>
+
+<details>
+<summary><strong>Blocking vs non-blocking</strong></summary>
+
+**Là gì?** Blocking ở GUI thread làm treo hiển thị; non-blocking/asynchronous giữ UI phản hồi.  
+**Ví dụ:** Dùng worker thay vì sleep trong slot.
+
+</details>
+
+<details>
+<summary><strong>Hiển thị sensor / alarm</strong></summary>
+
+**Là gì?** Tách dữ liệu, kiểm tra validity/timestamp, hiển thị cảnh báo rõ ràng theo yêu cầu an toàn.  
+**Ví dụ:** Mất sensor → hiển thị trạng thái invalid.
+
+</details>
+
+<details>
+<summary><strong>UI lag / freeze</strong></summary>
+
+**Là gì?** Kiểm tra blocking operation, paint quá dày, lock contention; giới hạn tần số refresh.  
+**Ví dụ:** Sensor 1 kHz nhưng UI refresh 20 Hz.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 6. COMMUNICATION PROTOCOLS</strong></summary>
 
-- UART.
-- SPI.
-- I2C.
-- Ethernet.
-- TCP/IP.
-- TCP vs UDP.
-- Socket programming.
-- USB.
-- Bluetooth/BLE.
-- CAN.
-- CRC, checksum.
-- Ring buffer.
-- Packet parsing.
-- Timeout, retry, reconnection.
-- Xử lý mất kết nối sensor.
+<details>
+<summary><strong>UART</strong></summary>
+
+**Là gì?** Giao tiếp nối tiếp bất đồng bộ, thường qua TX/RX, baud rate, parity, stop bit.  
+**Ví dụ:** MCU gửi log UART 115200.
 
 </details>
+
+<details>
+<summary><strong>SPI</strong></summary>
+
+**Là gì?** Bus đồng bộ dùng SCLK, MOSI, MISO, CS; thường full-duplex.  
+**Ví dụ:** MCU đọc cảm biến SPI.
+
+</details>
+
+<details>
+<summary><strong>I2C</strong></summary>
+
+**Là gì?** Bus đồng bộ hai dây SDA/SCL, có address và ACK/NACK.  
+**Ví dụ:** MCU đọc sensor I2C địa chỉ 0x48.
+
+</details>
+
+<details>
+<summary><strong>Ethernet</strong></summary>
+
+**Là gì?** Công nghệ LAN tại lớp vật lý/liên kết; dùng MAC/PHY và frame.  
+**Ví dụ:** ECU kết nối mạng Ethernet.
+
+</details>
+
+<details>
+<summary><strong>TCP/IP</strong></summary>
+
+**Là gì?** Bộ giao thức liên mạng; IP định tuyến, TCP cung cấp luồng byte tin cậy.  
+**Ví dụ:** Thiết bị gửi dữ liệu đến server.
+
+</details>
+
+<details>
+<summary><strong>TCP vs UDP</strong></summary>
+
+**Là gì?** TCP có kết nối, thứ tự và retransmission; UDP là datagram không tự bảo đảm giao hàng.  
+**Ví dụ:** TCP cho cấu hình; UDP cho streaming khi phù hợp.
+
+</details>
+
+<details>
+<summary><strong>Socket programming</strong></summary>
+
+**Là gì?** API tạo endpoint để gửi/nhận dữ liệu TCP/UDP.  
+**Ví dụ:** `socket()`, `connect()`, `send()`.
+
+</details>
+
+<details>
+<summary><strong>USB</strong></summary>
+
+**Là gì?** Bus có host/device, endpoint và các kiểu truyền control/bulk/interrupt/isochronous.  
+**Ví dụ:** Device gửi dữ liệu qua USB CDC.
+
+</details>
+
+<details>
+<summary><strong>Bluetooth / BLE</strong></summary>
+
+**Là gì?** Bluetooth Classic hợp một số luồng liên tục; BLE tối ưu thiết bị ít năng lượng, trao đổi qua GATT.  
+**Ví dụ:** Sensor BLE gửi nhịp tim.
+
+</details>
+
+<details>
+<summary><strong>CAN</strong></summary>
+
+**Là gì?** Bus truyền thông ưu tiên theo identifier; bit dominant thắng recessive khi arbitration.  
+**Ví dụ:** ECU gửi CAN frame ID 0x100.
+
+</details>
+
+<details>
+<summary><strong>CRC / checksum</strong></summary>
+
+**Là gì?** Giá trị kiểm tra phát hiện lỗi truyền; CRC dựa phép toán đa thức.  
+**Ví dụ:** Receiver tính lại CRC và so sánh.
+
+</details>
+
+<details>
+<summary><strong>Ring buffer</strong></summary>
+
+**Là gì?** Buffer vòng cho producer/consumer, thường dùng UART RX.  
+**Ví dụ:** ISR ghi byte, task đọc byte.
+
+</details>
+
+<details>
+<summary><strong>Packet parsing</strong></summary>
+
+**Là gì?** Xác định frame, độ dài, payload và kiểm tra dữ liệu.  
+**Ví dụ:** `[SOF][LEN][DATA][CRC]`.
+
+</details>
+
+<details>
+<summary><strong>Timeout / retry / reconnect</strong></summary>
+
+**Là gì?** Giới hạn thời gian chờ, thử lại có kiểm soát và thiết lập lại kết nối.  
+**Ví dụ:** TCP mất kết nối → backoff rồi reconnect.
+
+</details>
+
+<details>
+<summary><strong>Sensor disconnect</strong></summary>
+
+**Là gì?** Phát hiện mất tín hiệu và đánh dấu dữ liệu invalid, không coi dữ liệu cũ là dữ liệu hiện tại.  
+**Ví dụ:** Không nhận gói trong 2 s → báo lỗi.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 7. MULTITHREADING & CONCURRENCY</strong></summary>
 
-- Process vs thread.
-- Thread lifecycle.
-- Race condition.
-- Mutex, semaphore.
-- Deadlock, livelock, starvation.
-- Condition variable.
-- Producer-consumer.
-- Atomic vs volatile.
-- Critical section.
-- Thread-safe queue.
-- UI thread vs worker thread.
-- Cancel mechanism.
-- Shared memory, shared state.
-- Debug lỗi đa luồng.
+<details>
+<summary><strong>Process vs Thread</strong></summary>
+
+**Là gì?** Process có address space riêng; thread cùng process chia sẻ address space.  
+**Ví dụ:** Hai threads cùng sửa biến toàn cục.
 
 </details>
+
+<details>
+<summary><strong>Thread lifecycle</strong></summary>
+
+**Là gì?** Tạo, chạy, chờ, kết thúc; tài nguyên thread cần được quản lý.  
+**Ví dụ:** `std::thread t(f); t.join();`
+
+</details>
+
+<details>
+<summary><strong>Race condition</strong></summary>
+
+**Là gì?** Kết quả phụ thuộc timing/interleaving, có thể sai do thiếu đồng bộ.  
+**Ví dụ:** Hai thread cùng tăng counter.
+
+</details>
+
+<details>
+<summary><strong>Data race</strong></summary>
+
+**Là gì?** Truy cập đồng thời cùng memory, ít nhất một ghi, thiếu synchronization theo C++; là undefined behavior.  
+**Ví dụ:** Hai thread viết `int x` thường.
+
+</details>
+
+<details>
+<summary><strong>Mutex</strong></summary>
+
+**Là gì?** Khóa dùng bảo vệ shared state.  
+**Ví dụ:** `std::lock_guard<std::mutex> g(m);`
+
+</details>
+
+<details>
+<summary><strong>Semaphore</strong></summary>
+
+**Là gì?** Bộ đếm/tín hiệu phối hợp các thread hoặc task.  
+**Ví dụ:** Producer signal khi có data.
+
+</details>
+
+<details>
+<summary><strong>Deadlock / livelock / starvation</strong></summary>
+
+**Là gì?** Chờ khóa vĩnh viễn / liên tục đổi trạng thái nhưng không tiến triển / bị bỏ đói CPU hoặc tài nguyên.  
+**Ví dụ:** Hai thread khóa mutex theo thứ tự ngược.
+
+</details>
+
+<details>
+<summary><strong>Condition variable</strong></summary>
+
+**Là gì?** Cho thread ngủ cho tới khi điều kiện đúng và được thông báo.  
+**Ví dụ:** `cv.wait(lock, pred);`
+
+</details>
+
+<details>
+<summary><strong>Producer-consumer</strong></summary>
+
+**Là gì?** Một thread tạo dữ liệu, thread khác lấy ra từ queue an toàn.  
+**Ví dụ:** Sensor producer → logger consumer.
+
+</details>
+
+<details>
+<summary><strong>Atomic vs volatile</strong></summary>
+
+**Là gì?** Atomic hỗ trợ đồng bộ truy cập; volatile không thay thế mutex/atomic.  
+**Ví dụ:** `std::atomic<bool> stop{false};`
+
+</details>
+
+<details>
+<summary><strong>Critical section</strong></summary>
+
+**Là gì?** Khối code cần bảo vệ khi truy cập tài nguyên chung.  
+**Ví dụ:** Cập nhật danh sách dùng chung.
+
+</details>
+
+<details>
+<summary><strong>Thread-safe queue</strong></summary>
+
+**Là gì?** Queue có cơ chế đồng bộ an toàn giữa nhiều thread.  
+**Ví dụ:** Mutex + condition_variable + queue.
+
+</details>
+
+<details>
+<summary><strong>UI thread vs worker</strong></summary>
+
+**Là gì?** UI thread xử lý event, worker thực hiện công việc lâu.  
+**Ví dụ:** Download ở worker, báo UI bằng signal.
+
+</details>
+
+<details>
+<summary><strong>Cancel mechanism</strong></summary>
+
+**Là gì?** Worker kiểm tra cờ dừng và kết thúc an toàn tại điểm phù hợp.  
+**Ví dụ:** `if (stopRequested) break;`
+
+</details>
+
+<details>
+<summary><strong>Shared state / lifetime</strong></summary>
+
+**Là gì?** Dữ liệu chung cần đồng bộ và quản lý lifetime để tránh use-after-free.  
+**Ví dụ:** Không capture reference của object đã hủy.
+
+</details>
+
+<details>
+<summary><strong>Debug intermittent bug</strong></summary>
+
+**Là gì?** Ghi log có timestamp/thread ID, kiểm tra lock order và truy cập chung.  
+**Ví dụ:** Bug chỉ xảy ra khi hai thao tác gần đồng thời.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 8. MEDICAL DEVICE SOFTWARE & SAFETY</strong></summary>
 
-- IEC 62304.
-- Software safety classification A/B/C.
-- Software development lifecycle.
-- Verification vs validation.
-- Requirement traceability.
-- ISO 14971.
-- IEC 60601.
-- IEC 62366-1.
-- Risk management.
-- Fail-safe, fault detection, recovery.
-- Sensor failure handling.
-- Alarm handling.
-- Patient data integrity.
-- Unit, integration, system, regression testing.
-- Impact analysis.
+<details>
+<summary><strong>IEC 62304</strong></summary>
+
+**Là gì?** Tiêu chuẩn quy trình vòng đời phát triển/bảo trì software thiết bị y tế.  
+**Ví dụ:** Requirements → design → verification → maintenance.
 
 </details>
+
+<details>
+<summary><strong>Safety class A/B/C</strong></summary>
+
+**Là gì?** Phân loại mức an toàn phần mềm theo khả năng góp phần gây hại; yêu cầu quy trình tăng theo rủi ro.  
+**Ví dụ:** Class C áp dụng yêu cầu nghiêm ngặt hơn A.
+
+</details>
+
+<details>
+<summary><strong>Software lifecycle</strong></summary>
+
+**Là gì?** Từ requirements, architecture, design, coding, test đến maintenance.  
+**Ví dụ:** Quản lý thay đổi có impact analysis.
+
+</details>
+
+<details>
+<summary><strong>Verification vs Validation</strong></summary>
+
+**Là gì?** Verification: xây đúng theo đặc tả? Validation: sản phẩm đáp ứng nhu cầu sử dụng dự định?  
+**Ví dụ:** Test đúng requirement vs đánh giá use case lâm sàng.
+
+</details>
+
+<details>
+<summary><strong>Requirement traceability</strong></summary>
+
+**Là gì?** Liên kết requirement với thiết kế, code và test để kiểm chứng mức bao phủ.  
+**Ví dụ:** REQ-10 → TC-10.
+
+</details>
+
+<details>
+<summary><strong>ISO 14971</strong></summary>
+
+**Là gì?** Tiêu chuẩn quản lý rủi ro của thiết bị y tế.  
+**Ví dụ:** Xác định hazard, đánh giá và kiểm soát risk.
+
+</details>
+
+<details>
+<summary><strong>IEC 60601</strong></summary>
+
+**Là gì?** Họ tiêu chuẩn an toàn cơ bản và hiệu năng thiết yếu cho thiết bị điện y tế.  
+**Ví dụ:** Xem xét safety/electrical design.
+
+</details>
+
+<details>
+<summary><strong>IEC 62366-1</strong></summary>
+
+**Là gì?** Tiêu chuẩn quy trình usability engineering cho thiết bị y tế.  
+**Ví dụ:** UI hạn chế nhầm thao tác khi cấp cứu.
+
+</details>
+
+<details>
+<summary><strong>Risk management</strong></summary>
+
+**Là gì?** Nhận diện nguy cơ, ước lượng/đánh giá rủi ro, kiểm soát và theo dõi.  
+**Ví dụ:** Sensor sai có thể tạo alarm sai.
+
+</details>
+
+<details>
+<summary><strong>Fail-safe / recovery</strong></summary>
+
+**Là gì?** Khi phát hiện lỗi, chuyển sang trạng thái giảm rủi ro theo thiết kế.  
+**Ví dụ:** Không sử dụng số đo invalid để điều khiển.
+
+</details>
+
+<details>
+<summary><strong>Sensor failure handling</strong></summary>
+
+**Là gì?** Kiểm tra kết nối, timestamp, giá trị và lỗi; cảnh báo theo risk control.  
+**Ví dụ:** Mất tín hiệu SpO₂ → báo sensor disconnected.
+
+</details>
+
+<details>
+<summary><strong>Alarm handling</strong></summary>
+
+**Là gì?** Phân loại, ưu tiên và hiển thị cảnh báo phù hợp; tránh mất alarm quan trọng.  
+**Ví dụ:** Alarm không phụ thuộc hoàn toàn vào UI animation.
+
+</details>
+
+<details>
+<summary><strong>Patient data integrity</strong></summary>
+
+**Là gì?** Bảo đảm dữ liệu đúng, nhất quán và không gắn nhầm bệnh nhân.  
+**Ví dụ:** Kiểm tra Patient ID khi lưu kết quả.
+
+</details>
+
+<details>
+<summary><strong>Testing levels</strong></summary>
+
+**Là gì?** Unit kiểm hàm/module; integration kiểm giao tiếp; system kiểm toàn hệ thống; regression kiểm không tái phát.  
+**Ví dụ:** Sửa bug → chạy test liên quan.
+
+</details>
+
+<details>
+<summary><strong>Impact analysis</strong></summary>
+
+**Là gì?** Đánh giá sửa đổi ảnh hưởng thành phần, yêu cầu, rủi ro và test nào.  
+**Ví dụ:** Thay đổi xử lý sensor phải kiểm tra alarm.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 9. DEBUGGING, TESTING & DESIGN</strong></summary>
 
-- Unit test, integration test, system test.
-- Test case, expected/actual results.
-- Boundary value, negative test.
-- Mock, stub, test harness.
-- Unity, CMock, Ceedling.
-- Requirement coverage.
-- Root cause analysis.
-- Log analysis, crash dump.
-- Memory leak detection.
-- Software architecture.
-- State machine.
-- UML: class, sequence, activity diagram.
-- Basic design, detailed design.
-- Code review.
-- Static analysis.
-- Regression test và impact analysis.
+<details>
+<summary><strong>Unit / Integration / System test</strong></summary>
+
+**Là gì?** Kiểm một module / các module kết hợp / toàn hệ thống.  
+**Ví dụ:** Test parser → parser + UART → thiết bị.
 
 </details>
+
+<details>
+<summary><strong>Regression test</strong></summary>
+
+**Là gì?** Chạy lại test để phát hiện lỗi do sửa đổi.  
+**Ví dụ:** Sửa nút Cancel rồi test Search.
+
+</details>
+
+<details>
+<summary><strong>Test case</strong></summary>
+
+**Là gì?** Gồm điều kiện đầu, input, bước thực hiện và expected result.  
+**Ví dụ:** Input timeout → expected error.
+
+</details>
+
+<details>
+<summary><strong>Boundary / negative test</strong></summary>
+
+**Là gì?** Kiểm ngưỡng biên và input lỗi.  
+**Ví dụ:** Buffer size 0, 1, MAX, MAX+1.
+
+</details>
+
+<details>
+<summary><strong>Mock / stub / harness</strong></summary>
+
+**Là gì?** Mock kiểm tương tác; stub trả kết quả giả; harness cung cấp môi trường chạy test.  
+**Ví dụ:** Mock `HAL_UART_Transmit`.
+
+</details>
+
+<details>
+<summary><strong>Unity / CMock / Ceedling</strong></summary>
+
+**Là gì?** Unity viết assertion; CMock tạo mocks; Ceedling build/run unit tests cho C.  
+**Ví dụ:** `TEST_ASSERT_EQUAL(5,actual);`
+
+</details>
+
+<details>
+<summary><strong>Coverage / traceability</strong></summary>
+
+**Là gì?** Coverage đo mức test chạy qua cấu trúc/code; traceability liên kết yêu cầu với test.  
+**Ví dụ:** Mỗi REQ có ít nhất một TC thích hợp.
+
+</details>
+
+<details>
+<summary><strong>Root cause analysis</strong></summary>
+
+**Là gì?** Xác định nguyên nhân gốc thay vì chỉ xử lý triệu chứng.  
+**Ví dụ:** Treo UI do synchronous DB query.
+
+</details>
+
+<details>
+<summary><strong>Log / crash dump</strong></summary>
+
+**Là gì?** Log ghi sự kiện; dump lưu trạng thái tại thời điểm crash.  
+**Ví dụ:** Stack trace cho biết hàm lỗi.
+
+</details>
+
+<details>
+<summary><strong>Memory leak detection</strong></summary>
+
+**Là gì?** Theo dõi cấp phát và tài nguyên không được thu hồi.  
+**Ví dụ:** RAM process tăng dần sau nhiều lần mở màn hình.
+
+</details>
+
+<details>
+<summary><strong>Software architecture</strong></summary>
+
+**Là gì?** Phân chia hệ thống thành thành phần, interface và luồng dữ liệu.  
+**Ví dụ:** Sensor driver → processing → UI.
+
+</details>
+
+<details>
+<summary><strong>State machine</strong></summary>
+
+**Là gì?** Mô hình hệ thống qua state và transition.  
+**Ví dụ:** IDLE → RUNNING → ERROR.
+
+</details>
+
+<details>
+<summary><strong>UML diagrams</strong></summary>
+
+**Là gì?** Class: quan hệ kiểu; Sequence: trao đổi theo thời gian; Activity: luồng công việc.  
+**Ví dụ:** Sequence diagram cho thao tác Send.
+
+</details>
+
+<details>
+<summary><strong>Basic vs Detailed design</strong></summary>
+
+**Là gì?** Basic/high-level mô tả thành phần và interface lớn; detailed mô tả logic, data structure, xử lý lỗi cụ thể.  
+**Ví dụ:** Thiết kế module vs thuật toán parse frame.
+
+</details>
+
+<details>
+<summary><strong>Code review</strong></summary>
+
+**Là gì?** Kiểm code về logic, độ an toàn, maintainability và tiêu chuẩn.  
+**Ví dụ:** Review lỗi null pointer.
+
+</details>
+
+<details>
+<summary><strong>Static analysis</strong></summary>
+
+**Là gì?** Phân tích mã mà không cần chạy nhằm phát hiện loại lỗi nhất định.  
+**Ví dụ:** Cảnh báo uninitialized variable.
+
+</details>
+
+<details>
+<summary><strong>Impact analysis</strong></summary>
+
+**Là gì?** Xác định code/test/tài liệu liên quan khi sửa đổi.  
+**Ví dụ:** Sửa DB schema → kiểm tra migration.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 10. FUJIFILM HEALTHCARE</strong></summary>
 
-- Data Management, Store/Print.
-- MFC, event-driven programming.
-- Message handling.
-- Multithreading.
-- Background Auto Delete.
-- Cancel mechanism.
-- PostMessage.
-- SQLite.
-- DICOM, MPPS, Storage Commitment.
-- Debug, root cause analysis.
-- Impact analysis, regression test.
-- Phối hợp với QA và khách hàng Nhật.
+<details>
+<summary><strong>Data Management</strong></summary>
+
+**Là gì?** Chức năng quản lý thông tin bệnh nhân, ca khám và dữ liệu liên quan.  
+**Ví dụ:** Tìm kiếm bệnh nhân/Exam.
 
 </details>
+
+<details>
+<summary><strong>Store / Print</strong></summary>
+
+**Là gì?** Chức năng lưu/truyền dữ liệu và in trong workflow máy siêu âm.  
+**Ví dụ:** Gửi ảnh tới hệ thống DICOM.
+
+</details>
+
+<details>
+<summary><strong>MFC / event-driven</strong></summary>
+
+**Là gì?** MFC xây ứng dụng Windows dựa trên message và handler.  
+**Ví dụ:** Click nút → message handler chạy.
+
+</details>
+
+<details>
+<summary><strong>Message handling</strong></summary>
+
+**Là gì?** Xử lý Windows message hoặc custom message để điều khiển UI.  
+**Ví dụ:** `PostMessage(WM_APP+1,...)`.
+
+</details>
+
+<details>
+<summary><strong>Multithreading</strong></summary>
+
+**Là gì?** Thực hiện tác vụ nền song song để UI tiếp tục phản hồi.  
+**Ví dụ:** Auto Delete chạy background.
+
+</details>
+
+<details>
+<summary><strong>Background Auto Delete</strong></summary>
+
+**Là gì?** Tác vụ xóa dữ liệu nền theo chính sách/điều kiện hệ thống.  
+**Ví dụ:** Worker xử lý, UI hiển thị trạng thái.
+
+</details>
+
+<details>
+<summary><strong>Cancel mechanism</strong></summary>
+
+**Là gì?** Yêu cầu dừng công việc nền theo trạng thái an toàn; cần xử lý hoàn tất trước khi đóng luồng.  
+**Ví dụ:** Cancel gửi cờ, worker kiểm tra rồi báo complete.
+
+</details>
+
+<details>
+<summary><strong>PostMessage</strong></summary>
+
+**Là gì?** Đưa message vào queue của thread sở hữu cửa sổ mà không chờ handler chạy xong.  
+**Ví dụ:** Worker `PostMessage` để UI cập nhật.
+
+</details>
+
+<details>
+<summary><strong>SQLite</strong></summary>
+
+**Là gì?** CSDL quan hệ nhúng, lưu thông tin ngay trong file.  
+**Ví dụ:** `SELECT ... FROM Patient;`
+
+</details>
+
+<details>
+<summary><strong>DICOM</strong></summary>
+
+**Là gì?** Chuẩn trao đổi và quản lý thông tin/hình ảnh y tế.  
+**Ví dụ:** Gửi ảnh siêu âm đến PACS.
+
+</details>
+
+<details>
+<summary><strong>MPPS</strong></summary>
+
+**Là gì?** Modality Performed Procedure Step: trao đổi trạng thái thủ thuật được thực hiện.  
+**Ví dụ:** Cập nhật trạng thái examination.
+
+</details>
+
+<details>
+<summary><strong>Storage Commitment</strong></summary>
+
+**Là gì?** DICOM service yêu cầu hệ thống nhận xác nhận trách nhiệm lưu trữ instance.  
+**Ví dụ:** Thiết bị yêu cầu xác nhận ảnh đã được lưu.
+
+</details>
+
+<details>
+<summary><strong>Root cause analysis</strong></summary>
+
+**Là gì?** Dựa vào logs, source, event flow và debugging để xác định gốc lỗi.  
+**Ví dụ:** Message đến khi view ở trạng thái không phù hợp.
+
+</details>
+
+<details>
+<summary><strong>Impact / regression</strong></summary>
+
+**Là gì?** Xác định phần bị ảnh hưởng rồi test lại các luồng liên quan.  
+**Ví dụ:** Sửa Delete → test Find, Tile, Patient.
+
+</details>
+
+<details>
+<summary><strong>QA / khách hàng Nhật</strong></summary>
+
+**Là gì?** Làm rõ yêu cầu, báo cáo điều tra và phối hợp xác nhận fix.  
+**Ví dụ:** Bug report gồm nguyên nhân, sửa đổi, test result.
+
+</details>
+
+</details>
+
+---
 
 <details>
 <summary><strong>NHÓM 11. AUTOSAR & FPT TELECOM</strong></summary>
 
-- AUTOSAR Classic architecture.
-- Application, RTE, BSW, MCAL.
-- EthIf.
-- SWS, ECUC, ARXML.
-- mSQT test cases.
-- DET, API verification.
-- AURIX TC397, TASKING, Mobilgene.
-- OpenWrt.
-- Embedded Linux.
-- Wi-Fi, MQTT.
-- Device connectivity.
-- Embedded debugging.
+<details>
+<summary><strong>AUTOSAR Classic</strong></summary>
+
+**Là gì?** Kiến trúc chuẩn hóa phần mềm ECU với Application, RTE, BSW.  
+**Ví dụ:** Automotive ECU software.
 
 </details>
 
 <details>
-<summary><strong>NHÓM 12. HR & BEHAVIORAL INTERVIEW</strong></summary>
+<summary><strong>Application / RTE / BSW / MCAL</strong></summary>
 
-- Giới thiệu bản thân.
-- Giải thích kinh nghiệm và dự án.
-- Vì sao ứng tuyển Nihon Kohden?
-- Vì sao muốn phát triển thiết bị y tế?
-- Cách trả lời khi chưa có kinh nghiệm Qt/RTOS.
-- Một bug khó từng xử lý.
-- Phương pháp phân tích nguyên nhân lỗi.
-- Phối hợp với Hardware/QA.
-- Làm việc với khách hàng Nhật.
-- Safety vs deadline.
-- Câu hỏi hỏi lại người phỏng vấn.
+**Là gì?** App xử lý chức năng; RTE kết nối component; BSW cung cấp dịch vụ; MCAL truy cập ngoại vi MCU.  
+**Ví dụ:** Eth driver nằm lớp thấp.
 
 </details>
+
+<details>
+<summary><strong>EthIf</strong></summary>
+
+**Là gì?** Ethernet Interface của AUTOSAR, kết nối upper-layer với Ethernet Driver/Transceiver abstraction.  
+**Ví dụ:** Test `EthIf_SetControllerMode`.
+
+</details>
+
+<details>
+<summary><strong>SWS / ECUC / ARXML</strong></summary>
+
+**Là gì?** SWS quy định hành vi; ECUC mô tả tham số cấu hình; ARXML lưu mô hình/cấu hình AUTOSAR.  
+**Ví dụ:** Viết test theo SWS requirement.
+
+</details>
+
+<details>
+<summary><strong>mSQT test case</strong></summary>
+
+**Là gì?** Test tự động gồm precondition, action, expected result, postcondition.  
+**Ví dụ:** Gọi EthIf API rồi assert kết quả.
+
+</details>
+
+<details>
+<summary><strong>DET / API verification</strong></summary>
+
+**Là gì?** DET báo lỗi phát triển theo AUTOSAR; verify API so sánh hành vi với specification.  
+**Ví dụ:** Invalid parameter → expected DET error.
+
+</details>
+
+<details>
+<summary><strong>AURIX TC397 / TASKING / Mobilgene</strong></summary>
+
+**Là gì?** TC397 là MCU; TASKING là compiler; Mobilgene dùng cấu hình/generate BSW.  
+**Ví dụ:** Compile ECU code bằng TASKING.
+
+</details>
+
+<details>
+<summary><strong>OpenWrt</strong></summary>
+
+**Là gì?** Embedded Linux distribution dành cho router và thiết bị mạng.  
+**Ví dụ:** Chạy service C/C++ trên router.
+
+</details>
+
+<details>
+<summary><strong>Embedded Linux</strong></summary>
+
+**Là gì?** Linux triển khai trên thiết bị có tài nguyên và nhu cầu cụ thể.  
+**Ví dụ:** Process đọc trạng thái mạng.
+
+</details>
+
+<details>
+<summary><strong>Wi-Fi</strong></summary>
+
+**Là gì?** Công nghệ kết nối mạng không dây IEEE 802.11.  
+**Ví dụ:** Router cung cấp WLAN.
+
+</details>
+
+<details>
+<summary><strong>MQTT</strong></summary>
+
+**Là gì?** Giao thức nhẹ publish/subscribe qua broker.  
+**Ví dụ:** Device publish telemetry lên topic.
+
+</details>
+
+<details>
+<summary><strong>Device connectivity</strong></summary>
+
+**Là gì?** Quản lý kết nối, trạng thái, lỗi và phục hồi kết nối thiết bị.  
+**Ví dụ:** Reconnect khi mất TCP/MQTT.
+
+</details>
+
+<details>
+<summary><strong>Embedded debugging</strong></summary>
+
+**Là gì?** Phân tích log, memory, process, giao tiếp và điều kiện tái hiện.  
+**Ví dụ:** SSH xem log rồi đối chiếu code.
+
+</details>
+
+</details>
+
+---
+
+<details>
+<summary><strong>NHÓM 12. HR & BEHAVIORAL INTERVIEW</strong></summary>
+
+<details>
+<summary><strong>Giới thiệu bản thân</strong></summary>
+
+**Là gì?** Tóm tắt kinh nghiệm, ba dự án chính và lý do phù hợp.  
+**Ví dụ:** “Tôi có hơn 5 năm kinh nghiệm C/C++, từng làm FUJIFILM, AUTOSAR và IoT.”
+
+</details>
+
+<details>
+<summary><strong>Giới thiệu dự án</strong></summary>
+
+**Là gì?** Nêu sản phẩm, vai trò thực tế, công nghệ, một đóng góp tiêu biểu.  
+**Ví dụ:** “FUJIFILM: C++/MFC, debug UI và multithreading.”
+
+</details>
+
+<details>
+<summary><strong>Vì sao Nihon Kohden?</strong></summary>
+
+**Là gì?** Kết nối kinh nghiệm thiết bị y tế với mục tiêu phát triển embedded an toàn.  
+**Ví dụ:** “Tôi muốn tiếp tục lĩnh vực medical software.”
+
+</details>
+
+<details>
+<summary><strong>Vì sao medical device?</strong></summary>
+
+**Là gì?** Thích bài toán phần mềm tin cậy, có tác động tới chăm sóc bệnh nhân.  
+**Ví dụ:** Nhấn mạnh safety và testing.
+
+</details>
+
+<details>
+<summary><strong>Chưa có Qt / RTOS</strong></summary>
+
+**Là gì?** Nói rõ phạm vi chưa có kinh nghiệm trực tiếp, nêu kiến thức liên quan và kế hoạch học.  
+**Ví dụ:** “Tôi có MFC/event-driven và đang tìm hiểu Qt.”
+
+</details>
+
+<details>
+<summary><strong>Bug khó đã xử lý</strong></summary>
+
+**Là gì?** Trình bày Situation–Task–Action–Result, ưu tiên bug thật.  
+**Ví dụ:** “UI không cập nhật do thứ tự callback…” nếu đúng dự án.
+
+</details>
+
+<details>
+<summary><strong>Root cause method</strong></summary>
+
+**Là gì?** Reproduce → log → isolate → fix → regression.  
+**Ví dụ:** Bug crash chỉ khi Cancel.
+
+</details>
+
+<details>
+<summary><strong>Làm việc Hardware / QA</strong></summary>
+
+**Là gì?** Thống nhất cách tái hiện, log/tín hiệu, expected result và phân công xử lý.  
+**Ví dụ:** Software + Hardware kiểm tra UART frame.
+
+</details>
+
+<details>
+<summary><strong>Khách hàng Nhật</strong></summary>
+
+**Là gì?** Trao đổi rõ yêu cầu, bằng chứng kỹ thuật, tiến độ, kết quả test.  
+**Ví dụ:** Báo cáo investigation và impact analysis.
+
+</details>
+
+<details>
+<summary><strong>Safety vs deadline</strong></summary>
+
+**Là gì?** Ưu tiên an toàn; báo rủi ro sớm, đề xuất phạm vi và kế hoạch kiểm chứng.  
+**Ví dụ:** Không bỏ test safety-critical để kịp lịch.
+
+</details>
+
+<details>
+<summary><strong>Hỏi lại nhà tuyển dụng</strong></summary>
+
+**Là gì?** Hỏi phạm vi Qt/RTOS, sản phẩm, quy trình IEC 62304, môi trường kỹ thuật.  
+**Ví dụ:** “Team đang dùng RTOS nào?”
+
+</details>
+
+</details>
+
+---
 
 </details>
 
