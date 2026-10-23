@@ -190,10 +190,15 @@ Ví dụ: Trong thiết bị đo nhiệt độ:
 <details>
 <summary><strong>Pointer arithmetic</strong></summary>
 
-**Là gì?** Pointer Arithmetic là các phép toán trên con trỏ,, giúp di chuyển vị trí con trỏ theo kích thước kiểu dữ liệu.
-Nó thường dùng để duyệt mảng, vùng nhớ cấp phát động và buffer trong Embedded.  
+**Là gì?** Pointer Arithmetic là các phép toán trên con trỏ, giúp di chuyển vị trí con trỏ theo kích thước kiểu dữ liệu.
+Nó thường dùng để duyệt mảng và xử lý buffer dữ liệu trong Embedded C
 **Ví dụ:** `int a[2]={3,4}; int *p=a; (*p)++;` là `3+1=4`.
 `p++ thì bằng 4, giải thích p tới vị trí thứ 2 là 4`
+Có 1 số chú ý như sau:
+p++;       // di chuyển CON TRỎ
+(*p)++;    // tăng GIÁ TRỊ mà p đang trỏ tới
+*p++ tưởng đương với *(p++)      // lấy GIÁ TRỊ hiện tại, rồi di chuyển CON TRỎ
+*(p + 1), thực chất tương đương a[1]
 
 chú ý:
 với biến đơn lẻ thì sao
@@ -201,7 +206,7 @@ với biến đơn lẻ thì sao
 ```c
 int x = 10;
 int *p = &x;
-p++;  // Hợp lệ, nhưng p trỏ đến vị trí ngay sau x
+p++;  // Hợp lệ, nhưng p trỏ đến vị trí ngay sau x, sẽ rơi vào trường hợp không xác định 
 ```
 
 </details>
