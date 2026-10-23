@@ -43,10 +43,131 @@
 </details>
 
 <details>
-<summary><strong>Pointer</strong></summary>
+<summary><strong>Pointer trong Embedded C — Khái niệm và ứng dụng</strong></summary>
 
-**Là gì?** Biến lưu địa chỉ của đối tượng khác.  
-**Ví dụ:** `int x=5; int *p=&x;` → `*p` là `5`.
+### 1. Pointer là gì?
+
+Pointer là biến lưu địa chỉ bộ nhớ của đối tượng hoặc hàm.
+
+```c
+int x = 10;
+int *p = &x;
+
+// p  : địa chỉ của x
+// *p : giá trị 10
+```
+
+### 2. Ứng dụng trong Embedded
+
+**Ứng dụng 1 — Truy cập thanh ghi MCU**
+
+```c
+#include <stdint.h>
+
+// Địa chỉ register giả định
+#define REG (*(volatile uint32_t *)0x40020014U)
+
+REG |= (1U << 5);  // Set bit 5
+```
+
+- Dùng để đọc/ghi thanh ghi GPIO, UART, Timer.
+- `volatile` giúp compiler không loại bỏ các truy cập register cần thiết.
+
+**Ứng dụng 2 — Xử lý UART Buffer**
+
+```c
+uint8_t buffer[] = {10, 20, 30};
+uint8_t *p = buffer;
+
+uint8_t value = *(p + 1); // 20
+```
+
+- Dùng Pointer để truy cập từng byte dữ liệu nhận được.
+- Cần kiểm tra độ dài buffer để tránh truy cập ngoài mảng.
+
+**Ứng dụng 3 — Trả kết quả qua Pointer**
+
+```c
+void ReadSensor(int *value)
+{
+    *value = 100;
+}
+
+int sensor = 0;
+ReadSensor(&sensor);
+
+// sensor = 100
+```
+
+- Hàm thay đổi trực tiếp biến được truyền vào.
+- Thường dùng trong các API đọc dữ liệu cảm biến.
+
+**Ứng dụng 4 — Function Pointer / Callback**
+
+```c
+void OnReceive(void)
+{
+    // Xử lý dữ liệu
+}
+
+void (*callback)(void) = OnReceive;
+
+callback();
+```
+
+- Dùng cho UART, DMA, Timer callback.
+- Giúp thiết kế phần mềm theo hướng event-driven.
+
+### 3. Các loại Pointer
+
+| Loại | Ví dụ |
+|---|---|
+| Normal Pointer | `int *p = &x;` |
+| NULL Pointer | `int *p = NULL;` |
+| Void Pointer | `void *p = &x;` |
+| Double Pointer | `int **pp = &p;` |
+| Function Pointer | `void (*cb)(void);` |
+| Pointer to const | `const int *p;` |
+| Const Pointer | `int *const p = &x;` |
+| Pointer to volatile | `volatile uint32_t *reg;` |
+
+### 4. Trả lời phỏng vấn
+
+Pointer là biến lưu địa chỉ bộ nhớ. Trong Embedded,
+Pointer thường được sử dụng để:
+
+1. Truy cập thanh ghi phần cứng.
+2. Xử lý buffer UART/SPI/I2C.
+3. Truyền địa chỉ dữ liệu giữa các hàm.
+4. Triển khai callback bằng Function Pointer.
+5. Quản lý bộ nhớ và cấu trúc dữ liệu.
+
+Khi sử dụng cần tránh NULL Pointer, Dangling Pointer,
+Buffer Overflow và truy cập bộ nhớ không hợp lệ.
+
+ví dụ:
+Function Pointer là con trỏ lưu địa chỉ của một hàm, cho phép gọi hàm thông qua con trỏ.
+
+Trong Embedded C, Function Pointer thường được sử dụng để triển khai Callback giữa Driver Layer và Application Layer.
+
+Ví dụ, khi UART Driver nhận được dữ liệu, Driver có thể gọi Callback thông qua Function Pointer để thông báo cho Application Layer xử lý.
+
+Ưu điểm là giảm sự phụ thuộc giữa các module, giúp Driver không cần biết cụ thể hàm xử lý ở Application Layer, đồng thời tăng khả năng tái sử dụng và bảo trì phần mềm.
+
+Driver Layer (tầng điều khiển phần cứng) là tầng phần mềm trực tiếp làm việc với các thiết bị ngoại vi của MCU.
+Ví dụ: UART Driver chịu trách nhiệm cấu hình baud rate, nhận dữ liệu UART và xử lý ngắt UART.
+Application Layer (tầng ứng dụng) là tầng chứa logic xử lý chức năng chính của sản phẩm.
+rong thiết bị đo nhiệt độ:
+Ví dụ: Trong thiết bị đo nhiệt độ:
+- Driver Layer đọc dữ liệu từ cảm biến.
+- Application Layer kiểm tra nhiệt độ có vượt ngưỡng không.
+- Nếu vượt ngưỡng, Application yêu cầu bật đèn cảnh báo.
+
+| Tầng | Chức năng | Ví dụ |
+|---|---|---|
+| **Hardware Layer** | Phần cứng thực tế | MCU, cảm biến |
+| **Driver Layer** | Giao tiếp và điều khiển phần cứng | UART Driver đọc dữ liệu |
+| **Application Layer** | Xử lý logic của sản phẩm | Kiểm tra dữ liệu và bật cảnh báo |
 
 </details>
 
