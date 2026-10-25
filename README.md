@@ -453,7 +453,16 @@ p++;  // Hợp lệ, nhưng p trỏ đến vị trí ngay sau x, sẽ rơi vào 
 <details>
 <summary><strong>Encapsulation</strong></summary>
 
-**Là gì?** Gom dữ liệu và hành vi, kiểm soát truy cập để bảo vệ trạng thái.  
+**Là gì?** Encapsulation là đưa  data + method vào trong class để  bảo vệ dữ liệu
+
+Có 3 phạm vi truy cập:
+
+public → bên ngoài truy cập được
+
+private → chỉ class đó truy cập trực tiếp được
+
+protected → class đó và derived class có thể truy cập
+
 **Ví dụ:** `private: int speed; public: void setSpeed(int);`
 
 </details>
@@ -461,7 +470,7 @@ p++;  // Hợp lệ, nhưng p trỏ đến vị trí ngay sau x, sẽ rơi vào 
 <details>
 <summary><strong>Inheritance</strong></summary>
 
-**Là gì?** Class con kế thừa giao diện/hành vi của class cha.  
+**Là gì?** Class con kế thừa thuộc tính và phương thứ của class cha.  (biểu diễn mối quan hệ is-a.)
 **Ví dụ:** `class Car : public Vehicle {};`
 
 </details>
@@ -477,8 +486,48 @@ p++;  // Hợp lệ, nhưng p trỏ đến vị trí ngay sau x, sẽ rơi vào 
 <details>
 <summary><strong>Abstraction</strong></summary>
 
-**Là gì?** Chỉ lộ thao tác quan trọng, ẩn chi tiết triển khai.  
-**Ví dụ:** `class Sensor {public: virtual int read()=0;};`
+**Là gì?** cung cấp những gì người dùng cần sử dụng, còn chi tiết bên trong thì ẩn đi.
+
+Trong C++, abstraction thường có thể đạt được thông qua interface/abstract class
+
+**Ví dụ:** `device.start();`
+
+`Người dùng biết start() làm gì, không cần quan tâm nó làm như thế nào.`
+
+Trong C++, abstraction thường được thể hiện thông qua:
+
+Abstract class và pure virtual function
+
+</details>
+
+<details>
+<summary><strong>Polymorphism(đa hình)</strong></summary>
+
+**Là gì?** Cùng một interface nhưng có thể có nhiều cách thực thi khác nhau.
+
++ Static Polymorphism (đa hình tĩnh): thể hiện qua Overloading/Template , compiler  xác định hàm nào sẽ được gọi ngay tại compile time.
+
+
++ Dynamic Polymorphism (đa hình động): thể hiện qua Overriding ,gọi là động vì hàm thực tế được gọi được lựa chọn tại runtime, dựa vào object thực tế
+
+Từ khóa  `override` dùng để xác nhận class con đang ghi đè một virtual function của class cha.
+
+Từ khóa `virtual` để làm gi?
+
+virtual cho phép gọi đúng hàm của class con qua pointer/reference của class cha. 
+
+Nếu không có `virtual`?
+
+khi gọi qua pointer/reference của class cha thì hàm của class cha sẽ được gọi
+
+
+Virtual destructor để  destructor của class con được gọi , khi con trỏ của class cha xóa đối tượng class con
+
+Nếu không có thì có khả năng à undefined behavior , và tài nguyên class con không được giải phóng đúng
+
+
+
+
 
 </details>
 
