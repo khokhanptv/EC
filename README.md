@@ -19,11 +19,14 @@
 <summary><strong>NHÓM 1. C PROGRAMMING</strong></summary>
 
 <details>
-<summary><strong>Data types</strong></summary>
+<summary><strong>Bitwise</strong></summary>
 
-**Là gì?** Kiểu dữ liệu quy định loại giá trị và phép toán được phép.  
-**Ví dụ:** `int age = 20; float temp = 36.5f; char c = 'A';`
-
+*Bitwise là các phép toán thao tác trực tiếp trên từng bit của một giá trị. quan trọng vì xử lý bi cần mà không ảnh hưởng bit khác
+bit mask là giá trị dùng để chỉ ra bit nào mình muốn tác động.
+OR  với 1 → BẬT bit
+AND với 0 → TẮT bit
+XOR với 1 → ĐẢO bit
+AND với 1 → KIỂM TRA bit
 </details>
 
 <details>
@@ -49,9 +52,42 @@
 
 Pointer là biến lưu địa chỉ bộ nhớ của đối tượng hoặc hàm.
 
+Trong Embedded, pointer được dùng để truy cập các thanh ghi phần cứng thông qua Memory-Mapped I/O.
+
+Memory-Mapped I/O là cơ chế ánh xạ thanh ghi phần cứng vào các địa chỉ của CPU.
+
+ánh xạ :
+Gắn một địa chỉ của CPU với một thanh ghi phần cứng cụ thể.
+
+ví dụ
+Thanh ghi phần cứng GPIO
+        ↕
+được ánh xạ
+        ↕
+địa chỉ 0x40020000
+        ↑
+Pointer truy cập địa chỉ này
+
+Pointer
+  + Truy cập thanh ghi phần cứng
+  + Truy cập/duyệt buffer dữ liệu UART, SPI, I2C, ...
+
+tại sao phải volatile uint32_t *p = (volatile uint32_t *)0x40020000;
+
+khi truy cập thanh ghi phần cứng?
+
+Vì giá trị của thanh ghi phần cứng có thể thay đổi bởi phần cứng mà chương trình không trực tiếp thay đổi nó
+Giúp đảm bảo chương trình thực hiện lại việc đọc thanh ghi khi code yêu cầu, thay vì compiler tối ưu theo cách có thể tái sử dụng giá trị cũ.
+ví dụ về con trỏ trong nhúng
+.nếu một thanh ghi GPIO được ánh xạ tại địa chỉ 0x01, ta có thể dùng một con trỏ volatile trỏ tới địa chỉ đó và dereference con trỏ để đọc hoặc ghi thanh ghi.
+
+Nếu không có pointer trong C/C++, lập trình Embedded sẽ gặp các vấn đề lớn:
+Khó truy cập trực tiếp thanh ghi phần cứng/ buffer
+có thể dùng Assembly của CPU để CPU xử lý , nhưng sẽ phức tạp hơn
 ```c
-int x = 10;
-int *p = &x;
+
+volatile int *p = (volatile int *)0x01;
+*p=1;
 
 // p  : địa chỉ của x
 // *p : giá trị 10
@@ -176,6 +212,7 @@ Ví dụ: Trong thiết bị đo nhiệt độ:
 
 **Là gì?** Con trỏ trỏ tới một con trỏ khác.  
 **Ví dụ:** `int *p=&x; int **pp=&p;` → `**pp` là `x`.
+Double pointer là pointer trỏ đến một pointer khác. Nó thường được dùng khi một function cần thay đổi giá trị của pointer bên ngoài function.
 
 </details>
 
@@ -270,7 +307,7 @@ p++;  // Hợp lệ, nhưng p trỏ đến vị trí ngay sau x, sẽ rơi vào 
 <details>
 <summary><strong>malloc / calloc / realloc / free</strong></summary>
 
-**Là gì?** Các hàm cấp phát, cấp phát và zero-initialize, thay đổi kích thước, giải phóng bộ nhớ động.  
+**Là gì?** calloc khởi tạo các byte của vùng cấp phát về 0, còn malloc không làm vậy 
 **Ví dụ:** `int *p=malloc(5*sizeof *p); free(p);`
 
 </details>
