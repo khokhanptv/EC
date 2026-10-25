@@ -14,7 +14,7 @@
 
 > Nhấn vào từng **nhóm** rồi từng **khái niệm** để xem giải thích ngắn và ví dụ.
 
-
+ ### Hôm nay học con trỏ ,Bitwise, reference , derefence , null , hoang
 <details>
 <summary><strong>NHÓM 1. C PROGRAMMING</strong></summary>
 
@@ -22,11 +22,22 @@
 <summary><strong>Bitwise</strong></summary>
 
 *Bitwise là các phép toán thao tác trực tiếp trên từng bit của một giá trị. quan trọng vì xử lý bi cần mà không ảnh hưởng bit khác
+
 bit mask là giá trị dùng để chỉ ra bit nào mình muốn tác động.
-OR  với 1 → BẬT bit
-AND với 0 → TẮT bit
-XOR với 1 → ĐẢO bit
-AND với 1 → KIỂM TRA bit
+
+OR  với 1 → BẬT bit ví dụ reg = reg | (1U << 3);
+
+AND với 0 → TẮT bit reg = reg & ~(1U << 3);
+
+XOR với 1 → ĐẢO bit eg = reg ^ (1U << 3);
+
+AND với 1 → KIỂM TRA :
+
+if (reg & (1U << 3))
+{
+    // bit 3 = 1
+}
+
 </details>
 
 <details>
