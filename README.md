@@ -459,7 +459,7 @@ Có 3 phạm vi truy cập:
 
 public → bên ngoài truy cập được
 
-private → chỉ class đó truy cập trực tiếp được
+private → chỉ class và các thành phần được cấp quyền như friend
 
 protected → class đó và derived class có thể truy cập
 
@@ -508,7 +508,7 @@ Abstract class và pure virtual function
 + Static Polymorphism (đa hình tĩnh): thể hiện qua Overloading/Template , compiler  xác định hàm nào sẽ được gọi ngay tại compile time.
 
 
-+ Dynamic Polymorphism (đa hình động): thể hiện qua Overriding ,gọi là động vì hàm thực tế được gọi được lựa chọn tại runtime, dựa vào object thực tế
++ Dynamic Polymorphism (đa hình động): thể hiện qua Overriding ,hàm thực tế được gọi tại runtime, dựa vào object thực tế
 
 Từ khóa  `override` dùng để xác nhận class con đang ghi đè một virtual function của class cha.
 
@@ -574,8 +574,19 @@ Nếu không có thì có khả năng à undefined behavior , và tài nguyên c
 <details>
 <summary><strong>Constructor / Destructor</strong></summary>
 
-**Là gì?** Constructor khởi tạo object; destructor giải phóng tài nguyên khi lifetime kết thúc.  
+**Là gì?** Constructor khởi tạo object; destructor giải phóng tài nguyên khi lifetime kết thúc. 
+
 **Ví dụ:** `Device(){} ~Device(){}`.
+
+có 3 loai 
+- Default Constructor :
+    + Constructor có thể được gọi không cần truyền đối số.
+- Parameterized Constructor:
+    + Constructor nhận tham số để khởi tạo object.
+- Copy Constructor:
+    + Tạo object mới từ một object khác cùng kiểu.
+- Move Constructor (c++11)
+    + Nó dùng để khởi tạo object bằng cách chuyển tài nguyên từ object khác thay vì copy tài nguyên.
 
 </details>
 
