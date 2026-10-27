@@ -1229,32 +1229,244 @@ có 3 loai
 <details>
 <summary><strong>SPI</strong></summary>
 
-**Là gì?** Bus đồng bộ dùng SCLK, MOSI, MISO, CS; thường full-duplex.  
-**Ví dụ:** MCU đọc cảm biến SPI.
+
+# SPI (Serial Peripheral Interface)
+
+- Là giao tiếp **nối tiếp, đồng bộ, Full-Duplex**.
+- Thường sử dụng **4 dây**:
+  - **SCLK/SCK:** Clock do Master tạo.
+  - **MOSI:** Master → Slave.
+  - **MISO:** Slave → Master.
+  - **CS/SS:** Master chọn Slave.
+
+## 1. Tốc độ
+
+- Tốc độ phổ biến: **1 Mbps, 10 Mbps, 20 Mbps, 50 Mbps** hoặc cao hơn.
+
+## 2. Khung truyền
+
+SPI **không có khung truyền cố định** như I2C.
+
+```text
+CS = 0 → [DATA] → CS = 1
+```
+
+- **CS = 0:** Chọn Slave, bắt đầu giao tiếp.
+- Truyền/nhận Data theo xung **SCLK**.
+- **CS = 1:** Bỏ chọn Slave, kết thúc giao tiếp.
+- Data thường là **8 bit hoặc 16 bit**, tùy thiết bị/cấu hình.
+
+## 3. Full-Duplex
+
+SPI có 2 đường dữ liệu riêng:
+
+```text
+MOSI: Master → Slave
+MISO: Master ← Slave
+```
+
+→ Có thể **truyền và nhận đồng thời**.
+
+## 4. Nhiều Slave
+
+Thông thường mỗi Slave có một chân CS riêng:
+
+```text
+Master
+ ├── CS1 → Slave 1
+ ├── CS2 → Slave 2
+ └── CS3 → Slave 3
+```
+
+mẹo nếu 1 M- 1 S, thì số dây là 4 , nếu N slayer thì số dây là 3+N
+nếu quá nhiều dây thì dùng decoder (74HC138) từ 3 sang 8
+
+## 5. SPI Mode
+
+Có **4 Mode** dựa trên **CPOL và CPHA**.
+
+- **CPOL (Clock Polarity):** Xác định mức logic của SCLK khi không hoạt động.
+- **CPHA (Clock Phase):** Xác định thời điểm lấy mẫu dữ liệu theo cạnh clock.
+
+Mục đích là xác định trạng thái clock và thời điểm lấy mẫu dữ liệu.
+
+Master và Slave phải cấu hình SPI Mode tương thích để truyền/nhận chính xác.
+
+## 6. Điểm cần nhớ
+
+- Không có **Address** như I2C.
+- Không có **ACK/NACK bắt buộc** như I2C.
+- Không cần **Pull-up** trên các đường SPI theo kiểu bắt buộc như I2C.
+- Chọn Slave bằng **CS**.
+- Hỗ trợ **Full-Duplex** nhờ MOSI và MISO.
+
+## 7. Trả lời phỏng vấn
+
+> SPI là giao thức truyền thông nối tiếp, đồng bộ và Full-Duplex. Nó thường sử dụng 4 dây SCLK, MOSI, MISO và CS. Master sử dụng CS để chọn Slave và tạo SCLK để đồng bộ truyền dữ liệu. SPI không sử dụng Address và ACK/NACK bắt buộc như I2C.
 
 </details>
 
 <details>
 <summary><strong>I2C</strong></summary>
 
-**Là gì?** Bus đồng bộ hai dây SDA/SCL, có address và ACK/NACK.  
-**Ví dụ:** MCU đọc sensor I2C địa chỉ 0x48.
+
+# I2C (Inter-Integrated Circuit)
+
+- I2C là giao thức truyền thông **đồng bộ, bán song công (Half-Duplex), nối tiếp (Serial)**.
+- Sử dụng 2 dây:
+  - **SDA (Serial Data):** Truyền dữ liệu.
+  - **SCL (Serial Clock):** Truyền xung clock.
+
+## 1. Tốc độ truyền I2C
+
+| Chế độ | Tốc độ |
+|---|---|
+| Standard Mode | 100 kbps |
+| Fast Mode | 400 kbps |
+| Fast Mode Plus | 1 Mbps |
+| High-Speed Mode | 3.4 Mbps |
+
+- Đơn vị tốc độ: **bps (bit/giây)**.
+- Tần số clock SCL thường được biểu diễn bằng **Hz, kHz hoặc MHz**.
+
+## 2. Khung truyền I2C
+
+```text
+START → [7-bit Address + 1-bit R/W] → ACK → [8-bit Data] → ACK → STOP
+                 8 bit                1 bit      8 bit       1 bit
+```
+
+### START và STOP
+
+- **START:** SDA chuyển từ `1 → 0` khi SCL = 1.
+- **STOP:** SDA chuyển từ `0 → 1` khi SCL = 1.
+
+### Address
+
+- Thường sử dụng địa chỉ **7 bit**, ngoài ra còn có chế độ **10 bit**.
+- Mỗi Slave trên cùng bus cần có địa chỉ riêng để Master phân biệt.
+- Với địa chỉ 7 bit, không phải tất cả 128 giá trị đều dùng được cho Slave thông thường vì có các địa chỉ dành riêng.
+
+### R/W (Read/Write)
+
+Gồm **1 bit**:
+
+- `0`: Write – Master ghi dữ liệu.
+- `1`: Read – Master đọc dữ liệu.
+
+### ACK/NACK
+
+Gồm **1 bit**:
+
+- **ACK (0):** Thiết bị xác nhận đã nhận byte.
+- **NACK (1):** Thiết bị không xác nhận hoặc không muốn nhận tiếp.
+
+Trong khung ghi dữ liệu từ Master đến Slave:
+
+- **ACK thứ 1:** Slave xác nhận địa chỉ phù hợp và sẵn sàng giao tiếp.
+- **ACK thứ 2:** Slave xác nhận đã nhận byte Data.
+
+**Lưu ý:** Khi Master đọc dữ liệu từ Slave, Master sẽ gửi ACK/NACK sau mỗi byte dữ liệu nhận được.
+
+### Data
+
+- Mỗi lần truyền **8 bit = 1 byte**.
+- Có thể truyền nhiều byte liên tiếp.
+- Sau mỗi byte sẽ có thêm 1 bit ACK/NACK.
+
+## 3. Vì sao I2C cần điện trở kéo lên (Pull-up)?
+
+- SDA và SCL sử dụng cấu trúc **Open-Drain**.
+- Thiết bị chỉ chủ động kéo đường tín hiệu xuống mức `0`.
+- Khi muốn tín hiệu lên mức `1`, thiết bị nhả đường tín hiệu và điện trở **Pull-up** kéo tín hiệu lên mức cao.
+
+**Kết luận:**
+
+- Mức `0`: Thiết bị kéo xuống GND.
+- Mức `1`: Điện trở Pull-up kéo lên VCC.
+- Pull-up giúp nhiều thiết bị có thể dùng chung bus I2C mà không xảy ra xung đột khi một thiết bị kéo xuống mức thấp.
 
 </details>
 
 <details>
 <summary><strong>Ethernet</strong></summary>
 
-**Là gì?** Công nghệ LAN tại lớp vật lý/liên kết; dùng MAC/PHY và frame.  
-**Ví dụ:** ECU kết nối mạng Ethernet.
+
+# Ethernet (IEEE 802.3)
+
+- Ethernet là công nghệ truyền thông mạng có dây, chủ yếu hoạt động ở **Layer 1 (Physical)** và **Layer 2 (Data Link)** trong mô hình OSI.
+- Sử dụng **MAC Address** để xác định thiết bị nguồn và đích trong mạng LAN.
+- MAC Address là địa chỉ vật lý (logic Layer 2) của giao diện mạng, thường dài 48 bit, được sử dụng để xác định nguồn và đích khi truyền Ethernet Frame.
+- IP Address: Địa chỉ logic, dùng để gửi dữ liệu giữa các mạng.
+- Dữ liệu được truyền dưới dạng **Ethernet Frame**.
+- Ethernet hiện đại thường hoạt động ở chế độ **Full-Duplex**.
+- Ứng dụng: **LAN, Embedded Linux, Automotive Ethernet, ECU, IoT**.
+
+
+## 1. Tốc độ Ethernet
+
+| Loại | Tốc độ |
+|---|---|
+| Ethernet | 10 Mbps |
+| Fast Ethernet | 100 Mbps |
+| Gigabit Ethernet | 1 Gbps |
+| 10 Gigabit Ethernet | 10 Gbps |
+
+- Đơn vị tốc độ: **Mbps, Gbps**.
+
+## 2. Ethernet Frame
+
+```text
+[Destination MAC] → [Source MAC] → [Type/Length] → [Data] → [FCS]
+      6 byte           6 byte         2 byte       46–1500     4 byte
+```
+
+- **Destination MAC:** Địa chỉ MAC của thiết bị nhận.
+- **Source MAC:** Địa chỉ MAC của thiết bị gửi.
+- **Type/Length:** Xác định loại giao thức phía trên hoặc độ dài dữ liệu.
+- **Data:** Dữ liệu cần truyền.
+- **FCS:** Kiểm tra lỗi bằng CRC-32.
+
+## 3. MAC Address và IP Address
+
+- **MAC Address:** Địa chỉ ở Layer 2, thường dài 48 bit (6 byte).
+- **IP Address:** Địa chỉ ở Layer 3, dùng để định tuyến dữ liệu giữa các mạng.
+- **ARP:** Dùng để tìm MAC Address tương ứng với địa chỉ IPv4 trong mạng cục bộ.
+
+## 4. MAC và PHY trong Embedded
+
+- **MAC (Media Access Control):** Xử lý Ethernet Frame, địa chỉ MAC, truyền và nhận dữ liệu.
+- **PHY (Physical Layer):** Chuyển đổi dữ liệu giữa MAC và tín hiệu vật lý trên đường truyền.
+- **MII/RMII/RGMII:** Các giao tiếp phổ biến giữa MAC và PHY.
+
+## 5. Điểm cần nhớ
+
+- Ethernet sử dụng **MAC Address**, không sử dụng địa chỉ Slave như I2C.
+- Ethernet Frame có **FCS (CRC-32)** để phát hiện lỗi.
+- Ethernet có thể truyền dữ liệu qua Switch.
+- Ethernet là công nghệ Layer 1 và Layer 2; **TCP/IP** là các giao thức được sử dụng phía trên Ethernet.
+- Ethernet không quy định tốc độ truyền cố định mà có nhiều chuẩn tốc độ khác nhau.
+
+## 6. Trả lời phỏng vấn
+
+> Ethernet là công nghệ truyền thông mạng có dây, chủ yếu hoạt động ở Layer 1 và Layer 2 của mô hình OSI. Ethernet truyền dữ liệu dưới dạng Frame, sử dụng MAC Address để xác định nguồn và đích. Trong Embedded, Ethernet thường gồm MAC Controller(MAC = Xử lý dữ liệu.) và PHY(Truyền/nhận tín hiệu vật lý.), hỗ trợ các tốc độ như 10 Mbps, 100 Mbps và 1 Gbps.
+
+
 
 </details>
 
 <details>
 <summary><strong>TCP/IP</strong></summary>
 
-**Là gì?** Bộ giao thức liên mạng; IP định tuyến, TCP cung cấp luồng byte tin cậy.  
-**Ví dụ:** Thiết bị gửi dữ liệu đến server.
+TCP/IP là bộ giao thức mạng (Protocol Suite), bao gồm nhiều giao thức như TCP, UDP, IP, HTTP, MQTT...
+
+IP: Định địa chỉ và định tuyến dữ liệu đến thiết bị đích.
+
+TCP: Truyền dữ liệu tin cậy, đúng thứ tự.TCP phải thiết lập kết nối trước khi truyền dữ liệu.Ví dụ: Client gửi dữ liệu đến Server.
+
+UDP: Truyền dữ liệu nhanh, không đảm bảo dữ liệu đến nơi.UDP không cần thiết lập kết nối trước khi gửi dữ liệu.
+
+TCP và UDP là hai giao thức cùng thuộc tầng Transport.
 
 </details>
 
@@ -1277,16 +1489,23 @@ có 3 loai
 <details>
 <summary><strong>USB</strong></summary>
 
-**Là gì?** Bus có host/device, endpoint và các kiểu truyền control/bulk/interrupt/isochronous.  
-**Ví dụ:** Device gửi dữ liệu qua USB CDC.
+> USB là chuẩn giao tiếp nối tiếp, hỗ trợ truyền dữ liệu và cấp nguồn, hoạt động theo mô hình Host – Device. USB 2.0 thường sử dụng 4 dây gồm VBUS, D+, D- và GND. Khi thiết bị được kết nối, Host thực hiện Enumeration để nhận diện và cấu hình thiết bị. USB hỗ trợ 4 kiểu truyền dữ liệu là Control, Bulk, Interrupt và Isochronous.- USB 2.0 High-Speed đạt tối đa **480 Mbps**, 3.0 thì 5Gbs
+
+Các kiểu truyền dữ liệu USB
+
+| Kiểu truyền | Ứng dụng |
+|---|---|
+| Control | Cấu hình và điều khiển thiết bị |
+| Bulk | USB Flash, truyền file |
+| Interrupt | Bàn phím, chuột |
+| Isochronous | Audio, video thời gian thực |
 
 </details>
 
 <details>
 <summary><strong>Bluetooth / BLE</strong></summary>
 
-**Là gì?** Bluetooth Classic hợp một số luồng liên tục; BLE tối ưu thiết bị ít năng lượng, trao đổi qua GATT.  
-**Ví dụ:** Sensor BLE gửi nhịp tim.
+> Bluetooth là công nghệ truyền thông không dây khoảng cách ngắn, hoạt động ở băng tần 2.4 GHz. Bluetooth có hai loại phổ biến là Classic và BLE. Classic thường dùng cho âm thanh và truyền dữ liệu liên tục, còn BLE được tối ưu để tiết kiệm năng lượng, phù hợp với cảm biến và thiết bị IoT.  tốc đố tầm 2 tới 3Mbps
 
 </details>
 
