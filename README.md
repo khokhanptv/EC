@@ -2331,6 +2331,9 @@ Tôi phụ trách thiết kế và thực hiện test case cho module EthIf dự
 Công nghệ sử dụng gồm Embedded C/C++, AUTOSAR Classic, mSQT, Infineon AURIX TC397, TASKING Compiler và Mobilgene.
 
 **Trước khi làm việc tại FPT Software, tôi làm việc tại FPT Telecom**, tham gia các dự án phần mềm nhúng cho thiết bị mạng và IoT như Router, Modem, FPT Play Box và Smart Home.
+
+Ở FPT Telecom, em chủ yếu phát triển phần mềm Embedded trên nền tảng Linux/OpenWrt bằng C/C++, cho các thiết bị như FPT Play Box và Smart Home.
+
 Công việc của em tập trung vào xử lý kết nối Wi-Fi, MQTT, nhận lệnh điều khiển từ server và gửi trạng thái thiết bị lên hệ thống.
 
 Các công nghệ tôi đã sử dụng gồm C/C++, OpenWrt, Linux, Wi-Fi và MQTT. Công việc liên quan đến phát triển chức năng kết nối, điều khiển, giám sát thiết bị, phân tích lỗi và kiểm thử.
