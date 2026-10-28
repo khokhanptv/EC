@@ -22,6 +22,7 @@
 - Ngoài những kiến thức và kỹ năng đã được đề cập trong JD, anh/chị có thể chia sẻ thêm những công nghệ hoặc kiến thức chuyên môn mà team hiện đang đặc biệt quan tâm và ưu tiên không ạ?
 
 ISO 13485:2016 : là tiêu chuẩn quản lý chất lượng thiết bị y tế
+
 IEC 62304 : là tiêu chuẩn quản lý phát triển , bảo trì phần mềm cho thiết bị y t
 
 <details>
