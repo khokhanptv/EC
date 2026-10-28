@@ -14,7 +14,13 @@
 
 > Nhấn vào từng **nhóm** rồi từng **khái niệm** để xem giải thích ngắn và ví dụ.
 
- ### Hôm nay học con trỏ ,Bitwise, reference , derefence , null , hoang
+
+- Trong quá trình làm việc, team có thường xuyên tổ chức các buổi training hoặc chia sẻ kiến thức, kinh nghiệm kỹ thuật giữa các thành viên không ạ?
+
+- Trong trường hợp gặp những vấn đề kỹ thuật phức tạp cần sự hỗ trợ từ team Nhật Bản, hai bên thường phối hợp và trao đổi như thế nào ạ? Ngoài ra, các kỹ sư tại Việt Nam có cơ hội sang Nhật để làm việc trực tiếp và trao đổi kỹ thuật không ạ?
+
+- Ngoài những kiến thức và kỹ năng đã được đề cập trong JD, anh/chị có thể chia sẻ thêm những công nghệ hoặc kiến thức chuyên môn mà team hiện đang đặc biệt quan tâm và ưu tiên không ạ?
+
 <details>
 <summary><strong>NHÓM 1. C PROGRAMMING</strong></summary>
 
