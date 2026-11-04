@@ -21,9 +21,435 @@
 
 - Ngoài những kiến thức và kỹ năng đã được đề cập trong JD, anh/chị có thể chia sẻ thêm những công nghệ hoặc kiến thức chuyên môn mà team hiện đang đặc biệt quan tâm và ưu tiên không ạ?
 
-ISO 13485:2016 : là tiêu chuẩn quản lý chất lượng thiết bị y tế
 
-IEC 62304 : là tiêu chuẩn quản lý phát triển , bảo trì phần mềm cho thiết bị y t
+<details>
+<summary><strong># ÔN TẬP TRỌNG TÂM </strong></summary>
+
+# ÔN TẬP TRỌNG TÂM — 5 CHỦ ĐỀ C++ & AUTOSAR CLASSIC OVERVIEW
+
+> Mục tiêu: hiểu bản chất, đọc được code, giải thích được lỗi và trả lời phỏng vấn bằng tiếng Việt. Không cần học hết AUTOSAR trong một buổi.
+>
+> Cách học: mở từng mục, đọc ví dụ, tự trả lời **Câu hỏi kiểm tra** rồi mới xem lại nội dung. Dành khoảng 35–45 phút mỗi mục C++ và 45–60 phút cho AUTOSAR Overview, chia thành nhiều buổi nếu cần.
+>
+> **Nguồn:** Phần C++ là kiến thức ngôn ngữ và ví dụ minh họa bổ sung. Phần AUTOSAR Overview tóm lược các slide *AUTOSAR Communication Concept*, *CAN Overview*, *CAN Driver*, *CAN Transceiver*, *CAN Interface*, *CanTp*, *CanSM*, *Diagnostic Overview*, *DCM*, *DEM* bạn đã gửi; phần bổ sung về EthIf được ghi rõ.
+Q
+---
+
+<details>
+<summary><strong>1. T, T&, const T&, T*, unique_ptr, shared_ptr — Truyền đối tượng và quyền sở hữu</strong></summary>
+
+## Ý nghĩa
+
+- `T`: **theo giá trị (pass by value)**. Hàm có đối tượng/tham số riêng; truyền lvalue thường copy, truyền rvalue có thể move.
+- `T&`: **tham chiếu có thể sửa (mutable reference)**, thường dùng khi hàm cần thay đổi đối tượng gốc.
+- `const T&`: **tham chiếu chỉ đọc (read-only reference)**, tránh copy đối tượng lớn; không cho sửa qua tham chiếu này.
+- `T*`: **con trỏ thô (raw pointer)**; có thể `nullptr`; *không tự biểu đạt quyền sở hữu (ownership)*. Dùng khi có thể không có đối tượng hoặc tương tác API C/legacy.
+- `std::unique_ptr<T>`: **con trỏ thông minh sở hữu độc quyền (exclusive ownership)**; không copy, có thể move.
+- `std::shared_ptr<T>`: **con trỏ thông minh đồng sở hữu (shared ownership)**; dùng khi thực sự có nhiều chủ sở hữu. `std::weak_ptr<T>` quan sát mà không tăng shared ownership, thường giúp tránh vòng tham chiếu.
+
+## Ví dụ
+
+```cpp
+#include <memory>
+#include <string>
+#include <utility>
+
+struct Patient { std::string name; };
+
+void Read(const Patient& p) { /* chỉ đọc p */ }
+void Rename(Patient& p) { p.name = "New"; }
+void Optional(Patient* p) { if (p) Read(*p); }
+void Store(std::unique_ptr<Patient> p) { /* nhận ownership */ }
+
+int main() {
+    Patient p{"Old"};
+    Read(p);             // không copy
+    Rename(p);           // sửa bản gốc
+    Optional(&p);        // không sở hữu p
+
+    auto owner = std::make_unique<Patient>();
+    Store(std::move(owner)); // chuyển ownership; owner giờ rỗng
+}
+```
+
+## Quy tắc chọn nhanh
+
+1. Chỉ đọc đối tượng lớn: `const T&`.
+2. Muốn sửa đối tượng gốc: `T&`.
+3. Có thể không có đối tượng: `T*` (hoặc kiểu optional phù hợp).
+4. Hàm nhận quyền sở hữu độc quyền: `unique_ptr<T>` theo giá trị.
+5. Thực sự cần kéo dài lifetime bằng đồng sở hữu: `shared_ptr<T>`.
+6. Đối tượng nhỏ hoặc cần lưu một bản sao: cân nhắc `T`.
+
+**Lưu ý:** `const T&` vẫn có thể bị dangling nếu tham chiếu sống lâu hơn đối tượng được tham chiếu. `shared_ptr` không tự bảo vệ dữ liệu khỏi data race.
+
+**Câu hỏi kiểm tra:** Hàm chỉ hiển thị thông tin `Patient` có nên nhận `shared_ptr<Patient>` theo giá trị không? Vì sao?
+
+</details>
+
+---
+
+<details>
+<summary><strong>2. Object slicing (cắt lát đối tượng), Name hiding (che khuất tên), Virtual dispatch (phân giải hàm ảo lúc chạy)</strong></summary>
+
+## 2.1 Object slicing — Cắt lát đối tượng
+
+Khi **copy `Derived` thành một object `Base` theo giá trị**, phần riêng của `Derived` không nằm trong bản sao `Base` mới. Điều này có thể làm mất hành vi đa hình (polymorphism) mong muốn.
+
+```cpp
+#include <iostream>
+struct Base {
+    virtual void Show() const { std::cout << "Base\n"; }
+    virtual ~Base() = default;
+};
+struct Derived : Base {
+    void Show() const override { std::cout << "Derived\n"; }
+};
+
+int main() {
+    Derived d;
+    Base b = d;
+    b.Show();           // Base: đã slicing
+    Base& ref = d;
+    ref.Show();         // Derived: giữ dynamic type
+}
+```
+
+**Tránh slicing:** Dùng `Base&`, `const Base&`, `Base*` hoặc smart pointer đến base khi cần polymorphism; đừng lưu object đa hình trong `std::vector<Base>` bằng cách copy `Derived`.
+
+## 2.2 Name hiding — Che khuất tên
+
+Một hàm trong derived có cùng **tên** có thể che các overload trong base, ngay cả khi danh sách tham số khác nhau.
+
+```cpp
+struct Base { void Print(int) {} };
+struct Derived : Base {
+    void Print(double) {}  // che tên Print của Base
+    // using Base::Print;  // mở lại overload của Base
+};
+```
+
+`override` khác `overload` (nạp chồng) và `name hiding` (che tên): override yêu cầu virtual function tương ứng và chữ ký phù hợp.
+
+## 2.3 Virtual dispatch — Phân giải hàm ảo lúc chạy
+
+Gọi hàm `virtual` qua base pointer/reference thường chọn override theo **kiểu động (dynamic type)** của đối tượng. `override` giúp compiler bắt lỗi khi chữ ký không thực sự override.
+
+**Đặc biệt:** Trong constructor/destructor của `Base`, lời gọi virtual không dispatch tới override của `Derived` như khi đối tượng đã hoàn chỉnh.
+
+**Câu hỏi kiểm tra:** Vì sao `Base b = Derived{}; b.Show();` không gọi `Derived::Show()`? `using Base::Print` giải quyết vấn đề nào?
+
+</details>
+
+---
+
+<details>
+<summary><strong>3. Constructor/Destructor trong inheritance — Hàm tạo/hủy trong kế thừa</strong></summary>
+
+## Thứ tự
+
+- **Xây dựng (construction):** Base → members (theo thứ tự *khai báo*, không phải thứ tự viết trong initializer list) → thân constructor Derived.
+- **Hủy (destruction):** thân destructor Derived → members theo thứ tự ngược → Base destructor.
+- Khi hủy object `Derived` qua `Base*`, trong cách sử dụng polymorphic thông thường **base destructor cần `virtual`** để tránh undefined behavior.
+
+```cpp
+#include <iostream>
+struct Base {
+    Base() { std::cout << "Base ctor\n"; }
+    virtual ~Base() { std::cout << "Base dtor\n"; }
+};
+struct Derived : Base {
+    Derived() { std::cout << "Derived ctor\n"; }
+    ~Derived() override { std::cout << "Derived dtor\n"; }
+};
+int main() {
+    Base* p = new Derived;
+    delete p;
+}
+```
+
+**Output:**
+
+```text
+Base ctor
+Derived ctor
+Derived dtor
+Base dtor
+```
+
+**Lỗi hay gặp:** Base destructor không virtual nhưng lại `delete` qua `Base*`; gọi callback/hàm virtual trong constructor và kỳ vọng Derived đã sẵn sàng; dùng member trước khi được khởi tạo.
+
+**Câu hỏi kiểm tra:** Nếu `Derived` có hai member `a`, `b`, member nào được khởi tạo trước? Thứ tự nào quyết định?
+
+</details>
+
+---
+
+<details>
+<summary><strong>4. Copy/Move, Rule of Zero, Ownership — Sao chép/di chuyển, quy tắc số không, quyền sở hữu</strong></summary>
+
+## Copy và Move
+
+- **Copy (sao chép):** tạo đối tượng đích có giá trị tương ứng từ nguồn; với kiểu quản lý tài nguyên cần xác định copy sâu hay shallow copy.
+- **Move (di chuyển/chuyển giao tài nguyên):** tạo/ghi đối tượng đích từ rvalue; có thể chuyển ownership thay vì sao chép dữ liệu lớn. Đối tượng nguồn vẫn hợp lệ nhưng có thể ở trạng thái đã thay đổi.
+- `std::move(x)` **không tự di chuyển tài nguyên**; nó chuyển biểu thức thành rvalue để cho phép chọn move operation nếu phù hợp.
+
+## Rule of Three/Five/Zero
+
+- **Rule of Three:** Nếu phải tự quản lý resource và viết destructor/copy constructor/copy assignment, thường cần xem xét cả ba.
+- **Rule of Five:** Thêm move constructor và move assignment.
+- **Rule of Zero (quy tắc số không):** thiết kế class để không cần tự viết những special member functions trên; dùng `std::vector`, `std::string`, `unique_ptr` và RAII wrapper.
+
+```cpp
+#include <vector>
+#include <cstdint>
+#include <utility>
+
+class ImageBuffer {
+public:
+    explicit ImageBuffer(std::size_t n) : bytes_(n) {}
+private:
+    std::vector<std::uint8_t> bytes_;
+};
+
+int main() {
+    ImageBuffer a(1024);
+    ImageBuffer b = a;            // copy hợp lệ, vector tự quản lý
+    ImageBuffer c = std::move(a); // move hợp lệ
+}
+```
+
+**Ownership (quyền sở hữu):** Ai phải bảo đảm resource được giải phóng? Ai được phép giữ resource lâu hơn scope hiện tại? Trong thiết kế API, trả lời hai câu này trước khi chọn pointer.
+
+**Bẫy thực tế:** Hai `shared_ptr` tạo từ cùng một raw pointer bằng hai control block độc lập có thể dẫn đến double-delete. Dùng `make_shared` và copy shared_ptr hiện có, không tạo hai owner độc lập cho cùng một raw pointer.
+
+**Câu hỏi kiểm tra:** Tại sao `std::vector` giúp class đạt Rule of Zero? Tại sao `std::move` không luôn làm chương trình nhanh hơn?
+
+</details>
+
+---
+
+<details>
+<summary><strong>5. Debugging Lifetime/Callback/Use-after-free — Gỡ lỗi vòng đời, hàm gọi lại và truy cập sau giải phóng</strong></summary>
+
+## Thuật ngữ
+
+- **Lifetime (vòng đời):** khoảng thời gian object tồn tại hợp lệ.
+- **Callback (hàm gọi lại):** hàm được đăng ký để hệ thống gọi khi một sự kiện/tác vụ xảy ra.
+- **Use-after-free:** truy cập vùng nhớ sau khi đã giải phóng; có thể crash hoặc tạo lỗi âm thầm.
+- **Dangling pointer (con trỏ treo):** con trỏ trỏ đến object không còn lifetime hợp lệ.
+- **Evidence (bằng chứng):** log, call stack, dump, timestamp, địa chỉ object, thread state, sanitizer report.
+
+## Tình huống
+
+```cpp
+// Mã mô phỏng: phụ thuộc lifetime/cơ chế callback của loader
+void Dialog::Start() {
+    loader.SetCallback([this] { UpdateUI(); });
+    loader.StartAsync();
+}
+```
+
+Nếu dialog bị hủy nhưng callback vẫn có thể chạy, lambda giữ `this` có thể gọi vào object đã bị hủy. `if (this != nullptr)` **không khắc phục** vì địa chỉ treo thường khác null.
+
+## Quy trình xử lý chuẩn
+
+1. **Reproduce (tái hiện):** mở dialog → load → đóng sớm → xem lỗi có lặp lại không.
+2. **Collect evidence (thu bằng chứng):** log thời điểm create/destroy, callback start/end, thread ID; call stack, crash dump, AddressSanitizer khi khả dụng.
+3. **Form hypothesis (giả thuyết):** callback chạy sau destructor, hoặc race giữa hủy và callback.
+4. **Confirm root cause (xác nhận nguyên nhân gốc):** chứng minh thứ tự sự kiện và object lifetime bằng trace/debugger/sanitizer.
+5. **Fix (sửa):** hủy đăng ký callback, cancel và **đồng bộ hoàn tất** tác vụ trước khi object/resource bị hủy; cân nhắc `weak_ptr`/lifetime token khi phù hợp; bảo đảm cập nhật GUI trên UI thread.
+6. **Regression test (kiểm thử hồi quy):** đóng sớm, đóng liên tục, cancel đồng thời, retry, test tải lớn và chạy lặp nhiều lần.
+
+**Lưu ý:** `weak_ptr.lock()` bảo vệ lifetime khi object được sở hữu đúng bằng `shared_ptr`, nhưng **không** thay thế đồng bộ truy cập shared state hay bảo đảm đúng GUI thread.
+
+**Câu hỏi kiểm tra:** Bạn chứng minh callback chạy *sau* destructor bằng dữ liệu nào? Vì sao thêm `sleep(100)` không phải root-cause fix?
+
+</details>
+
+---
+
+# PHẦN B — AUTOSAR CLASSIC OVERVIEW
+
+<details>
+<summary><strong>6. AUTOSAR Classic là gì? Kiến trúc SWC → RTE → BSW → MCAL</strong></summary>
+
+**AUTOSAR (AUTomotive Open System ARchitecture)**: kiến trúc tiêu chuẩn hóa phần mềm ô tô. **Classic Platform** phù hợp với nhiều ECU nhúng sử dụng mô hình cấu hình và phần mềm nền tảng tiêu chuẩn.
+
+- **SWC (Software Component — thành phần phần mềm):** logic ứng dụng, runnable, port/interface.
+- **RTE (Runtime Environment — môi trường thực thi):** lớp kết nối SWC với SWC và các dịch vụ BSW.
+- **BSW (Basic Software — phần mềm cơ sở):** nhóm module dịch vụ, trừu tượng ECU/phần cứng và driver; bao gồm communication, diagnostics, memory, OS, v.v.
+- **MCAL (Microcontroller Abstraction Layer — lớp trừu tượng vi điều khiển):** driver gần phần cứng như CAN, SPI, DIO, GPT.
+
+```mermaid
+flowchart TD
+    A[Application SWCs] --> R[RTE]
+    R --> B[BSW Services / Communication]
+    B --> E[ECU Abstraction]
+    E --> M[MCAL]
+    M --> H[Microcontroller / Peripherals]
+```
+
+**Giải thích:** Đây là hình tổng quan đơn giản hóa, không phải mọi API đều đi qua đủ tất cả các tầng. Các module BSW có thể gọi nhau theo interface được định nghĩa.
+
+**Câu hỏi kiểm tra:** RTE làm gì? MCAL khác ECU Abstraction ở đâu? CanIf thuộc nhóm nào?
+
+</details>
+
+---
+
+<details>
+<summary><strong>7. Communication Stack — Luồng truyền nhận CAN thông thường</strong></summary>
+
+## CAN Signal Tx (truyền)
+
+```mermaid
+flowchart TD
+  SWC[SWC] --> RTE[RTE]
+  RTE --> COM[COM: pack signals into I-PDU]
+  COM --> PDUR[PduR: route PDU]
+  PDUR --> IF[CanIf: interface / PDU handling]
+  IF --> DRV[CAN Driver: controller access]
+  DRV --> CTRL[CAN Controller]
+  CTRL --> TRCV[CAN Transceiver hardware]
+  TRCV --> BUS[CAN Bus]
+```
+
+- **COM:** pack/unpack signal trong I-PDU.
+- **PduR (PDU Router — bộ định tuyến PDU):** chuyển PDU giữa module nguồn/đích.
+- **CanIf (CAN Interface — lớp giao tiếp CAN):** cầu nối upper layers và CAN Driver; xử lý Tx/Rx indication/confirmation, mode, filtering theo cấu hình.
+- **CAN Driver:** truy cập CAN controller và báo sự kiện.
+- **CAN Transceiver:** phần cứng chuyển mức tín hiệu logic sang tín hiệu CAN_H/CAN_L. **CanTrcv driver** là module phần mềm điều khiển transceiver; không phải đường payload bắt buộc đi qua CanTrcv driver.
+
+## CAN Signal Rx (nhận): luồng ngược
+
+```mermaid
+flowchart TD
+  BUS[CAN Bus] --> TRCV[Transceiver hardware]
+  TRCV --> CTRL[CAN Controller]
+  CTRL --> DRV[CAN Driver]
+  DRV --> IF[CanIf / RxIndication]
+  IF --> PDUR[PduR]
+  PDUR --> COM[COM: unpack signals]
+  COM --> RTE[RTE]
+  RTE --> SWC[SWC]
+```
+
+**Câu hỏi kiểm tra:** COM khác CanIf ở điểm nào? Tx Confirmation có giống Rx Indication không?
+
+</details>
+
+---
+
+<details>
+<summary><strong>8. Nhóm module cần nhớ: CAN Driver, CanTrcv, CanIf, CanTp, CanSM</strong></summary>
+
+| Module | Tên và nghĩa tiếng Việt | Nhiệm vụ cốt lõi |
+|---|---|---|
+| CAN Driver | Trình điều khiển CAN | Điều khiển CAN Controller, Tx/Rx events |
+| CanTrcv | Trình điều khiển bộ thu phát CAN | Điều khiển mode/wakeup của CAN transceiver |
+| CanIf | Giao diện CAN | Trung gian upper layers ↔ CAN Driver, PDU/mode/filter |
+| CanTp | Tầng vận chuyển CAN | Segmentation/reassembly, ISO-TP flow control |
+| CanSM | Bộ quản lý trạng thái CAN | Chuyển communication mode theo yêu cầu ComM |
+
+**CanTp:** phân biệt `SF` (Single Frame — khung đơn), `FF` (First Frame — khung đầu), `CF` (Consecutive Frame — khung tiếp theo), `FC` (Flow Control — điều khiển luồng).
+
+```mermaid
+sequenceDiagram
+    participant TX as Sender (CanTp)
+    participant RX as Receiver (CanTp)
+    TX->>RX: First Frame (FF)
+    RX-->>TX: Flow Control (FC): BS, STmin
+    TX->>RX: Consecutive Frame 1
+    TX->>RX: Consecutive Frame 2 ...
+    Note over TX,RX: Tiếp tục theo BS/STmin cho tới khi hoàn tất
+```
+
+**CanSM:** Phối hợp ComM → CanSM → CanIf → CAN Driver / CanTrcv driver để điều khiển communication modes; không phải module để đóng gói dữ liệu ứng dụng.
+
+**Câu hỏi kiểm tra:** Gửi dữ liệu chẩn đoán dài hơn payload một frame CAN thì module nào xử lý? Vì sao cần Flow Control?
+
+</details>
+
+---
+
+<details>
+<summary><strong>9. Diagnostic Overview — DCM, DEM và UDS</strong></summary>
+
+- **UDS (Unified Diagnostic Services — dịch vụ chẩn đoán thống nhất):** giao thức chẩn đoán trên ECU, chuẩn hóa theo ISO 14229.
+- **DCM (Diagnostic Communication Manager — bộ quản lý giao tiếp chẩn đoán):** nhận, điều phối, xử lý yêu cầu chẩn đoán; tương tác với PduR và các module liên quan.
+- **DEM (Diagnostic Event Manager — bộ quản lý sự kiện chẩn đoán):** xử lý, lưu và cung cấp thông tin về sự kiện lỗi/DTC và dữ liệu liên quan.
+- **DTC (Diagnostic Trouble Code — mã lỗi chẩn đoán):** mã dùng để biểu thị lỗi/sự kiện theo cấu hình chẩn đoán.
+
+```mermaid
+flowchart LR
+    T[Diagnostic Tester] --> CAN[CAN / CanIf / CanTp]
+    CAN --> P[PduR]
+    P --> D[DCM]
+    D <--> E[DEM: events / DTC]
+    D <--> APP[SWC / RTE / BSW services]
+    D --> P
+    P --> CAN
+```
+
+**Chú ý:** Đây là luồng chẩn đoán qua CAN điển hình; trường hợp Ethernet/DoIP có transport stack khác. DCM không đơn thuần là chỗ lưu DTC; DEM mới là module quản lý diagnostic events.
+
+**Câu hỏi kiểm tra:** DCM khác DEM thế nào? Tester yêu cầu đọc lỗi thì request đi qua những module nào?
+
+</details>
+
+---
+
+<details>
+<summary><strong>10. EthIf, SWS, ECUC, ARXML và SQT — Liên hệ dự án Hyundai AutoEver</strong></summary>
+
+> **Kiến thức bổ sung ngoài 11 slide được cung cấp:** Phần dưới tập trung bối cảnh EthIf/mSQT và cấu hình AUTOSAR trong CV, không phải trích nguyên văn slide chuyên biệt EthIf.
+
+- **EthIf (Ethernet Interface — giao diện Ethernet):** abstraction giữa upper Ethernet users và Ethernet controller/transceiver drivers; xử lý các yêu cầu, callback Tx/Rx và mode liên quan theo cấu hình.
+- **SWS (Software Specification — đặc tả phần mềm):** mô tả yêu cầu hành vi/API của module AUTOSAR.
+- **ECUC (ECU Configuration — cấu hình ECU):** định nghĩa các tham số/cấu hình module cho ECU.
+- **ARXML (AUTOSAR XML):** định dạng biểu diễn thông tin mô hình/cấu hình AUTOSAR.
+- **SQT / mSQT (Software Qualification Test — kiểm thử đánh giá chất lượng phần mềm):** test và kiểm tra kết quả module trong quy trình dự án; công cụ, phạm vi chi tiết phụ thuộc dự án.
+
+## Minh họa việc xử lý một test FAIL
+
+```mermaid
+flowchart TD
+  F[Test case FAIL] --> R[Đọc requirement / SWS ID]
+  R --> P[Kiểm tra preconditions và stub/mock]
+  P --> C[Kiểm tra ECUC/ARXML và generated config]
+  C --> L[Đối chiếu actual, expected, logs]
+  L --> Q{Nguyên nhân?}
+  Q --> A[Test setup/expectation sai: sửa và review test]
+  Q --> B[Configuration sai: sửa config, regenerate]
+  Q --> D[Implementation defect: báo bug / sửa code]
+  A --> T[Re-run + regression + traceability]
+  B --> T
+  D --> T
+```
+
+**Nguyên tắc thực tế:** Không thay expected output chỉ để test PASS. Trước tiên xác nhận yêu cầu, điều kiện test và kết quả thực thi. Phân biệt việc trực tiếp làm và kiến thức về module khác.
+
+**Câu hỏi kiểm tra:** Khi mSQT fail, bạn ưu tiên kiểm tra requirement, precondition, configuration, stub và implementation theo trình tự nào, vì sao?
+
+</details>
+
+---
+
+# 6 CÂU TỰ KIỂM TRA CUỐI BUỔI
+
+1. Một API chỉ đọc ảnh có nên nhận `std::shared_ptr<Image>` theo giá trị không? Khi nào nên, khi nào không?
+2. Phân biệt object slicing, name hiding và virtual dispatch bằng ba ví dụ ngắn.
+3. Nêu đúng thứ tự constructor/destructor khi `Derived` kế thừa `Base`.
+4. Vì sao Rule of Zero giúp giảm nguy cơ double-free? `std::move` thực sự làm gì?
+5. Một callback bị crash sau khi đóng dialog: bạn cần thu thập **bằng chứng gì** để xác nhận use-after-free?
+6. Một diagnostic request qua CAN đi từ Tester đến DCM theo luồng nào? DCM và DEM khác nhau ra sao?
+
+**Mức đạt:** Bạn có thể giải thích từng câu trên trong 1–2 phút, không cần nhìn tài liệu, và minh họa bằng ví dụ.
+
+
+</details>
+
 
 <details>
 <summary><strong>NHÓM 1. C PROGRAMMING</strong></summary>
