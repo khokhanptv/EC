@@ -22,6 +22,163 @@
 - Ngoài những kiến thức và kỹ năng đã được đề cập trong JD, anh/chị có thể chia sẻ thêm những công nghệ hoặc kiến thức chuyên môn mà team hiện đang đặc biệt quan tâm và ưu tiên không ạ?
 
 
+
+# FPT Telecom – FPT Play Box & Smart Home (06/2017 – 09/2021)
+
+**Vị trí:** Embedded Software Engineer  
+**Domain:** Embedded Linux, IoT, Smart Home, Networking  
+**Team size:** 50 thành viên (quy mô dự án)
+
+## 1. Công việc chính
+
+- Phát triển, bảo trì và sửa lỗi phần mềm nhúng bằng C/C++ cho FPT Play Box và thiết bị Smart Home.
+- Điều tra source code cũ, phân tích luồng xử lý và bổ sung chức năng theo yêu cầu.
+- Phát triển các chức năng liên quan đến kết nối Wi-Fi, giao tiếp MQTT, điều khiển thiết bị và giám sát trạng thái online/offline.
+- Tích hợp phần mềm trên thiết bị với hệ thống backend.
+- Phân tích log, debug lỗi và thực hiện functional testing, integration testing.
+- Hỗ trợ tích hợp và phát hành các phiên bản phần mềm.
+
+## 2. Kiến trúc hệ thống
+
+### FPT Play Box
+
+- Thiết bị giải trí chạy hệ điều hành nhúng, một số thế hệ sử dụng Android TV.
+- Các thành phần phần mềm liên quan đến kết nối mạng, cấu hình thiết bị và vận hành ứng dụng.
+- Có thể sử dụng C/C++ cho các native module hoặc system service.
+
+### Smart Home – Kịch bản kỹ thuật tham khảo
+
+- **Mobile App:** Người dùng điều khiển thiết bị.
+- **Backend Server:** Quản lý người dùng, thiết bị và yêu cầu điều khiển.
+- **MQTT Broker:** Trung gian truyền nhận message.
+- **Embedded Device/Gateway:** Nhận lệnh, xử lý và cập nhật trạng thái.
+- **Hardware:** Thực hiện điều khiển thiết bị.
+
+## 3. Công nghệ sử dụng
+
+- **Ngôn ngữ:** C, C++.
+- **Hệ điều hành:** Embedded Linux, OpenWrt.
+- **Môi trường phát triển:** Ubuntu Linux, có thể sử dụng VS Code.
+- **Build:** GCC Toolchain, OpenWrt SDK, cross-compilation.
+- **Giao tiếp:** TCP/IP, Wi-Fi, MQTT.
+- **Version Control:** Git, SVN.
+- **Debug:** SSH, application logs, GDB/gdbserver.
+- **Thư viện MQTT tham khảo:** libmosquitto hoặc Eclipse Paho.
+
+Trong danh sách này, C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, Git và SVN là các công nghệ đã có trong CV. Các công cụ khác là lựa chọn tham khảo, cần xác minh lại trước khi coi là kinh nghiệm thực tế.
+
+## 4. Quy trình làm việc
+
+1. Nhận yêu cầu phát triển hoặc bug từ Team Leader.
+2. Study requirement, tài liệu thiết kế và source code.
+3. Phân tích ảnh hưởng đến các module liên quan.
+4. Confirm những điểm chưa rõ với Leader, Tester hoặc Backend Team.
+5. Estimation thời gian thực hiện.
+6. Coding C/C++ hoặc sửa lỗi trong module phụ trách.
+7. Build bằng GCC/OpenWrt SDK.
+8. Deploy chương trình lên thiết bị để kiểm thử.
+9. Phân tích log, debug và fix issue.
+10. Thực hiện functional testing và regression testing.
+11. Review code, merge source và hỗ trợ release.
+
+## 5. Tài liệu dự án
+
+Các tài liệu có thể sử dụng trong quy trình phát triển:
+
+- Software Requirements Specification (SRS).
+- High-Level Design (HLD).
+- Low-Level Design (LLD).
+- Interface/API Specification.
+- Test Cases và Test Reports.
+- Bug Reports.
+- Release Notes.
+
+Chưa xác nhận dự án FPT Telecom thực tế sử dụng đầy đủ các loại tài liệu trên.
+
+## 6. Mô tả một nhiệm vụ điển hình
+
+**Task: Phát triển và bảo trì chức năng quản lý kết nối MQTT trên Smart Home Gateway.**
+
+- Nhận yêu cầu đảm bảo thiết bị có thể giao tiếp ổn định với backend.
+- Study MQTT client, network manager và các callback liên quan.
+- Triển khai logic connect/disconnect, publish/subscribe và reconnect.
+- Xử lý command từ backend và gửi trạng thái thiết bị.
+- Build chương trình C/C++ cho thiết bị OpenWrt.
+- Deploy và kiểm thử trên thiết bị thật.
+- Kiểm tra các trường hợp mất Wi-Fi, mất MQTT broker và kết nối lại.
+
+Đây là nhiệm vụ mẫu, chưa xác nhận bạn trực tiếp phát triển MQTT client hay chỉ tích hợp nó.
+
+## 7. Task khó – Điều tra lỗi MQTT reconnect
+
+**Hiện tượng:** Smart Home device không nhận được lệnh ON/OFF sau khi mất Wi-Fi rồi kết nối lại.
+
+### Điều tra
+
+- Reproduce bằng cách ngắt và bật lại Wi-Fi.
+- Kiểm tra log kết nối mạng và MQTT.
+- Phân tích callback reconnect và trạng thái subscribe.
+- Kiểm tra thread nhận message có còn hoạt động không.
+
+### Nguyên nhân giả định
+
+MQTT client đã kết nối lại broker nhưng ứng dụng không khôi phục subscription sau khi tạo session mới.
+
+### Hướng xử lý
+
+- Sửa logic reconnect.
+- Subscribe lại topic khi cần.
+- Bổ sung kiểm tra trạng thái kết nối và xử lý lỗi.
+- Thực hiện regression testing với nhiều chu kỳ mất mạng.
+
+### Kết quả mong đợi
+
+Thiết bị tiếp tục nhận lệnh ON/OFF sau khi mạng được khôi phục mà không cần khởi động lại ứng dụng.
+
+## 8. Những khó khăn trong dự án
+
+- Phần mềm chạy trên thiết bị nhúng có giới hạn về CPU và RAM.
+- Lỗi kết nối mạng có thể xảy ra không thường xuyên, khó reproduce.
+- Việc debug cần kiểm tra đồng thời application, network và backend.
+- Source code cũ có nhiều module phụ thuộc lẫn nhau, cần study kỹ trước khi sửa.
+- Một thay đổi nhỏ trong connection manager có thể ảnh hưởng nhiều chức năng.
+- Một số lỗi chỉ xuất hiện trên thiết bị thật, không tái hiện được trên môi trường phát triển.
+
+## 9. Tóm tắt để trả lời phỏng vấn
+
+Trong giai đoạn 2017–2021, tôi làm Embedded Software Engineer tại FPT Telecom, tham gia phát triển và bảo trì phần mềm nhúng cho hai sản phẩm là FPT Play Box và Smart Home.
+
+Công việc tập trung vào C/C++, xử lý kết nối mạng, giao tiếp thiết bị, phân tích source code và debug các vấn đề liên quan đến Wi-Fi, MQTT.
+
+Quy trình phát triển bao gồm nhận yêu cầu, phân tích tài liệu và source code, xác nhận yêu cầu, ước lượng thời gian, coding, cross-compile, triển khai lên thiết bị, kiểm thử và hỗ trợ release.
+
+Các công nghệ chính trong CV gồm C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, Git và SVN.
+
+Những nội dung về module cụ thể, cách chia kiến trúc, công cụ debug và task khó ở trên là kịch bản tham khảo cần đối chiếu lại với công việc thực tế trước khi dùng trong phỏng vấn.
+
+## 10. Kinh nghiệm sử dụng Qt Framework và QML
+
+### Câu hỏi phỏng vấn: Bạn có biết Qt và đã sử dụng Qt trong dự án chưa?
+
+**Câu trả lời mẫu (chỉ dùng nếu phù hợp với kinh nghiệm thực tế):**
+
+Có, tôi có kiến thức về Qt Framework và đã sử dụng Qt/QML để phát triển giao diện ứng dụng bằng C++.
+
+Trong quá trình làm việc, tôi tham gia tích hợp các file QML được cung cấp từ team Designer vào source code hiện có.
+
+### Công việc chủ yếu
+
+- Tùy chỉnh các QML component và property cho phù hợp với yêu cầu.
+- Thay các giá trị hardcode bằng enum hoặc constant để dễ bảo trì.
+- Sử dụng signal/slot để xử lý sự kiện và giao tiếp giữa giao diện với C++.
+- Phát triển và chỉnh sửa logic C++ phía sau giao diện.
+- Sử dụng Qt Creator để build, debug và kiểm thử chức năng.
+
+Ngoài ra, tôi còn tham gia điều tra và sửa lỗi liên quan đến giao diện, xử lý sự kiện và cập nhật trạng thái thiết bị.
+
+**Lưu ý:** Phần Qt/QML là kịch bản tham khảo, chưa được xác nhận là công nghệ bạn đã trực tiếp sử dụng tại FPT Telecom.
+
+
 <details>
 <summary><strong># ÔN TẬP TRỌNG TÂM </strong></summary>
 
