@@ -23,13 +23,19 @@
 
 
 
-# FPT Telecom – FPT Play Box & Smart Home (06/2017 – 09/2021)
+
+# FPT TELECOM – KINH NGHIỆM DỰ ÁN & PHỎNG VẤN THỰC TẾ
+
+> **Lưu ý:** Các công việc, công nghệ có trong CV được dùng làm cơ sở. Những task và quy trình chưa xác nhận là kịch bản tham khảo để ôn tập.
+
+# PHẦN I. FPT TELECOM – FPT PLAY BOX & SMART HOME (06/2017 – 09/2021)
 
 **Vị trí:** Embedded Software Engineer  
 **Domain:** Embedded Linux, IoT, Smart Home, Networking  
 **Team size:** 50 thành viên (quy mô dự án)
 
-## 1. Công việc chính
+<details>
+<summary><strong>1. Công việc chính</strong></summary>
 
 - Phát triển, bảo trì và sửa lỗi phần mềm nhúng bằng C/C++ cho FPT Play Box và thiết bị Smart Home.
 - Điều tra source code cũ, phân tích luồng xử lý và bổ sung chức năng theo yêu cầu.
@@ -38,7 +44,10 @@
 - Phân tích log, debug lỗi và thực hiện functional testing, integration testing.
 - Hỗ trợ tích hợp và phát hành các phiên bản phần mềm.
 
-## 2. Kiến trúc hệ thống
+</details>
+
+<details>
+<summary><strong>2. Kiến trúc hệ thống</strong></summary>
 
 ### FPT Play Box
 
@@ -54,7 +63,10 @@
 - **Embedded Device/Gateway:** Nhận lệnh, xử lý và cập nhật trạng thái.
 - **Hardware:** Thực hiện điều khiển thiết bị.
 
-## 3. Công nghệ sử dụng
+</details>
+
+<details>
+<summary><strong>3. Công nghệ sử dụng</strong></summary>
 
 - **Ngôn ngữ:** C, C++.
 - **Hệ điều hành:** Embedded Linux, OpenWrt.
@@ -65,9 +77,12 @@
 - **Debug:** SSH, application logs, GDB/gdbserver.
 - **Thư viện MQTT tham khảo:** libmosquitto hoặc Eclipse Paho.
 
-Trong danh sách này, C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, Git và SVN là các công nghệ đã có trong CV. Các công cụ khác là lựa chọn tham khảo, cần xác minh lại trước khi coi là kinh nghiệm thực tế.
+**Lưu ý:** C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, Git và SVN có trong CV. Các công cụ khác cần xác minh lại.
 
-## 4. Quy trình làm việc
+</details>
+
+<details>
+<summary><strong>4. Quy trình làm việc</strong></summary>
 
 1. Nhận yêu cầu phát triển hoặc bug từ Team Leader.
 2. Study requirement, tài liệu thiết kế và source code.
@@ -81,9 +96,12 @@ Trong danh sách này, C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, 
 10. Thực hiện functional testing và regression testing.
 11. Review code, merge source và hỗ trợ release.
 
-## 5. Tài liệu dự án
+</details>
 
-Các tài liệu có thể sử dụng trong quy trình phát triển:
+<details>
+<summary><strong>5. Tài liệu dự án</strong></summary>
+
+Các tài liệu tham khảo trong quy trình phát triển:
 
 - Software Requirements Specification (SRS).
 - High-Level Design (HLD).
@@ -93,90 +111,332 @@ Các tài liệu có thể sử dụng trong quy trình phát triển:
 - Bug Reports.
 - Release Notes.
 
-Chưa xác nhận dự án FPT Telecom thực tế sử dụng đầy đủ các loại tài liệu trên.
+**Lưu ý:** Chưa xác nhận dự án thực tế sử dụng đầy đủ các tài liệu trên.
 
-## 6. Mô tả một nhiệm vụ điển hình
+</details>
 
-**Task: Phát triển và bảo trì chức năng quản lý kết nối MQTT trên Smart Home Gateway.**
+<details>
+<summary><strong>6. Mô tả một nhiệm vụ điển hình – MQTT</strong></summary>
 
-- Nhận yêu cầu đảm bảo thiết bị có thể giao tiếp ổn định với backend.
-- Study MQTT client, network manager và các callback liên quan.
+**Task:** Phát triển và bảo trì chức năng quản lý kết nối MQTT trên Smart Home Gateway.
+
+- Nhận yêu cầu đảm bảo thiết bị giao tiếp ổn định với backend.
+- Study MQTT client, network manager và callback.
 - Triển khai logic connect/disconnect, publish/subscribe và reconnect.
 - Xử lý command từ backend và gửi trạng thái thiết bị.
 - Build chương trình C/C++ cho thiết bị OpenWrt.
 - Deploy và kiểm thử trên thiết bị thật.
-- Kiểm tra các trường hợp mất Wi-Fi, mất MQTT broker và kết nối lại.
+- Kiểm tra trường hợp mất Wi-Fi, mất MQTT broker và kết nối lại.
 
-Đây là nhiệm vụ mẫu, chưa xác nhận bạn trực tiếp phát triển MQTT client hay chỉ tích hợp nó.
+**Lưu ý:** Đây là nhiệm vụ minh họa, chưa xác nhận bạn trực tiếp phát triển MQTT client hay chỉ tích hợp.
 
-## 7. Task khó – Điều tra lỗi MQTT reconnect
+</details>
 
-**Hiện tượng:** Smart Home device không nhận được lệnh ON/OFF sau khi mất Wi-Fi rồi kết nối lại.
+<details>
+<summary><strong>7. Task khó – Điều tra lỗi MQTT reconnect</strong></summary>
+
+**Hiện tượng:** Thiết bị Smart Home không nhận lệnh ON/OFF sau khi mất Wi-Fi rồi kết nối lại.
 
 ### Điều tra
 
 - Reproduce bằng cách ngắt và bật lại Wi-Fi.
 - Kiểm tra log kết nối mạng và MQTT.
-- Phân tích callback reconnect và trạng thái subscribe.
+- Phân tích callback reconnect và trạng thái subscription.
 - Kiểm tra thread nhận message có còn hoạt động không.
 
 ### Nguyên nhân giả định
 
-MQTT client đã kết nối lại broker nhưng ứng dụng không khôi phục subscription sau khi tạo session mới.
+MQTT client kết nối lại broker nhưng ứng dụng không khôi phục subscription sau khi tạo session mới.
 
 ### Hướng xử lý
 
-- Sửa logic reconnect.
+- Sửa reconnect logic.
 - Subscribe lại topic khi cần.
 - Bổ sung kiểm tra trạng thái kết nối và xử lý lỗi.
-- Thực hiện regression testing với nhiều chu kỳ mất mạng.
+- Regression testing với nhiều chu kỳ mất mạng.
 
 ### Kết quả mong đợi
 
 Thiết bị tiếp tục nhận lệnh ON/OFF sau khi mạng được khôi phục mà không cần khởi động lại ứng dụng.
 
-## 8. Những khó khăn trong dự án
+</details>
 
-- Phần mềm chạy trên thiết bị nhúng có giới hạn về CPU và RAM.
-- Lỗi kết nối mạng có thể xảy ra không thường xuyên, khó reproduce.
-- Việc debug cần kiểm tra đồng thời application, network và backend.
-- Source code cũ có nhiều module phụ thuộc lẫn nhau, cần study kỹ trước khi sửa.
-- Một thay đổi nhỏ trong connection manager có thể ảnh hưởng nhiều chức năng.
-- Một số lỗi chỉ xuất hiện trên thiết bị thật, không tái hiện được trên môi trường phát triển.
+<details>
+<summary><strong>8. Những khó khăn trong dự án</strong></summary>
 
-## 9. Tóm tắt để trả lời phỏng vấn
+- Thiết bị nhúng có giới hạn CPU và RAM.
+- Lỗi Wi-Fi/MQTT có tần suất thấp, khó reproduce.
+- Debug cần kiểm tra application, network và backend.
+- Source code cũ có nhiều module phụ thuộc.
+- Thay đổi nhỏ có thể ảnh hưởng chức năng khác.
+- Một số lỗi chỉ xảy ra trên thiết bị thật.
 
-Trong giai đoạn 2017–2021, tôi làm Embedded Software Engineer tại FPT Telecom, tham gia phát triển và bảo trì phần mềm nhúng cho hai sản phẩm là FPT Play Box và Smart Home.
+</details>
+
+<details>
+<summary><strong>9. Tóm tắt dự án để trả lời phỏng vấn</strong></summary>
+
+Trong giai đoạn 2017–2021, tôi làm Embedded Software Engineer tại FPT Telecom, tham gia phát triển và bảo trì phần mềm nhúng cho FPT Play Box và Smart Home.
 
 Công việc tập trung vào C/C++, xử lý kết nối mạng, giao tiếp thiết bị, phân tích source code và debug các vấn đề liên quan đến Wi-Fi, MQTT.
 
-Quy trình phát triển bao gồm nhận yêu cầu, phân tích tài liệu và source code, xác nhận yêu cầu, ước lượng thời gian, coding, cross-compile, triển khai lên thiết bị, kiểm thử và hỗ trợ release.
+Quy trình phát triển bao gồm nhận yêu cầu, phân tích tài liệu và source code, xác nhận yêu cầu, estimation, coding, cross-compile, deploy, testing và release.
 
-Các công nghệ chính trong CV gồm C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, Git và SVN.
+Các công nghệ chính gồm C/C++, OpenWrt, GCC Toolchain, OpenWrt SDK, Wi-Fi, MQTT, Git và SVN.
 
-Những nội dung về module cụ thể, cách chia kiến trúc, công cụ debug và task khó ở trên là kịch bản tham khảo cần đối chiếu lại với công việc thực tế trước khi dùng trong phỏng vấn.
+**Lưu ý:** Cần đối chiếu với kinh nghiệm thực tế trước khi sử dụng trong phỏng vấn.
 
-## 10. Kinh nghiệm sử dụng Qt Framework và QML
+</details>
 
-### Câu hỏi phỏng vấn: Bạn có biết Qt và đã sử dụng Qt trong dự án chưa?
+<details>
+<summary><strong>10. Qt Framework và QML</strong></summary>
 
-**Câu trả lời mẫu (chỉ dùng nếu phù hợp với kinh nghiệm thực tế):**
+### Câu hỏi: Bạn có biết Qt và đã sử dụng Qt trong dự án chưa?
+
+**Câu trả lời mẫu nếu đã thực sự làm Qt/QML:**
 
 Có, tôi có kiến thức về Qt Framework và đã sử dụng Qt/QML để phát triển giao diện ứng dụng bằng C++.
 
-Trong quá trình làm việc, tôi tham gia tích hợp các file QML được cung cấp từ team Designer vào source code hiện có.
+Tôi tham gia tích hợp các file QML được cung cấp từ team Designer vào source code hiện có.
 
 ### Công việc chủ yếu
 
-- Tùy chỉnh các QML component và property cho phù hợp với yêu cầu.
-- Thay các giá trị hardcode bằng enum hoặc constant để dễ bảo trì.
-- Sử dụng signal/slot để xử lý sự kiện và giao tiếp giữa giao diện với C++.
-- Phát triển và chỉnh sửa logic C++ phía sau giao diện.
-- Sử dụng Qt Creator để build, debug và kiểm thử chức năng.
+- Tùy chỉnh QML component và property.
+- Thay hardcode bằng enum hoặc constant.
+- Sử dụng signal/slot để xử lý sự kiện.
+- Phát triển logic C++ phía sau giao diện.
+- Build, debug và kiểm thử bằng Qt Creator.
+- Điều tra và sửa lỗi giao diện, xử lý sự kiện và trạng thái thiết bị.
 
-Ngoài ra, tôi còn tham gia điều tra và sửa lỗi liên quan đến giao diện, xử lý sự kiện và cập nhật trạng thái thiết bị.
+**Lưu ý:** Đây là kịch bản tham khảo, chưa xác nhận Qt/QML được sử dụng trong dự án FPT Telecom của bạn.
 
-**Lưu ý:** Phần Qt/QML là kịch bản tham khảo, chưa được xác nhận là công nghệ bạn đã trực tiếp sử dụng tại FPT Telecom.
+</details>
+
+---
+
+# PHẦN II. 20 CÂU HỎI PHỎNG VẤN THỰC TẾ
+
+## I. Xử lý task khó và điều tra lỗi
+
+<details>
+<summary><strong>1. Khi nhận một task khó, bạn thường xử lý như thế nào?</strong></summary>
+
+Đầu tiên, tôi đọc requirement và study source code để hiểu yêu cầu.
+
+Sau đó, tôi phân tích các module liên quan, đánh giá phạm vi ảnh hưởng và đưa ra hướng xử lý.
+
+Nếu gặp vấn đề chưa rõ, tôi trao đổi với Leader hoặc thành viên có kinh nghiệm trước khi thực hiện.
+
+</details>
+
+<details>
+<summary><strong>2. Bạn đã từng gặp bug khó chưa? Điều gì khiến bug đó khó xử lý?</strong></summary>
+
+Có. Những bug khó thường xảy ra với tần suất thấp, khó tái hiện, crash ngẫu nhiên hoặc chỉ xuất hiện trong điều kiện đặc biệt.
+
+Tôi thường thu thập log, crash dump, phân tích call stack và kiểm tra các điều kiện gây lỗi.
+
+Sau khi xác định root cause, tôi sửa code và thực hiện regression test.
+
+</details>
+
+<details>
+<summary><strong>3. Nếu gặp bug không thể reproduce, bạn làm gì?</strong></summary>
+
+Tôi kiểm tra môi trường, phiên bản phần mềm và điều kiện xảy ra lỗi.
+
+Sau đó, tôi phân tích log, bổ sung debug log tại vị trí nghi ngờ và thử tái hiện theo nhiều kịch bản.
+
+Nếu chưa xác định được nguyên nhân, tôi báo cáo kết quả điều tra và đề xuất bước tiếp theo.
+
+</details>
+
+<details>
+<summary><strong>4. Nếu phải sửa source code cũ nhưng không có tài liệu thì sao?</strong></summary>
+
+Tôi sử dụng Find All References, Call Hierarchy và debugger để tìm hiểu luồng xử lý.
+
+Sau đó, tôi xác định các module phụ thuộc, phân tích ảnh hưởng và ưu tiên thay đổi tối thiểu để tránh phát sinh lỗi mới.
+
+</details>
+
+<details>
+<summary><strong>5. Nếu sửa một bug nhưng lại phát sinh bug khác thì sao?</strong></summary>
+
+Tôi so sánh source code trước và sau khi sửa, phân tích những module bị ảnh hưởng và xác định nguyên nhân.
+
+Sau đó, tôi điều chỉnh bản sửa và thực hiện regression test.
+
+Nếu thay đổi có rủi ro cao, tôi trao đổi với Leader về phương án revert.
+
+</details>
+
+<details>
+<summary><strong>6. Nếu ứng dụng bị crash ngẫu nhiên, bạn sẽ điều tra thế nào?</strong></summary>
+
+Tôi thu thập crash dump, log và phân tích call stack để xác định vị trí lỗi.
+
+Sau đó, tôi kiểm tra các nguyên nhân như null pointer, memory corruption, use-after-free hoặc race condition.
+
+Cuối cùng, tôi cố gắng tái hiện và xác nhận nguyên nhân trước khi sửa.
+
+</details>
+
+<details>
+<summary><strong>7. Nếu gặp memory leak, bạn xử lý thế nào?</strong></summary>
+
+Tôi theo dõi mức sử dụng bộ nhớ và kiểm tra các thao tác làm memory tăng liên tục.
+
+Sau đó, tôi sử dụng memory profiler hoặc công cụ phù hợp để tìm vị trí cấp phát chưa được giải phóng và sửa lỗi quản lý bộ nhớ.
+
+</details>
+
+<details>
+<summary><strong>8. Nếu bug xảy ra trên môi trường khách hàng nhưng không xảy ra trên máy của bạn?</strong></summary>
+
+Tôi so sánh phiên bản phần mềm, cấu hình hệ thống, dữ liệu và điều kiện môi trường.
+
+Sau đó, tôi phân tích log, tìm cách tái hiện trên môi trường tương đương và xác nhận root cause trước khi sửa.
+
+</details>
+
+## II. Kiến thức mới và quản lý công việc
+
+<details>
+<summary><strong>9. Nếu nhận task liên quan đến công nghệ chưa từng sử dụng, bạn sẽ làm gì?</strong></summary>
+
+Tôi đọc tài liệu chính thức, tìm hiểu kiến trúc và tham khảo các ví dụ trong source code.
+
+Sau đó, tôi thử nghiệm trên một phần nhỏ trước khi tích hợp.
+
+Nếu gặp vấn đề phức tạp, tôi trao đổi với thành viên có kinh nghiệm.
+
+</details>
+
+<details>
+<summary><strong>10. Nếu estimation ban đầu không đủ thời gian thì sao?</strong></summary>
+
+Tôi đánh giá lại khối lượng công việc, xác định nguyên nhân phát sinh và thông báo sớm cho Leader.
+
+Sau đó, tôi đề xuất điều chỉnh estimation hoặc ưu tiên các phần quan trọng để hạn chế ảnh hưởng tiến độ dự án.
+
+</details>
+
+<details>
+<summary><strong>11. Nếu nhận nhiều task cùng lúc, bạn ưu tiên thế nào?</strong></summary>
+
+Tôi đánh giá mức độ ưu tiên dựa trên severity, deadline, mức độ ảnh hưởng và dependency giữa các task.
+
+Sau đó, tôi thống nhất thứ tự thực hiện với Leader và cập nhật tiến độ thường xuyên.
+
+</details>
+
+<details>
+<summary><strong>12. Nếu yêu cầu của khách hàng chưa rõ ràng thì sao?</strong></summary>
+
+Tôi phân tích requirement, xác định điểm chưa rõ và chuẩn bị các câu hỏi cụ thể.
+
+Sau đó, tôi xác nhận với người phụ trách hoặc khách hàng trước khi coding để tránh hiểu sai yêu cầu.
+
+</details>
+
+<details>
+<summary><strong>13. Nếu đang làm task thì khách hàng thay đổi requirement?</strong></summary>
+
+Tôi phân tích sự khác biệt giữa yêu cầu cũ và mới, đánh giá ảnh hưởng đến source code, thiết kế và test case.
+
+Sau đó, tôi cập nhật estimation và xác nhận thay đổi trước khi tiếp tục.
+
+</details>
+
+<details>
+<summary><strong>14. Nếu bạn không thể hoàn thành task đúng deadline thì sao?</strong></summary>
+
+Tôi thông báo sớm cho Leader, giải thích nguyên nhân, báo cáo phần đã hoàn thành và phần còn lại.
+
+Đồng thời, tôi đề xuất phương án xử lý hoặc điều chỉnh kế hoạch thay vì chờ đến sát deadline.
+
+</details>
+
+## III. Teamwork, review và giải quyết vấn đề
+
+<details>
+<summary><strong>15. Nếu bạn và Tester không thống nhất về một bug thì sao?</strong></summary>
+
+Tôi đối chiếu requirement với expected behavior và actual behavior.
+
+Sau đó, tôi cùng Tester reproduce lỗi và kiểm tra log.
+
+Nếu requirement chưa rõ, tôi xác nhận lại với người phụ trách trước khi quyết định sửa.
+
+</details>
+
+<details>
+<summary><strong>16. Nếu bạn không đồng ý với giải pháp của Team Leader thì sao?</strong></summary>
+
+Tôi trình bày quan điểm dựa trên phân tích kỹ thuật, ưu nhược điểm và rủi ro của từng phương án.
+
+Sau đó, tôi trao đổi để thống nhất giải pháp phù hợp với yêu cầu và tiến độ dự án.
+
+</details>
+
+<details>
+<summary><strong>17. Nếu code review phát hiện nhiều vấn đề trong code của bạn thì sao?</strong></summary>
+
+Tôi xem xét từng comment, tìm hiểu nguyên nhân và chỉnh sửa những điểm hợp lý.
+
+Nếu có ý kiến khác, tôi trao đổi dựa trên coding convention và yêu cầu kỹ thuật.
+
+Sau đó, tôi kiểm thử lại trước khi cập nhật code.
+
+</details>
+
+<details>
+<summary><strong>18. Nếu phát hiện một bug nhưng không thuộc module bạn phụ trách?</strong></summary>
+
+Tôi kiểm tra và thu thập thông tin ban đầu như log, điều kiện xảy ra và cách reproduce.
+
+Sau đó, tôi trao đổi với người phụ trách module đó và hỗ trợ điều tra nếu cần.
+
+</details>
+
+## IV. Testing và Release
+
+<details>
+<summary><strong>19. Nếu phát hiện bug nghiêm trọng ngay trước release thì sao?</strong></summary>
+
+Tôi đánh giá severity, phạm vi ảnh hưởng và khả năng tái hiện.
+
+Sau đó, tôi thông báo cho Leader và đề xuất fix, revert hoặc hoãn release tùy mức độ rủi ro.
+
+Nếu cần hotfix, tôi ưu tiên thay đổi tối thiểu và kiểm thử kỹ trước khi phát hành.
+
+</details>
+
+<details>
+<summary><strong>20. Làm thế nào để đảm bảo bản sửa bug không ảnh hưởng chức năng khác?</strong></summary>
+
+Tôi thực hiện impact analysis trước khi sửa, xác định các module liên quan và ưu tiên thay đổi tối thiểu.
+
+Sau đó, tôi thực hiện unit test, integration test và regression test phù hợp với phạm vi ảnh hưởng.
+
+</details>
+
+---
+
+# PHẦN III. QUY TRÌNH XỬ LÝ CÔNG VIỆC CẦN GHI NHỚ
+
+<details>
+<summary><strong>Understand → Analyze → Confirm → Implement → Test → Report</strong></summary>
+
+1. **Understand:** Hiểu yêu cầu hoặc vấn đề.
+2. **Analyze:** Phân tích source code, log, root cause và impact.
+3. **Confirm:** Xác nhận hướng xử lý với người phụ trách khi cần.
+4. **Implement:** Coding hoặc fix bug.
+5. **Test:** Kiểm thử và regression test.
+6. **Report:** Báo cáo kết quả và cập nhật tiến độ.
+
+</details>
 
 
 <details>
