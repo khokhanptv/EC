@@ -629,17 +629,15 @@ Truy cập dữ liệu static: Dùng để đọc hoặc thay đổi Static Prop
 Mặc dù Static Property được khai báo private, nhưng Static Method nằm trong cùng class vẫn có thể truy cập và thay đổi giá trị của nó.
 
 ```cpp
-class UART {
+class Test {
 private:
     static int count;
+    int value;
 
 public:
-    static void IncreaseCount() {
-        count++;
-    }
-
-    static int GetCount() {
-        return count;
+    static void setCount(int x) {
+        count = x;     // ✅ OK
+        // value = x;  // ❌ Không OK
     }
 };
 ```
