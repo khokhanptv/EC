@@ -603,7 +603,46 @@ Base dtor
 ---
 
 <details>
-<summary><strong>4. Copy/Move, Rule of Zero, Ownership — Sao chép/di chuyển, quy tắc số không, quyền sở hữu</strong></summary>
+<summary><strong>4.Static Method, Copy/Move, Rule of Zero, Ownership — Sao chép/di chuyển, quy tắc số không, quyền sở hữu</strong></summary>
+
+
+
+## Static Method là gì?
+Static Method là hàm thuộc về class, có thể gọi trực tiếp mà không cần tạo object.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Student {
+public:
+    static void Hello() {
+        cout << "Hello Student!" << endl;
+    }
+};
+
+int main() {
+    Student::Hello();
+}
+```
+Truy cập dữ liệu static: Dùng để đọc hoặc thay đổi Static Property, kể cả khi property đó là private
+Mặc dù Static Property được khai báo private, nhưng Static Method nằm trong cùng class vẫn có thể truy cập và thay đổi giá trị của nó.
+
+```cpp
+class UART {
+private:
+    static int count;
+
+public:
+    static void IncreaseCount() {
+        count++;
+    }
+
+    static int GetCount() {
+        return count;
+    }
+};
+```
 
 ## Copy và Move
 
