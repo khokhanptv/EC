@@ -6,6 +6,672 @@
 > Phần STL đã được tinh gọn theo hướng phỏng vấn: bỏ các câu đi quá sâu vào từng hàm riêng lẻ của `std::vector`.
 
 ---
+# 52 CÂU HỎI PHỎNG VẤN EMBEDDED LINUX NETWORKING – C/C++
+
+> **Vị trí:** Embedded Linux Networking Developer  
+> **Kinh nghiệm liên quan:** FPT Telecom – Router/Modem, FPT Play Box & Smart Home.  
+> **Lưu ý:** Các câu liên quan kinh nghiệm cá nhân là **câu trả lời mẫu**, cần đối chiếu với việc thực tế đã làm. Đặc biệt chưa xác nhận model SoC, IDE/Host OS và các công cụ debug đã trực tiếp dùng.
+
+## PHẦN 1. LINUX SYSTEM PROGRAMMING
+
+<details>
+<summary><strong>1. Linux Kernel là gì? User Space và Kernel Space khác nhau như thế nào?</strong></summary>
+
+Linux Kernel là nhân hệ điều hành, quản lý CPU, RAM, Process, phần cứng và tài nguyên hệ thống.
+
+- **User Space:** Nơi ứng dụng thông thường chạy.
+- **Kernel Space:** Nơi Kernel và các thành phần của nhân hệ điều hành hoạt động.
+- Ứng dụng dùng **System Call** để yêu cầu Kernel thực hiện thao tác được bảo vệ.
+
+**Trả lời phỏng vấn:** Linux Kernel quản lý tài nguyên hệ thống. User Space chạy ứng dụng, Kernel Space chạy nhân hệ điều hành; hai bên tương tác thông qua System Call.
+</details>
+
+<details>
+<summary><strong>2. fork() là gì? Hoạt động như thế nào?</strong></summary>
+
+`fork()` là System Call tạo Process con từ Process hiện tại.
+
+- Process cha nhận **PID của con** (giá trị dương).
+- Process con nhận **0**.
+- Nếu thất bại, `fork()` trả về **-1** trong Process cha.
+
+Hai Process cùng tiếp tục từ vị trí sau lời gọi `fork()` và có không gian địa chỉ riêng về mặt logic.
+
+**Trả lời phỏng vấn:** `fork()` tạo Process con. Cha nhận PID của con, con nhận 0, thất bại trả về -1.
+</details>
+
+<details>
+<summary><strong>3. IPC là gì? Có những cơ chế IPC nào trong Linux?</strong></summary>
+
+IPC (*Inter-Process Communication*) cho phép các Process trao đổi dữ liệu và phối hợp hoạt động.
+
+- Pipe, FIFO (Named Pipe)
+- Message Queue
+- Shared Memory
+- Semaphore
+- Signal
+- Socket
+
+**Trả lời phỏng vấn:** IPC là cơ chế giao tiếp giữa các Process; lựa chọn Pipe, Queue, Shared Memory, Socket... tùy lượng dữ liệu và nhu cầu đồng bộ.
+</details>
+
+<details>
+<summary><strong>4. Shared Memory và Message Queue khác nhau như thế nào?</strong></summary>
+
+- **Shared Memory:** Nhiều Process truy cập chung vùng nhớ; hiệu quả với dữ liệu lớn nhưng cần tự đồng bộ.
+- **Message Queue:** Process trao đổi dữ liệu theo Message qua hàng đợi do hệ thống quản lý.
+
+**Trả lời phỏng vấn:** Shared Memory thiên về chia sẻ dữ liệu nhanh, Message Queue thiên về gửi/nhận thông điệp tách biệt.
+</details>
+
+<details>
+<summary><strong>5. File Descriptor là gì? Tại sao Socket cũng dùng File Descriptor?</strong></summary>
+
+File Descriptor (FD) là số nguyên không âm đại diện cho tài nguyên I/O đang mở của Process. File, Pipe và Socket đều có thể được biểu diễn bằng FD.
+
+```c
+int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+```
+
+**Trả lời phỏng vấn:** Linux sử dụng File Descriptor để cung cấp giao diện I/O nhất quán cho File, Pipe, Socket qua các API như `read()`, `write()`, `close()`.
+</details>
+
+<details>
+<summary><strong>6. select(), poll() và epoll() khác nhau như thế nào?</strong></summary>
+
+Cả ba đều hỗ trợ **I/O Multiplexing** để theo dõi nhiều File Descriptor.
+
+- `select()`: Dùng `fd_set`, thường chịu giới hạn `FD_SETSIZE`.
+- `poll()`: Dùng mảng `pollfd`, không chịu giới hạn `FD_SETSIZE`.
+- `epoll()`: Cơ chế thông báo sự kiện I/O hiệu quả cho nhiều kết nối trên Linux.
+
+**Trả lời phỏng vấn:** `epoll()` thường phù hợp hơn khi TCP Server cần quản lý số lượng lớn Socket đồng thời.
+</details>
+
+<details>
+<summary><strong>7. Blocking I/O và Non-blocking I/O khác nhau như thế nào?</strong></summary>
+
+- **Blocking I/O:** Lời gọi có thể chờ đến khi thao tác sẵn sàng/hoàn tất hoặc xảy ra lỗi.
+- **Non-blocking I/O:** Nếu chưa thể thực hiện ngay, lời gọi thường trả về `EAGAIN`/`EWOULDBLOCK`.
+
+**Trả lời phỏng vấn:** Blocking có thể khiến Thread chờ; Non-blocking trả về ngay khi chưa sẵn sàng và thường kết hợp với `select()`, `poll()`, `epoll()`.
+</details>
+
+<details>
+<summary><strong>8. Làm sao kiểm tra CPU, RAM và Process trên Linux?</strong></summary>
+
+| Lệnh | Mục đích |
+|---|---|
+| `top` | CPU, RAM, Process |
+| `ps` | Danh sách Process |
+| `free -h` | Bộ nhớ RAM (nếu hệ thống hỗ trợ) |
+| `cat /proc/meminfo` | Thông tin RAM |
+| `dmesg` | Kernel Log |
+| `logread` | System Log trên OpenWrt |
+
+**Trả lời phỏng vấn:** Tôi sẽ kiểm tra Process với `ps`, `top`, RAM với `/proc/meminfo`, và log với `logread`/`dmesg`.
+</details>
+
+## PHẦN 2. NETWORKING STACK
+
+<details>
+<summary><strong>9. Mô hình OSI có bao nhiêu tầng?</strong></summary>
+
+OSI có **7 tầng**, từ thấp lên cao:
+
+1. Physical – Vật lý
+2. Data Link – Liên kết dữ liệu
+3. Network – Mạng
+4. Transport – Vận chuyển
+5. Session – Phiên
+6. Presentation – Trình diễn
+7. Application – Ứng dụng
+
+**Trả lời phỏng vấn:** OSI là mô hình tham chiếu 7 tầng để mô tả và chuẩn hóa các chức năng truyền thông mạng.
+</details>
+
+<details>
+<summary><strong>10. Mô hình TCP/IP gồm những tầng nào?</strong></summary>
+
+TCP/IP thường được trình bày thành **4 tầng**:
+
+- Application: HTTP, DNS, MQTT
+- Transport: TCP, UDP
+- Internet: IP, ICMP
+- Network Access: Ethernet, Wi-Fi
+
+**Trả lời phỏng vấn:** TCP/IP gồm Application, Transport, Internet và Network Access.
+</details>
+
+<details>
+<summary><strong>11. TCP và UDP khác nhau như thế nào?</strong></summary>
+
+- **TCP:** Hướng kết nối; truyền dữ liệu tin cậy, theo thứ tự; có truyền lại và điều khiển luồng.
+- **UDP:** Không hướng kết nối; overhead thấp, không tự bảo đảm nhận đủ hoặc theo thứ tự.
+
+Ví dụ: SSH, MQTT thường dùng TCP; DNS thông thường có thể dùng UDP.
+
+**Trả lời phỏng vấn:** Chọn TCP khi cần truyền tin cậy; chọn UDP khi ưu tiên overhead thấp/độ trễ hoặc ứng dụng tự quản lý độ tin cậy.
+</details>
+
+<details>
+<summary><strong>12. TCP Three-way Handshake là gì?</strong></summary>
+
+Thiết lập kết nối TCP bằng **3 bước**:
+
+1. Client gửi `SYN`.
+2. Server trả lời `SYN-ACK`.
+3. Client gửi `ACK`.
+
+**Trả lời phỏng vấn:** Three-way Handshake là ba bước SYN, SYN-ACK, ACK để đồng bộ và thiết lập kết nối TCP.
+</details>
+
+<details>
+<summary><strong>13. TCP Four-way Handshake là gì?</strong></summary>
+
+Quá trình đóng kết nối TCP thông thường:
+
+```text
+Client                  Server
+  | ------ FIN ------>   |
+  | <----- ACK -------   |
+  | <----- FIN -------   |
+  | ------ ACK ------>   |
+```
+
+Hai chiều gửi dữ liệu được đóng độc lập; trên thực tế FIN và ACK có thể được gộp.
+
+**Trả lời phỏng vấn:** FIN và ACK được trao đổi để đóng kết nối TCP một cách có kiểm soát.
+</details>
+
+<details>
+<summary><strong>14. Socket là gì? TCP Socket hoạt động như thế nào?</strong></summary>
+
+Socket là một đầu cuối giao tiếp giữa các chương trình qua mạng hoặc trong cùng hệ thống.
+
+- Server: `socket()` → `bind()` → `listen()` → `accept()`.
+- Client: `socket()` → `connect()`.
+- Hai bên: `send()`, `recv()`, sau đó `close()`.
+
+**Trả lời phỏng vấn:** Server lắng nghe và chấp nhận kết nối, Client chủ động kết nối; sau đó hai bên trao đổi dữ liệu qua Socket.
+</details>
+
+<details>
+<summary><strong>15. TCP Server và TCP Client được triển khai như thế nào trong C/C++?</strong></summary>
+
+Server tạo Socket, gắn địa chỉ (`bind`), chờ kết nối (`listen`, `accept`). Client tạo Socket và gọi `connect()`. Hai bên dùng `send()`, `recv()`, `close()`.
+
+**Lưu ý triển khai:** Kiểm tra lỗi, Partial Read/Write, Buffer, Timeout và trạng thái đóng kết nối.
+
+**Trả lời phỏng vấn:** Điểm khác biệt chính là Server `bind/listen/accept`, còn Client `connect`.
+</details>
+
+<details>
+<summary><strong>16. IP Address và MAC Address khác nhau như thế nào?</strong></summary>
+
+- **IP Address:** Địa chỉ logic ở Layer 3, dùng để định tuyến qua các mạng.
+- **MAC Address:** Địa chỉ ở Layer 2, dùng để gửi Frame trên liên kết mạng.
+
+**Trả lời phỏng vấn:** IP phục vụ định tuyến, MAC phục vụ truyền Frame trên liên kết cục bộ.
+</details>
+
+<details>
+<summary><strong>17. IPv4 và IPv6 khác nhau như thế nào?</strong></summary>
+
+- IPv4: địa chỉ **32 bit**, ví dụ `192.168.1.1`.
+- IPv6: địa chỉ **128 bit**, ví dụ `2001:db8::1`.
+- IPv6 có không gian địa chỉ lớn hơn nhiều và không sử dụng Broadcast.
+
+**Trả lời phỏng vấn:** Khác biệt lớn nhất là độ dài địa chỉ 32 bit và 128 bit, cùng một số cơ chế mạng được thiết kế lại ở IPv6.
+</details>
+
+<details>
+<summary><strong>18. Subnet Mask và Default Gateway là gì?</strong></summary>
+
+- **Subnet Mask:** Xác định phần Network và Host của địa chỉ IPv4.
+- **Default Gateway:** Router nhận lưu lượng đến các mạng không có tuyến cụ thể hơn.
+
+```text
+IP:       192.168.1.10
+Subnet:   255.255.255.0
+Gateway:  192.168.1.1
+```
+
+**Trả lời phỏng vấn:** Subnet Mask xác định mạng con; Default Gateway thường là Router đưa lưu lượng ra mạng khác.
+</details>
+
+<details>
+<summary><strong>19. DHCP là gì? Quá trình cấp phát IP như thế nào?</strong></summary>
+
+DHCP (*Dynamic Host Configuration Protocol*) cấp cấu hình mạng tự động.
+
+Bốn bước **DORA**:
+
+1. Discover
+2. Offer
+3. Request
+4. Acknowledge
+
+**Trả lời phỏng vấn:** DHCP tự động cấp IP và các thông số như Gateway, DNS; thông thường trải qua Discover, Offer, Request, ACK.
+</details>
+
+<details>
+<summary><strong>20. DNS là gì?</strong></summary>
+
+DNS (*Domain Name System*) cung cấp các bản ghi giúp phân giải tên miền thành địa chỉ IP và nhiều thông tin khác.
+
+Ví dụ: Ứng dụng cần truy cập `example.com`, Resolver sẽ tìm địa chỉ phù hợp để thiết lập kết nối.
+
+**Trả lời phỏng vấn:** DNS giúp truy cập dịch vụ bằng tên miền thay vì phải nhớ IP.
+</details>
+
+<details>
+<summary><strong>21. NAT là gì? Tại sao Router cần NAT?</strong></summary>
+
+NAT (*Network Address Translation*) là kỹ thuật dịch địa chỉ IP khi gói tin đi qua thiết bị mạng. **NAT kết hợp PAT** trên Router gia đình có thể cho nhiều máy dùng chung một IPv4 công cộng.
+
+**Trả lời phỏng vấn:** NAT/PAT giúp các thiết bị có IP riêng trong LAN chia sẻ IP công cộng khi truy cập Internet.
+</details>
+
+<details>
+<summary><strong>22. ARP là gì? ARP hoạt động như thế nào?</strong></summary>
+
+ARP (*Address Resolution Protocol*) tìm MAC Address tương ứng với một IPv4 trong mạng cục bộ.
+
+1. Gửi ARP Request.
+2. Nhận ARP Reply.
+3. Sử dụng MAC tìm được để gửi Ethernet Frame.
+
+Nếu đích nằm ngoài mạng cục bộ, thiết bị thường phân giải MAC của Next-hop Router.
+
+**Trả lời phỏng vấn:** ARP dùng để tìm MAC từ IPv4 trên liên kết mạng cục bộ.
+</details>
+
+<details>
+<summary><strong>23. Thiết bị không kết nối được Internet, bạn debug thế nào?</strong></summary>
+
+1. Kiểm tra `ip addr`, `ip link`.
+2. Kiểm tra `ip route` và Default Gateway.
+3. `ping` Gateway, sau đó thử IP Internet.
+4. Kiểm tra DNS bằng `nslookup`.
+5. Xem `logread`, `dmesg`.
+6. Dùng `tcpdump` nếu cần phân tích Packet.
+
+**Trả lời phỏng vấn:** Kiểm tra từ Interface, IP, Gateway, Route, DNS tới ứng dụng; dùng log và Packet Capture để khoanh vùng lỗi. Ping thất bại chưa đủ chứng minh mất mạng vì ICMP có thể bị chặn.
+</details>
+
+## PHẦN 3. EMBEDDED LINUX VÀ OPENWRT
+
+<details>
+<summary><strong>24. Embedded Linux là gì? Khác Linux trên PC thế nào?</strong></summary>
+
+Embedded Linux là Linux được tùy chỉnh cho thiết bị nhúng (Router, Camera IP, IoT...). Hệ thống thường tối ưu CPU, RAM, Flash và chức năng chuyên dụng.
+
+**Trả lời phỏng vấn:** Embedded Linux là Linux cho phần cứng nhúng có giới hạn tài nguyên và yêu cầu chuyên biệt.
+</details>
+
+<details>
+<summary><strong>25. OpenWrt là gì? Tại sao dùng trên Router?</strong></summary>
+
+OpenWrt là hệ điều hành Embedded Linux mã nguồn mở cho Router và thiết bị mạng. Hỗ trợ LAN/WAN, Wi-Fi, DHCP, DNS, Routing, Firewall và Package.
+
+**Trả lời phỏng vấn:** OpenWrt cung cấp nền tảng Linux và công cụ cấu hình mạng cho Router.
+</details>
+
+<details>
+<summary><strong>26. OpenWrt SDK là gì? Khác OpenWrt Build System thế nào?</strong></summary>
+
+- **OpenWrt SDK:** Dùng để Cross-compile Package cho Target/OpenWrt cụ thể.
+- **OpenWrt Build System:** Có thể build Firmware hoàn chỉnh (Kernel, Root Filesystem, Package).
+
+**Trả lời phỏng vấn:** SDK chủ yếu build Package, Build System có thể build cả Firmware.
+</details>
+
+<details>
+<summary><strong>27. Cross-compilation là gì? Vì sao cần Cross Compiler?</strong></summary>
+
+Là quá trình biên dịch trên **Host** để chạy trên **Target** khác kiến trúc hoặc môi trường.
+
+Ví dụ: Host Ubuntu x86_64 build ứng dụng cho Router ARM bằng GCC Cross Compiler.
+
+**Trả lời phỏng vấn:** Cross Compiler tạo Binary đúng kiến trúc CPU và ABI của Router.
+</details>
+
+<details>
+<summary><strong>28. Biên dịch C/C++ chạy trên OpenWrt như thế nào?</strong></summary>
+
+1. Viết Source Code C/C++.
+2. Chọn OpenWrt SDK tương thích Target.
+3. Cấu hình Package Makefile.
+4. Build bằng GCC Toolchain trong SDK.
+5. Tạo Binary/Package.
+6. Deploy và test trên Router.
+
+**Trả lời phỏng vấn:** Build bằng OpenWrt SDK để tạo Package/Binary phù hợp với Firmware và kiến trúc Target.
+</details>
+
+<details>
+<summary><strong>29. Package .ipk là gì? Cài đặt thế nào?</strong></summary>
+
+`.ipk` là định dạng Package truyền thống của nhiều phiên bản OpenWrt.
+
+```bash
+opkg install myapp.ipk
+```
+
+Một số bản OpenWrt mới sử dụng `apk` thay `opkg`.
+
+**Trả lời phỏng vấn:** `.ipk` đóng gói ứng dụng và thông tin cần thiết để cài đặt lên OpenWrt tương thích.
+</details>
+
+<details>
+<summary><strong>30. SSH là gì? Dùng SSH debug Router thế nào?</strong></summary>
+
+SSH là giao thức đăng nhập/điều khiển từ xa qua kết nối được mã hóa.
+
+```bash
+ssh root@192.168.1.1
+```
+
+Sau khi vào Router có thể chạy `ps`, `top`, `logread`, `dmesg`, `ip route`.
+
+**Trả lời phỏng vấn:** SSH giúp truy cập Router để xem log, quản lý Process và kiểm tra mạng.
+</details>
+
+<details>
+<summary><strong>31. Kiểm tra Network Interface trên Linux thế nào?</strong></summary>
+
+```bash
+ip addr      # Địa chỉ IP
+ip link      # Trạng thái Interface
+ip -s link   # Thống kê Packet
+```
+
+Trên OpenWrt có thể dùng thêm `ubus call network.interface dump`.
+
+**Trả lời phỏng vấn:** Tôi kiểm tra IP, trạng thái Interface và Packet Error/Drop bằng các lệnh `ip` và `ubus` khi phù hợp.
+</details>
+
+<details>
+<summary><strong>32. Kiểm tra Routing Table trên Linux thế nào?</strong></summary>
+
+```bash
+ip route
+```
+
+Ví dụ:
+
+```text
+default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0
+```
+
+**Trả lời phỏng vấn:** `ip route` giúp xem Default Gateway và các tuyến sử dụng để chuyển tiếp Packet.
+</details>
+
+<details>
+<summary><strong>33. Làm sao tự khởi động ứng dụng khi OpenWrt bật nguồn?</strong></summary>
+
+Trên OpenWrt dùng Service Script, thường tích hợp `procd`.
+
+```bash
+/etc/init.d/myapp enable
+/etc/init.d/myapp start
+```
+
+**Trả lời phỏng vấn:** Tạo Init Script và đăng ký Service tự khởi động; với `procd` có thể cấu hình giám sát/khởi động lại.
+</details>
+
+## PHẦN 4. CÂU HỎI TÌNH HUỐNG DEBUG
+
+<details>
+<summary><strong>34. TCP Client kết nối thành công nhưng không nhận được dữ liệu: nguyên nhân?</strong></summary>
+
+Có thể do Server chưa gửi, gửi sai Socket, lỗi ứng dụng/Buffer/Message Framing, Thread bị Blocking, hoặc kết nối đã đóng nhưng chưa xử lý đúng.
+
+**Cách debug:** Kiểm tra log, mã trả về `send()`/`recv()`, trạng thái Socket, Timeout và dùng `tcpdump` xem Packet.
+
+**Trả lời phỏng vấn:** Tôi kiểm tra từ Server có gửi hay không đến phía Client có nhận và xử lý đúng hay không, dùng log và Packet Capture để định vị lỗi.
+</details>
+
+<details>
+<summary><strong>35. Chương trình C++ trên Router tăng RAM liên tục: debug thế nào?</strong></summary>
+
+1. Dùng `top`, `/proc/<PID>/status` theo dõi Memory.
+2. Xác định hoạt động nào làm RAM tăng.
+3. Kiểm tra cấp phát động, Buffer, Container, Cache.
+4. Dùng Valgrind hoặc AddressSanitizer nếu hỗ trợ.
+5. Sửa lỗi, chạy Long-duration Test.
+
+**Trả lời phỏng vấn:** Tôi tìm dấu hiệu Memory Leak, phân biệt với Cache/Allocator rồi dùng công cụ phân tích và test lại.
+</details>
+
+<details>
+<summary><strong>36. TCP Server có nhiều Client: thiết kế xử lý thế nào?</strong></summary>
+
+Có ba mô hình cơ bản:
+
+- Thread per Client.
+- Thread Pool.
+- Event-driven I/O với Non-blocking Socket và `epoll()`.
+
+**Trả lời phỏng vấn:** Với nhiều kết nối tôi ưu tiên `epoll()` để theo dõi Socket, kết hợp Thread Pool khi có tác vụ tốn CPU; cần xử lý Partial I/O và Timeout.
+</details>
+
+<details>
+<summary><strong>37. Cập nhật Firmware xong, Router không kết nối Wi-Fi: debug thế nào?</strong></summary>
+
+1. `dmesg`: Kiểm tra Driver/Firmware Wi-Fi.
+2. `wifi status`: Trạng thái Wi-Fi.
+3. `/etc/config/wireless`: Cấu hình SSID/Security/Interface.
+4. `logread`: Lỗi `hostapd`, `wpa_supplicant`, `netifd`.
+5. So sánh Firmware, Driver và cấu hình giữa hai phiên bản.
+6. Sửa và Regression Test.
+
+**Trả lời phỏng vấn:** Kiểm tra theo hướng Driver → Interface → Cấu hình → Log → So sánh trước/sau cập nhật để tìm nguyên nhân.
+</details>
+
+## PHẦN 5. KINH NGHIỆM FPT TELECOM
+
+> **Phân biệt theo CV:** Router/Modem (09/2021–09/2024) ghi **Project Manager**; FPT Play Box & Smart Home (06/2017–09/2021) ghi **Embedded Software Engineer**. Không nên gộp trách nhiệm hai dự án thành công việc đã trực tiếp code.
+
+<details>
+<summary><strong>38. Bạn làm gì trong dự án FPT Telecom?</strong></summary>
+
+**Trả lời mẫu (theo phần Developer trong CV):** Tôi phát triển và bảo trì phần mềm nhúng C/C++ cho FPT Play Box và Smart Home; phân tích yêu cầu, phát triển chức năng kết nối, điều khiển, giám sát; tích hợp Backend; debug và kiểm thử.
+</details>
+
+<details>
+<summary><strong>39. Bạn phát triển phần mềm trên thiết bị nào?</strong></summary>
+
+**Trả lời mẫu:** Tôi tham gia các dự án FPT Play Box, thiết bị Smart Home và Router/Modem. Cần phân biệt sản phẩm nào đã trực tiếp phát triển ứng dụng, sản phẩm nào tham gia ở vai trò khác.
+</details>
+
+<details>
+<summary><strong>40. Dự án sử dụng hệ điều hành nào?</strong></summary>
+
+- **Router/Modem:** Bạn xác nhận có thiết bị chạy OpenWrt.
+- **FPT Play Box:** Nhiều dòng phổ biến chạy Android/Android TV; không nên nói tất cả chạy OpenWrt.
+- **Smart Home:** Tùy thiết bị/firmware; chưa đủ dữ liệu để khẳng định cùng nền tảng.
+
+**Trả lời mẫu:** Ở phần Router/Modem sử dụng OpenWrt (Embedded Linux); những sản phẩm khác có nền tảng riêng theo thiết bị.
+</details>
+
+<details>
+<summary><strong>41. Môi trường phát triển phần mềm như thế nào?</strong></summary>
+
+**Mô hình tham khảo:** PC chạy Linux hoặc Windows + WSL Ubuntu; viết code bằng VS Code/IDE tương đương; build bằng OpenWrt SDK và GCC Cross Compiler; deploy lên Router chạy OpenWrt.
+
+**Lưu ý:** Chưa xác nhận IDE và Host OS thực tế của dự án. Không nên khẳng định đã dùng VS Code/WSL nếu chưa từng dùng.
+</details>
+
+<details>
+<summary><strong>42. Dự án sử dụng Compiler nào?</strong></summary>
+
+**Trả lời mẫu:** Với ứng dụng cho OpenWrt, sử dụng GCC Cross Compiler thuộc Toolchain của OpenWrt SDK, tạo Binary đúng kiến trúc CPU/ABI của Router.
+
+CV còn liệt kê IAR Embedded Workbench ở dự án Router/Modem, nhưng chưa xác định module nào dùng IAR.
+</details>
+
+<details>
+<summary><strong>43. Dự án sử dụng Chip hoặc MCU nào?</strong></summary>
+
+**Chưa xác nhận model SoC/MCU.** Router chạy OpenWrt có thể dùng các loại SoC khác nhau (ARM, MIPS...), không thể suy ra chính xác từ tên OpenWrt.
+
+**Cách trả lời an toàn:** Nêu model SoC/thiết bị thực sự từng dùng; nếu không nhớ, không đoán hãng hoặc model.
+</details>
+
+<details>
+<summary><strong>44. Ứng dụng C/C++ chạy User Space hay Kernel Space?</strong></summary>
+
+Ứng dụng OpenWrt thông thường chạy ở **User Space** và dùng System Call/API để giao tiếp Kernel, Network Stack hoặc Device Driver.
+
+**Trả lời phỏng vấn:** Ứng dụng User Space sử dụng các giao diện Kernel cung cấp; không đồng nghĩa với tự viết Kernel Driver.
+</details>
+
+<details>
+<summary><strong>45. Ứng dụng C/C++ giao tiếp với Backend Server thế nào?</strong></summary>
+
+**Ví dụ theo công nghệ MQTT trong CV:** Ứng dụng kết nối MQTT Broker qua TCP/IP, Publish trạng thái và Subscribe Topic nhận Message/lệnh.
+
+**Trả lời mẫu:** Thiết bị giao tiếp Backend qua MQTT Broker; ứng dụng cần xử lý trạng thái kết nối, Reconnect và Message.
+</details>
+
+<details>
+<summary><strong>46. MQTT là gì? Vì sao dùng trong IoT?</strong></summary>
+
+MQTT là giao thức Publish/Subscribe có overhead tương đối nhỏ, thường dùng trong IoT.
+
+- Publisher: Gửi Message.
+- Subscriber: Nhận Message.
+- Broker: Chuyển tiếp Message.
+- Topic: Kênh logic phân loại Message.
+
+**Trả lời phỏng vấn:** MQTT phù hợp để thiết bị nhúng trao đổi trạng thái và lệnh điều khiển với Backend.
+</details>
+
+<details>
+<summary><strong>47. Backend gửi lệnh bật/tắt thiết bị, luồng xử lý thế nào?</strong></summary>
+
+**Luồng MQTT minh họa:** Backend Publish lệnh → Broker → Topic thiết bị Subscribe → ứng dụng C/C++ nhận và kiểm tra → module điều khiển thực hiện → thiết bị gửi trạng thái/kết quả.
+
+**Lưu ý:** Cần chỉnh theo luồng đã thực sự triển khai.
+</details>
+
+<details>
+<summary><strong>48. Ứng dụng C/C++ giao tiếp phần cứng bằng cách nào?</strong></summary>
+
+Ứng dụng User Space có thể sử dụng Kernel Driver thông qua Device File, `ioctl()`, sysfs hoặc API/thư viện chuyên dụng.
+
+**Trả lời phỏng vấn:** User Space gọi giao diện Driver do Kernel cung cấp; Driver xử lý phần cứng. Chỉ nêu API đã trực tiếp dùng nếu có ví dụ thực tế.
+</details>
+
+<details>
+<summary><strong>49. Debug chương trình C/C++ trên OpenWrt thế nào?</strong></summary>
+
+- SSH để truy cập Router.
+- `logread`, `dmesg` xem log.
+- `top`, `ps` kiểm tra Process.
+- GDB/GDBServer để Remote Debug khi hỗ trợ.
+- `tcpdump` phân tích Network Traffic.
+
+**Trả lời mẫu:** Tôi kiểm tra lỗi qua log/Process, tái hiện lỗi và khoanh vùng nguyên nhân; dùng Remote GDB hoặc Packet Capture khi cần và khi môi trường hỗ trợ. Chỉ nói đã trực tiếp sử dụng các công cụ thực tế từng dùng.
+</details>
+
+<details>
+<summary><strong>50. Thiết bị mất kết nối MQTT, xử lý thế nào?</strong></summary>
+
+Kiểm tra Network Interface, TCP Connection, Broker, địa chỉ/Port, cấu hình xác thực và log. Sau đó xử lý Reconnect theo chính sách phù hợp, Subscribe lại nếu Session không còn duy trì.
+
+**Trả lời phỏng vấn:** Tôi xác định lỗi nằm ở mạng, TCP hay MQTT, rồi kiểm tra Retry/Reconnect và khả năng khôi phục hoạt động của thiết bị.
+</details>
+
+<details>
+<summary><strong>51. Dự án FPT Telecom liên quan gì đến Linux?</strong></summary>
+
+Router/Modem bạn xác nhận sử dụng OpenWrt – một hệ điều hành dựa trên Linux. Phát triển ứng dụng cho nền tảng này liên quan đến GCC Cross Toolchain, Linux User Space, Process và Network Communication.
+
+**Trả lời mẫu:** Dự án có nền tảng Embedded Linux qua OpenWrt. Công việc liên quan tới triển khai, kiểm thử và xử lý ứng dụng/giao tiếp mạng trên thiết bị; cần phân biệt phần đã trực tiếp code với phần quản lý dự án.
+</details>
+
+<details>
+<summary><strong>52. Kinh nghiệm FPT Telecom phù hợp vị trí Linux Networking Stack thế nào?</strong></summary>
+
+Các điểm liên quan từ CV: C/C++, OpenWrt SDK, GCC Toolchain, Wi-Fi, MQTT, giao tiếp Backend, Debug/Testing phần mềm nhúng.
+
+**Trả lời mẫu:** Tôi có nền tảng Embedded C/C++, OpenWrt và Network Communication. Kinh nghiệm ứng dụng mạng trên Linux liên quan đến vị trí này, nhưng khác với việc trực tiếp phát triển TCP/IP Stack hoặc Kernel Networking; tôi sẽ trình bày rõ phạm vi công việc thực tế.
+</details>
+
+---
+
+## PHẦN 6. GHI NHỚ NHANH: OPENWRT, COMPILER VÀ DEBUG
+
+<details>
+<summary><strong>A. OpenWrt, OpenWrt SDK, GCC Cross Compiler khác nhau thế nào?</strong></summary>
+
+| Thành phần | Chức năng |
+|---|---|
+| **OpenWrt** | Hệ điều hành Embedded Linux chạy trên Router |
+| **OpenWrt SDK** | Bộ công cụ build Package cho OpenWrt |
+| **GCC Cross Compiler** | Trình biên dịch C/C++ cho CPU/ABI của Router, thường đi kèm SDK |
+| **VS Code** | Nơi viết code (không phải Compiler) |
+| **Ubuntu/WSL** | Môi trường Host để build (một lựa chọn) |
+| **SSH** | Truy cập Router từ xa |
+| **GDB/GDBServer** | Remote Debug ứng dụng nếu có hỗ trợ |
+
+**Ghi nhớ:** OpenWrt **chạy chương trình**; GCC Cross Compiler **tạo chương trình**; OpenWrt SDK **cung cấp Toolchain và công cụ build**.
+</details>
+
+<details>
+<summary><strong>B. Quy trình từ viết code đến chạy trên Router</strong></summary>
+
+```text
+Máy Developer (Windows/Ubuntu)
+        |
+        | Viết Source Code C/C++ bằng IDE/Editor
+        v
+OpenWrt SDK + GCC Cross Compiler
+        |
+        | Build Binary / Package
+        v
+Deploy lên Router (SCP/SSH hoặc Package Manager)
+        |
+        v
+Router chạy OpenWrt
+        |
+        | Chạy, lấy Log, kiểm thử
+        v
+SSH / logread / dmesg / GDBServer / tcpdump
+```
+</details>
+
+<details>
+<summary><strong>C. Interviewer hỏi: Bạn dùng Cross Compiler nào?</strong></summary>
+
+**Trả lời mẫu:** Trong dự án Router/Modem sử dụng OpenWrt, Toolchain phù hợp để build C/C++ là GCC Cross Compiler được cung cấp qua OpenWrt SDK, dùng biên dịch Source Code trên Host thành Binary cho CPU Router.
+
+Tên Compiler chính xác phụ thuộc Target (ARM/MIPS...), chưa được xác nhận trong CV.
+</details>
+
+<details>
+<summary><strong>D. Interviewer hỏi: Bạn debug trên OpenWrt thế nào?</strong></summary>
+
+**Trả lời mẫu:** Tôi có thể truy cập Router bằng SSH, xem `logread`/`dmesg`, kiểm tra Process với `top`/`ps`. Với lỗi C/C++ phức tạp có thể dùng GDB/GDBServer để Remote Debug; với lỗi Network có thể dùng `ip`, `ping`, `tcpdump`.
+
+**Lưu ý:** Phân biệt *biết cách dùng* với *đã trực tiếp sử dụng* khi trả lời về kinh nghiệm cá nhân.
+</details>
+
+### Ưu tiên ôn tập
+
+1. **TCP/UDP, Socket:** Câu 11–15.
+2. **DHCP, DNS, NAT, ARP và Debug Network:** Câu 19–23.
+3. **OpenWrt, SDK, Cross Compiler, SSH:** Câu 25–30.
+4. **Kinh nghiệm thực tế FPT Telecom:** Câu 38–52.
+5. **Linux System Programming và Debug:** Câu 1–8, 34–37.
+
+> **Ghi chú:** Đây là bộ 52 câu dành riêng cho Linux Networking, đánh số lại từ 1 theo yêu cầu; không thay thế tiến độ đánh số câu hỏi của bộ luyện phỏng vấn Embedded C trước đó.
+
+
 <details>
 <summary><strong>CÂU HỎI PHỎNG VẤN EMBEDDED / C++</strong></summary>
 
