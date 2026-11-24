@@ -45,12 +45,13 @@ Hai Process cùng tiếp tục từ vị trí sau lời gọi `fork()` và có k
 
 IPC (*Inter-Process Communication*) cho phép các Process trao đổi dữ liệu và phối hợp hoạt động.
 
-- Pipe, FIFO (Named Pipe)
-- Message Queue
-- Shared Memory
-- Semaphore
-- Signal
-- Socket
+- Pipe, (Named Pipe):Là một kênh truyền dữ liệu một chiều, thường sử dụng giữa Process cha và Process con
+- FIFO :Tương tự Pipe nhưng có tên trong File System, cho phép các Process không có quan hệ cha – con giao tiếp với nhau.
+- Message Queue :Cho phép các Process trao đổi dữ liệu thông qua một hàng đợ
+- Shared Memory: Cho phép nhiều Process truy cập chung một vùng nhớ để đọc và ghi dữ liệu
+- Semaphore :Dùng để kiểm soát số lượng Process hoặc Thread được phép truy cập tài nguyên chung tại cùng một thời điểm.
+- Signal :Là cơ chế gửi tín hiệu đến Process để thông báo một sự kiện hoặc yêu cầu thực hiện một hành động.
+- Socket :là cơ chế cho phép các Process gửi và nhận dữ liệu với nhau trên cùng một máy hoặc giữa các máy khác nhau qua mạng.
 
 **Trả lời phỏng vấn:** IPC là cơ chế giao tiếp giữa các Process; lựa chọn Pipe, Queue, Shared Memory, Socket... tùy lượng dữ liệu và nhu cầu đồng bộ.
 </details>
