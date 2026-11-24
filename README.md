@@ -43,6 +43,15 @@ Hai Process cùng tiếp tục từ vị trí sau lời gọi `fork()` và có k
 <details>
 <summary><strong>3. IPC là gì? Có những cơ chế IPC nào trong Linux?</strong></summary>
 
+
+4 trạng thái thường gặp của Process hoặc Task trong hệ điều hành
+
+**Là gì?** Các trạng thái thường gặp: 
+Running : Process/Task đang được CPU thực thi.
+Ready :Process đã sẵn sàng chạy nhưng chưa được cấp CPU
+Blocked: Task đang chờ sự kiện hoặc Timeout; khi điều kiện  ok ,Task chuyển về Ready.
+Suspended:process bị tạm dừng, phải được Resume mới có thể tiếp tục
+
 IPC (*Inter-Process Communication*) cho phép các Process trao đổi dữ liệu và phối hợp hoạt động.
 
 - Pipe, (Named Pipe):Là một kênh truyền dữ liệu một chiều, thường sử dụng giữa Process cha và Process con
@@ -2469,6 +2478,8 @@ có 3 loai
 <summary><strong>Task states</strong></summary>
 
 **Là gì?** Các trạng thái thường gặp: Running, Ready, Blocked, Suspended.  
+
+
 **Ví dụ:** Task chờ queue → Blocked.
 
 </details>
